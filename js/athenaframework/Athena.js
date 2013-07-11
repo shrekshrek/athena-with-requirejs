@@ -456,37 +456,30 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		resize:function(){
 			if(!this.$stage) throw "athena havn't stage!!!";
 			
-			var _width = $(window).width();
-			var _height = $(window).height();
+			this._windowRect.width = $(window).width();
+			this._windowRect.height = $(window).height();
 			
 			if(this._isFullScreen){
-				if(_width < this._windowRectMin.width){
-					this.$body.css("overflow-x","visible");
+				if(this._windowRect.width < this._windowRectMin.width){
+					this.$body.css("overflow-x","auto");
 				}else{
 					this.$body.css("overflow-x","hidden");
 				}
-				if(_height < this._windowRectMin.height){
-					this.$body.css("overflow-y","visible");
+				if(this._windowRect.height < this._windowRectMin.height){
+					this.$body.css("overflow-y","auto");
 				}else{
 					this.$body.css("overflow-y","hidden");
 				}
+				this._stageRect.width = Math.max(this._windowRect.width, this._windowRectMin.width);
+				this._stageRect.height = Math.max(this._windowRect.height, this._windowRectMin.height);
 				this.$stage.width(this._stageRect.width);
 				this.$stage.height(this._stageRect.height);
 			}else{
-				this.$body.css("overflow-x","auto");
-				this.$body.css("overflow-y","auto");
+				this.$body.css("overflow","auto");
 				this.$stage.width("100%");
-				this.$stage.height(0);
-			}
-			
-			this._windowRect.width = _width;
-			this._windowRect.height = _height;
-			this._stageRect.width = Math.max(this._windowRect.width, this._windowRectMin.width);
-			this._stageRect.height = Math.max(this._windowRect.height, this._windowRectMin.height);
-			
-			if(this._isFullScreen){
-				this.$stage.width(this._stageRect.width);
-				this.$stage.height(this._stageRect.height);
+				this.$stage.height("100%");
+				this._stageRect.width = $(document).width();
+				this._stageRect.height = $(document).height();
 			}
 			
 			this.trigger(this.WINDOW_RESIZE);
