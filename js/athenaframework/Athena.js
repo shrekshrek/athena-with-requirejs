@@ -470,17 +470,24 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				}else{
 					this.$body.css("overflow-y","hidden");
 				}
+				this.$stage.width(this._stageRect.width);
+				this.$stage.height(this._stageRect.height);
 			}else{
 				this.$body.css("overflow-x","auto");
 				this.$body.css("overflow-y","auto");
+				this.$stage.width("100%");
+				this.$stage.height(0);
 			}
 			
 			this._windowRect.width = _width;
 			this._windowRect.height = _height;
 			this._stageRect.width = Math.max(this._windowRect.width, this._windowRectMin.width);
 			this._stageRect.height = Math.max(this._windowRect.height, this._windowRectMin.height);
-			this.$stage.width(this._stageRect.width);
-			this.$stage.height(this._stageRect.height);
+			
+			if(this._isFullScreen){
+				this.$stage.width(this._stageRect.width);
+				this.$stage.height(this._stageRect.height);
+			}
 			
 			this.trigger(this.WINDOW_RESIZE);
 		}
