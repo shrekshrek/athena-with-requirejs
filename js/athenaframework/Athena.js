@@ -64,7 +64,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		_flow:null,
 		_isFullScreen:false,
 		_windowRect:{width:0,height:0},
-		_windowRectMin:{width:1000,height:600},
+		_windowRectMin:{width:1,height:1},
 		_stageRect:{width:0,height:0},
 		_curPages:null,
 		_tempPages:null,
@@ -476,8 +476,6 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				this.$stage.height(this._stageRect.height);
 			}else{
 				this.$body.css("overflow","auto");
-				this.$stage.width("100%");
-				this.$stage.height("100%");
 				this._stageRect.width = $(document).width();
 				this._stageRect.height = $(document).height();
 			}
