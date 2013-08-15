@@ -8,7 +8,7 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 			BaseView.prototype.init.apply(this,[args]);
 			
 			this.data = args.data;
-			this.$el.css({"position":"absolute","opacity":0,"display":"none","z-index":this.data.depth});
+			this.$el.css({"opacity":0,"display":"none","z-index":this.data.depth});
 			
 			this.preloadArray = [];
 			this.listenTo(Athena, Athena.WINDOW_RESIZE, function(){
@@ -16,7 +16,6 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 			});
 		},
 		destroy:function(){
-			this.stopListening(Athena);
 			BaseView.prototype.destroy.apply(this);
 		},
 		preload:function(){
@@ -52,7 +51,7 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 			this.trigger(BasePageConst.PRELOAD_COMPLETE, {data:this.data});
 		},
 		transitionIn:function(){
-			this.$el.css({"display":"inline"});
+			this.$el.css({"display":"block"});
 			this.resize();
 			this.trigger(BasePageConst.TRANSITION_IN, {data:this.data});
 		},

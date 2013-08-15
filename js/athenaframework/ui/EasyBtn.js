@@ -5,14 +5,14 @@ define(["baseBtn","tweenMax"],function(BaseBtn,TweenMax){
 			this.$el.css({"opacity":0.8});
 		},
 		mouseOverHandler:function(){
-			if(this.isSelected) return;
+			if(this._isSelected) return;
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.2, {"opacity":1});
 		},
 		mouseOutHandler:function(){
-			if(this.isSelected) return;
+			if(this._isSelected) return;
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
-			TweenMax.to(this.$el, 0.2, {"opacity":0.8});
+			TweenMax.to(this.$el, 0.2, {"opacity":0.9});
 		}
 	});
 	return view;

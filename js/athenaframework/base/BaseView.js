@@ -15,7 +15,6 @@ define(["backbone"],function(BackBone){
 			this.init(args);
 		},
 		init:function(args){
-			
 		},
 		destroy:function(){
 			_.each(this.children, function(obj){

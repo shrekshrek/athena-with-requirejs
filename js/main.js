@@ -1,5 +1,5 @@
 require.config({
-	waitSeconds:7,
+	waitSeconds:60,
 	baseUrl:"js",
     paths:{
     	//athena框架配置地址
@@ -93,6 +93,15 @@ require(['jquery','athena','siteMap','siteRouter'],function($,Athena,SiteMap,Sit
 		Athena.pageTo(SiteMap.footer);
 		Backbone.history.start({pushState:false});
 		
+		$("body").on("mousedown",function(event){
+			var _tag = ["TEXTAREA","INPUT","P","SPAN","H1","H2","H3","H4","H5","H6","A","SELECT"];
+			var _len = _tag.length;
+			for(var i=0; i<_len; i++){
+				if(event.target.tagName==_tag[i]) return true;
+			}
+			return false;
+		});
 	}
+	
 });
 

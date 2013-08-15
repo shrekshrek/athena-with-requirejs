@@ -3,33 +3,19 @@ define(["baseView"],function(BaseView){
 		MOUSE_OVER:"mouseover",
 		MOSUE_OUT:"mouseout",
 		CLICK:"click",
-		isMouseOver:false,
-		isSelected:false,
-		navID:null,
+		_isMouseOver:null,
+		_isSelected:null,
+		_isEnable:null,
 		init:function(args){
 			BaseView.prototype.init.apply(this,[args]);
-			this.navID = args.navID;
-			var _self = this;
-			if(this.$el){
-				this.$el.css("cursor","pointer");
-				this.$el.mouseenter(function() {
-					_self.isMouseOver = true;
-					_self.trigger(_self.MOUSE_OVER);
-					_self.mouseOverHandler();
-				});
-				this.$el.mouseleave(function() {
-					_self.isMouseOver = false;
-					_self.trigger(_self.MOSUE_OUT);
-					_self.mouseOutHandler();
-				});
-				this.$el.click(function() {
-					_self.trigger(_self.CLICK);
-					_self.clickHandler();
-				});
-			}
+			this._isMouseOver = false,
+			this._isSelected = false,
+			this._isEnable = false,
+			this.enable(true);
 		},
 		destroy:function(){
-			this.$el.off();
+			this.enable(false);
+			BaseView.prototype.destroy.apply(this);
 		},
 		mouseOverHandler:function(){
 		},
@@ -38,18 +24,46 @@ define(["baseView"],function(BaseView){
 		clickHandler:function(){
 		},
 		selected:function(_bool){
-			if(_bool == this.isSelected) return;
+			if(_bool == this._isSelected) return;
+			var _self = this;
 			if(_bool){
 				this.mouseOverHandler();
-				this.isSelected = _bool;
+				this._isSelected = _bool;
 			}else{
-				this.isSelected = _bool;
-				if(this.isMouseOver){
-					this.mouseOverHandler();
-				}else{
-					this.mouseOutHandler();
-				}
+				this._isSelected = _bool;
+				this.mouseOutHandler();
 			}
+			//this.enable(!_bool);
+		},
+		enable:function(_bool){
+			if(_bool == this._isEnable) return;
+			var _self = this;
+			if(_bool){
+				this.$el.css("cursor","pointer");
+				this.$el.on("mouseenter",function(event){
+					_self._isMouseOver = true;
+					_self.trigger(_self.MOUSE_OVER);
+					_self.mouseOverHandler(event);
+					//return false;
+				});
+				this.$el.on("mouseleave",function(event){
+					_self._isMouseOver = false;
+					_self.trigger(_self.MOSUE_OUT);
+					_self.mouseOutHandler(event);
+					//return false;
+				});
+				this.$el.on("click",function(event){
+					_self.trigger(_self.CLICK);
+					_self.clickHandler(event);
+					//return false;
+				});
+			}else{
+				this.$el.css("cursor","auto");
+				this.$el.off("mouseenter");
+				this.$el.off("mouseleave");
+				this.$el.off("click");
+			}
+			this._isEnable = _bool;
 		}
 	});
 	return view;
