@@ -59,5 +59,5 @@ Athena.js 为框架主文件，组织图解如下：
 
 
 在首页html中只需加入一行  
-<script data-main="../../../athena/js/main" src="../../../athena/js/libs/require/require-min.js"></script>  
+![首页代码](readme_img2.gif)
 即可载入并启动整站
