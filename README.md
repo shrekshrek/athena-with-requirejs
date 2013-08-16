@@ -53,5 +53,6 @@ http://shrekwang.duapp.com/
 获取指定depth层级的页面实例
 
 
-##文件结构说明：
-Athena.js 为框架主文件，
+##网站文件结构：
+Athena.js 为框架主文件，组织图解如下：  
+[组织图解](readme_img1.gif)
