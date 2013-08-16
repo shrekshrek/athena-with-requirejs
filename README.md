@@ -55,4 +55,9 @@ http://shrekwang.duapp.com/
 
 ##网站文件结构：
 Athena.js 为框架主文件，组织图解如下：  
-[组织图解](readme_img1.gif)
+![组织图解](readme_img1.gif)  
+
+
+在首页html中只需加入一行  
+<script data-main="../../../athena/js/main" src="../../../athena/js/libs/require/require-min.js"></script>  
+即可载入并启动整站
