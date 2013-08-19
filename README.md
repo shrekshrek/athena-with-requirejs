@@ -23,6 +23,7 @@ athena，整合以上各种强大通用的第三方库，使js网站开发变得
 Athena，让开发者可以快速搭建出网站框架，更方便的调整加载流程，层级控制，以及页面管理。  
 如果开发者有使用过as3下的开发框架gaia framework的经验就可以更快更好的理解这一点  
 本框架志在简化管理网站页面结构，方便页面切换，对表现层不做任何干预。  
+支持ie7+，firefox，chrome等所有主流浏览器
 
 ##Athena API:
 **init(stage);**  
@@ -76,5 +77,9 @@ main.js 里需要为所有使用的js文件注册一个对应的变量名，以�
 
 在首页html中只需加入一行  
 ![首页代码](readme_img2.gif)
-即可载入并启动整站
+即可载入并启动整站  
 
+
+##应用案例：
+http://kyrios.hvsop.cn/  
+http://outdoor.adidasevent.com/?cid=1  
