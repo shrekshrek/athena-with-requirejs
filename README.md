@@ -13,15 +13,15 @@ http://shrekwang.duapp.com/
 
 ##athena是什么？:
 js虽然强大，但是在网站开发过程中确实有很多地方用起来很不爽。比如js文件过大，不容易维护，oop开发比较弱。。。。。。这里不一一累述。  
-athena只是一个整合各种强大通用的第三方库的框架，  
+
 backbone，让我们可以用js进行oop开发，创建类，继承类，覆盖扩展方法等等，  
 requirejs，让我们可以把臃肿复杂的js按照模块分拆成各个模块js，按需加载使用，结合backbone，可以让我们的开发习惯延续其他语言的习惯，工程文件结构清晰，代码结构也更加友善易懂，  
 jquery，功能大家都懂得，虽然稍显庞大  
 underscore，非常好用的方法集，也是backbone的强依赖类  
-结合以上功能，开发出athena框架，文件位于athenaframework/文件夹下，athena.js为主文件。athenaframework/base/下为各种基类文件，用于继承使用  
+athena，整合以上各种强大通用的第三方库，使js网站开发变得更加美好。  
 
 Athena，让开发者可以快速搭建出网站框架，更方便的调整加载流程，层级控制，以及页面管理。  
-如果开发者有使用过as3下的开发框架gaia framework的经验就可以更快更好的理解这一点
+如果开发者有使用过as3下的开发框架gaia framework的经验就可以更快更好的理解这一点  
 
 ##Athena API:
 **init(stage);**  
@@ -68,6 +68,10 @@ Athena，让开发者可以快速搭建出网站框架，更方便的调整加�
 Athena.js 为框架主文件，组织图解如下：  
 ![组织图解](readme_img1.gif)  
 
+如上图，  
+athenaframework/ 为框架文件所在，Athena.js为主文件。athenaframework/base/下为各种基类文件，用于继承使用  
+app/ 为网站文件所在，SiteMap.js记录网站所有的页面节点，
+main.js 里需要为所有使用的js文件注册一个对应的变量名，以方便以后的js文件来书写依赖关系。(开发中别忘记每个新建的模块js需要在main中注册一个变量，使用起来才更方便，这里需要熟悉requirejs的使用方法)
 
 在首页html中只需加入一行  
 ![首页代码](readme_img2.gif)
