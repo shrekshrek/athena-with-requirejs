@@ -1,12 +1,8 @@
 /*
- * version:0.0.2
- * date:2013.08.11
- * 
- * version:0.0.1
- * date:2013.06.13
  * 
  * authur:shrek.wang
- * Athena是一个基于Backbone的js前端框架，主要功能是通过SiteMap设置的网站结构
+ * git:https://github.com/shrekshrek/athenaframework
+ * 
  */
 define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageConst){
 	var athena = _.extend({}, Backbone.Events, {
@@ -35,10 +31,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		/*
 		 * 页面间切换状态常量
 		 */
-		FLOW_IN:"flowIn",
-		FLOW_IN_COMPLETE:"flowInComplete",
-		FLOW_OUT:"flowOut",
-		FLOW_OUT_COMPLETE:"flowOutComplete",
+		FLOW_START:"flowStart",
+		FLOW_COMPLETE:"flowComplete",
 		WINDOW_RESIZE:"windowResize",
 		/*
 		 * 其他参数
@@ -46,6 +40,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		$body:null,
 		$stage:null,
 		$window:null,
+		$document:null,
 		_flow:null,
 		_isFlowing:false,
 		_isFullScreen:false,
@@ -54,7 +49,6 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		_stageRect:{width:0,height:0},
 		_curPages:null,
 		_tempPages:null,
-		_tempDepths:null,
 		_pageQueue:null,
 		_preloader:null,
 		_tempData:null,
@@ -64,11 +58,11 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			this.$stage = stage?stage:$("body");
 			this.$body = $("body");
 			this.$window = $(window);
+			this.$document = $(document);
 			
 			this._flow = this.NORMAL;
 			this._curPages = {};
 			this._tempPages = {};
-			this._tempDepths = {};
 			this._pageQueue = [];
 			
 			var _self = this;
@@ -80,43 +74,52 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		pageTo:function(data){
 			if(!this.$stage) throw "athena havn't stage!!!";
 			
+			if(this._isFlowing) return;
+			
 			data = this._checkData(data);
 			
 			this._pageQueue.push(data);
 			
-			if(!this._isFlowing){
-				this._playQueue();
-			}
+			this._playQueue();
 		},
 		pageOn:function(data){
 			this.pageTo(data);
 		},
 		pageOff:function(data){
-			var _data = {};
-			if(_.isObject(data)){
-				_data.depth = this._checkDepth(data.depth);
-			}else{
-				_data.depth = this._checkDepth(data);
-			}
-			var _curPage = this._curPages[_data.depth];
-			var _tempPage = this._tempPages[_data.depth];
-			if(_tempPage){
-				return;
-			}
+			if(!this.$stage) throw "athena havn't stage!!!";
 			
-			if(_curPage){
-				var _self = this;
-				this.listenToOnce(_curPage, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
-					this._flowOutComplete(_data);
+			if(this._isFlowing) return;
+			
+			var _self = this;
+			var _page = null;
+			var _data = {};
+			if(_.isArray(data)){
+				_.each(data, function(_obj, _index){
+					_obj.depth = _self._checkDepth(_obj.depth);
+					_page = _self._curPages[_obj.depth];
+					_self.listenToOnce(_page, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
+						_self._flowOutComplete(_data);
+					});
+					_page.transitionOut();
 				});
-				_curPage.transitionOut();
+			}else{
+				if(_.isString(data)){
+					_data.depth = _self._checkDepth(data);
+				}else{
+					_data.depth = _self._checkDepth(data.depth);
+				}
+				_page = _self._curPages[_data.depth];
+				_self.listenToOnce(_page, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
+					_self._flowOutComplete(_data);
+				});
+				_page.transitionOut();
 			}
 		},
 		_playQueue:function(){
 			var _self = this;
 			if(this._pageQueue.length >= 1){
-				this._isFlowing = true;
 				this._tempData = this._pageQueue.shift();
+				this._isFlowing = true;
 				this._tempIndex = 0;
 				if(_.isArray(this._tempData)){
 					this._tempLoadedProgress = [];
@@ -126,6 +129,11 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				}else{
 					this._flowIn(this._tempData);
 				}
+				this.trigger(this.FLOW_START, {data:this._tempData});
+			}else{
+				this._tempData = null;
+				this._isFlowing = false;
+				this._tempIndex = 0;
 			}
 		},
 		_checkData:function(data){
@@ -154,6 +162,9 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				return data;
 			}
 		},
+		calcDepth:function(depth){
+			return this._checkDepth(depth);
+		},
 		_checkDepth:function(depth){
 			var _depth = 0;
 			
@@ -165,6 +176,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				var _n2 = depth.indexOf("-");
 				var _max = Math.max(_n1,_n2);
 				var _min = Math.min(_n1,_n2);
+				var _num = 0;
 				
 				if(_min >=0 ){
 					_n = _min;
@@ -175,6 +187,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				if(_n > 0){
 					_depth = depth.substring(0,_n);
 					_plus = depth.substring(_n,_n+1);
+					_num = parseInt(depth.substring(_n+1));
 				}else{
 					_depth = depth;
 				}
@@ -199,19 +212,12 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				
 				switch(_plus){
 					case "+":
-						while(_depth<5000){
-							_depth++;
-							if(!this._curPages[_depth] && !this._tempPages[_depth] && !this._tempDepths[_depth]) break;
-						}
+						_depth += _num;
 						break;
 					case "-":
-						while(_depth>-5000){
-							_depth--;
-							if(!this._curPages[_depth] && !this._tempPages[_depth] && !this._tempDepths[_depth]) break;
-						}
+						_depth -= _num;
 						break;
 				}
-				this._tempDepths[_depth] = 1;
 			}
 			
 			if(_.isNumber(depth)){
@@ -256,12 +262,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 					});
 					break;
 			}
-			
-			this.trigger(this.FLOW_IN, {data:data});
 		},
 		_flowInComplete:function(data){
-			this.trigger(this.FLOW_IN_COMPLETE, {data:data});
-			
 			var _curPage = this._curPages[data.depth];
 			var _tempPage = this._tempPages[data.depth];
 			var _flow = data.flow?data.flow:this._flow;
@@ -335,8 +337,6 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 					}
 					break;
 			}
-			
-			this.trigger(this.FLOW_OUT, {data:data});
 		},
 		_flowOutComplete:function(data){
 			var _curPage = this._curPages[data.depth];
@@ -355,26 +355,23 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 			
 			delete this._tempPages[data.depth];
-			this.trigger(this.FLOW_OUT_COMPLETE, {data:data});
 			
-			delete this._tempDepths[data.depth];
-			
-			if(data.routing){
-				document.title = data.routing;
-			}
-			
-			if(_.isArray(this._tempData)){
-				this._tempIndex++;
-				if(this._tempIndex >= this._tempData.length){
-					this._tempIndex = 0;
-					this._isFlowing = false;
+			if(this._tempData != null){
+				if(data.routing){
+					document.title = data.routing;
+				}
+				
+				if(_.isArray(this._tempData)){
+					this._tempIndex++;
+					if(this._tempIndex >= this._tempData.length){
+						this.trigger(this.FLOW_COMPLETE, {data:this._tempData});
+						this._playQueue();
+					}
+				}else{
+					this.trigger(this.FLOW_COMPLETE, {data:this._tempData});
 					this._playQueue();
 				}
-			}else{
-				this._isFlowing = false;
-				this._playQueue();
 			}
-			
 		},
 		_preloadComplete:function(data){
 			var _self = this;
@@ -570,9 +567,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		resize:function(){
 			if(!this.$stage) throw "athena havn't stage!!!";
 			
-			this._windowRect.width = $(window).width();
-			this._windowRect.height = $(window).height();
-			
+			this._windowRect.width = this.$window.width();
+			this._windowRect.height = this.$window.height();
 			if(this._isFullScreen){
 				if(this._windowRect.width < this._windowRectMin.width){
 					this.$body.css("overflow-x","auto");
@@ -584,14 +580,18 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				}else{
 					this.$body.css("overflow-y","hidden");
 				}
+				this._windowRect.width = this.$window.width();
+				this._windowRect.height = this.$window.height();
 				this._stageRect.width = Math.max(this._windowRect.width, this._windowRectMin.width);
 				this._stageRect.height = Math.max(this._windowRect.height, this._windowRectMin.height);
 				this.$stage.width(this._stageRect.width);
 				this.$stage.height(this._stageRect.height);
 			}else{
 				this.$body.css("overflow","auto");
-				this._stageRect.width = $(document).width();
-				this._stageRect.height = $(document).height();
+				this._windowRect.width = this.$window.width();
+				this._windowRect.height = this.$window.height();
+				this._stageRect.width = this.$document.width();
+				this._stageRect.height = this.$document.height();
 			}
 			
 			this.trigger(this.WINDOW_RESIZE);
