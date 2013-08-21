@@ -74,11 +74,10 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		pageTo:function(data){
 			if(!this.$stage) throw "athena havn't stage!!!";
 			
-			if(this._isFlowing) return;
-			
 			data = this._checkData(data);
-			
 			this._pageQueue.push(data);
+			
+			if(this._isFlowing) return;
 			
 			this._playQueue();
 		},
@@ -89,6 +88,9 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			if(!this.$stage) throw "athena havn't stage!!!";
 			
 			if(this._isFlowing) return;
+			
+			this._isFlowing = true;
+			this._tempData = data;
 			
 			var _self = this;
 			var _page = null;
@@ -356,21 +358,19 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			
 			delete this._tempPages[data.depth];
 			
-			if(this._tempData != null){
-				if(data.routing){
-					document.title = data.routing;
-				}
-				
-				if(_.isArray(this._tempData)){
-					this._tempIndex++;
-					if(this._tempIndex >= this._tempData.length){
-						this.trigger(this.FLOW_COMPLETE, {data:this._tempData});
-						this._playQueue();
-					}
-				}else{
+			if(data.routing){
+				document.title = data.routing;
+			}
+			
+			if(_.isArray(this._tempData)){
+				this._tempIndex++;
+				if(this._tempIndex >= this._tempData.length){
 					this.trigger(this.FLOW_COMPLETE, {data:this._tempData});
 					this._playQueue();
 				}
+			}else{
+				this.trigger(this.FLOW_COMPLETE, {data:this._tempData});
+				this._playQueue();
 			}
 		},
 		_preloadComplete:function(data){
