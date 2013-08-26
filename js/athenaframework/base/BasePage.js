@@ -4,13 +4,15 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 		loadMax:null,
 		loaded:null,
 		data:null,
+		initialize:function(args){
+			BaseView.prototype.initialize.apply(this,[args]);
+			this.data = args.data;
+			this.$el.css({"opacity":0,"display":"none","z-index":this.data.depth});
+			this.preloadArray = [];
+		},
 		init:function(args){
 			BaseView.prototype.init.apply(this,[args]);
 			
-			this.data = args.data;
-			this.$el.css({"opacity":0,"display":"none","z-index":this.data.depth});
-			
-			this.preloadArray = [];
 			this.listenTo(Athena, Athena.WINDOW_RESIZE, function(){
 				this.resize();
 			});
@@ -48,7 +50,10 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 			this.trigger(BasePageConst.PRELOAD_PROGRESS, {data:this.data, progress:obj});
 		},
 		completeHandle:function () {
-			this.trigger(BasePageConst.PRELOAD_COMPLETE, {data:this.data});
+			var _self = this;
+			setTimeout(function(){
+				_self.trigger(BasePageConst.PRELOAD_COMPLETE, {data:_self.data});
+			},10);
 		},
 		transitionIn:function(){
 			this.$el.css({"display":"block"});

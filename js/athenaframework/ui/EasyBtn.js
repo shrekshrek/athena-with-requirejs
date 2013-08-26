@@ -12,7 +12,7 @@ define(["baseBtn","tweenMax"],function(BaseBtn,TweenMax){
 		mouseOutHandler:function(){
 			if(this._isSelected) return;
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
-			TweenMax.to(this.$el, 0.2, {"opacity":0.9});
+			TweenMax.to(this.$el, 0.2, {"opacity":0.8});
 		}
 	});
 	return view;

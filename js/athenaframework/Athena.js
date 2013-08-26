@@ -1,8 +1,6 @@
 /*
- * 
  * authur:shrek.wang
  * git:https://github.com/shrekshrek/athenaframework
- * 
  */
 define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageConst){
 	var athena = _.extend({}, Backbone.Events, {
@@ -52,7 +50,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		_pageQueue:null,
 		_preloader:null,
 		_tempData:null,
-		_tempIndex:null,
+		_tempFlowIndex:null,
+		_tempPreloadIndex:null,
 		_tempLoadedProgress:null,
 		init:function(stage){
 			this.$stage = stage?stage:$("body");
@@ -122,7 +121,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			if(this._pageQueue.length >= 1){
 				this._tempData = this._pageQueue.shift();
 				this._isFlowing = true;
-				this._tempIndex = 0;
+				this._tempFlowIndex = 0;
+				this._tempPreloadIndex = 0;
 				if(_.isArray(this._tempData)){
 					this._tempLoadedProgress = [];
 					_.each(this._tempData, function(_obj, _index){
@@ -135,7 +135,6 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}else{
 				this._tempData = null;
 				this._isFlowing = false;
-				this._tempIndex = 0;
 			}
 		},
 		_checkData:function(data){
@@ -232,13 +231,14 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			var _curPage = this._curPages[data.depth];
 			var _tempPage = this._tempPages[data.depth];
 			var _flow = data.flow?data.flow:this._flow;
+			var _self = this;
 			switch(_flow)
 			{
 				case this.NORMAL:
 					if(_curPage)
 					{
 						this.listenToOnce(_curPage, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
-							this._flowInComplete(data);
+							_self._flowInComplete(data);
 						});
 						_curPage.transitionOut();
 					}else{
@@ -250,7 +250,6 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				case this.CROSS:
 					this._preloaderOn();
 					
-					var _self = this;
 					require([data.view,"text!"+data.template],function(view,template){
 						_self._tempPage = new view({template:_.template(template,{}),data:data});
 						_self._tempPages[data.depth] = _self._tempPage;
@@ -363,8 +362,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 			
 			if(_.isArray(this._tempData)){
-				this._tempIndex++;
-				if(this._tempIndex >= this._tempData.length){
+				this._tempFlowIndex++;
+				if(this._tempFlowIndex >= this._tempData.length){
 					this.trigger(this.FLOW_COMPLETE, {data:this._tempData});
 					this._playQueue();
 				}
@@ -377,9 +376,9 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			var _self = this;
 			var _flow = data.flow?data.flow:this._flow;
 			if(_.isArray(this._tempData)){
-				this._tempIndex++;
-				if(this._tempIndex >= this._tempData.length){
-					this._tempIndex = 0;
+				this._tempFlowIndex++;
+				if(this._tempFlowIndex >= this._tempData.length){
+					this._tempFlowIndex = 0;
 					_.each(this._tempData,function(_obj,_index){
 						switch(_flow)
 						{
@@ -452,9 +451,9 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			if(this._preloader == null) return;
 			var _self = this;
 			if(_.isArray(this._tempData)){
-				this._tempIndex++;
-				if(this._tempIndex >= this._tempData.length){
-					this._tempIndex = 0;
+				this._tempPreloadIndex++;
+				if(this._tempPreloadIndex >= this._tempData.length){
+					this._tempPreloadIndex = 0;
 					this._preloader.transitionIn(obj);
 				}
 			}else{
@@ -480,9 +479,9 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			this._clearPreloader(obj.data);
 			var _self = this;
 			if(_.isArray(this._tempData)){
-				this._tempIndex++;
-				if(this._tempIndex >= this._tempData.length){
-					this._tempIndex = 0;
+				this._tempPreloadIndex++;
+				if(this._tempPreloadIndex >= this._tempData.length){
+					this._tempPreloadIndex = 0;
 					this._preloader.transitionOut(obj);
 				}
 			}else{
