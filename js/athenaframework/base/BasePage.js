@@ -50,10 +50,7 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 			this.trigger(BasePageConst.PRELOAD_PROGRESS, {data:this.data, progress:obj});
 		},
 		completeHandle:function () {
-			var _self = this;
-			setTimeout(function(){
-				_self.trigger(BasePageConst.PRELOAD_COMPLETE, {data:_self.data});
-			},10);
+			this.trigger(BasePageConst.PRELOAD_COMPLETE, {data:this.data});
 		},
 		transitionIn:function(){
 			this.$el.css({"display":"block"});

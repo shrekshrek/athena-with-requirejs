@@ -379,32 +379,36 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				this._tempFlowIndex++;
 				if(this._tempFlowIndex >= this._tempData.length){
 					this._tempFlowIndex = 0;
-					_.each(this._tempData,function(_obj,_index){
-						switch(_flow)
-						{
-							case _self.NORMAL:
-								_self._flowOut(_obj);
-								break;
-							case _self.PRELOAD:
-							case _self.REVERSE:
-							case _self.CROSS:
-								_self._flowInComplete(_obj);
-								break;
-						}
-					});
+					setTimeout(function(){
+						_.each(_self._tempData,function(_obj,_index){
+							switch(_flow)
+							{
+								case _self.NORMAL:
+									_self._flowOut(_obj);
+									break;
+								case _self.PRELOAD:
+								case _self.REVERSE:
+								case _self.CROSS:
+									_self._flowInComplete(_obj);
+									break;
+							}
+						});
+					},10);
 				}
 			}else{
-				switch(_flow)
-				{
-					case _self.NORMAL:
-						_self._flowOut(data);
-						break;
-					case _self.PRELOAD:
-					case _self.REVERSE:
-					case _self.CROSS:
-						_self._flowInComplete(data);
-						break;
-				}
+				setTimeout(function(){
+					switch(_flow)
+					{
+						case _self.NORMAL:
+							_self._flowOut(data);
+							break;
+						case _self.PRELOAD:
+						case _self.REVERSE:
+						case _self.CROSS:
+							_self._flowInComplete(data);
+							break;
+					}
+				},10);
 			}
 		},
 		preloader:function(data, obj){
