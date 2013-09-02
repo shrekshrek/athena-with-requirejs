@@ -11,7 +11,7 @@ Athena是一个基于Backbone的js前端框架，主要功能是通过SiteMap设
 authur:shrek.wang  
 http://shrekwang.duapp.com/
 
-##athena是什么？:
+##athena是什么？
 js虽然强大，但是在网站开发过程中确实有很多地方用起来很不爽。比如js文件过大，不容易维护，oop开发比较弱。。。。。。这里不一一累述。  
 
 backbone，让我们可以用js进行oop开发，创建类，继承类，覆盖扩展方法等等，  
@@ -24,6 +24,9 @@ Athena，让开发者可以快速搭建出网站框架，更方便的调整加�
 如果开发者有使用过as3下的开发框架gaia framework的经验就可以更快更好的理解这一点  
 本框架志在简化管理网站页面结构，方便页面切换，对表现层不做任何干预。  
 支持ie7+，firefox，chrome等所有主流浏览器
+
+##athena适合干什么？
+athena适合开发跨平台的单页应用网站，如活动的minisite，产品演示网站等等
 
 ##Athena API:
 **init(stage);**  
@@ -44,7 +47,7 @@ Athena，让开发者可以快速搭建出网站框架，更方便的调整加�
 *data*为SiteMap节点对象,效果同pageTo(data);
 
 **pageOff(data);**  
-*data*为SiteMap节点对象,此处也可以传string字符串，或者数字，用户指定页面中某层级的内容退场
+*data*为SiteMap节点对象,此处也可以传string字符串，或者数字，用户指定页面中某层级的内容退场，也可以指定一个数组的页面一起退场
 
 **preloader(data,{complete:function});**  
 *data*为节点对象，function为加载设置完成的回调函数，data为空则取消preload显示组件
