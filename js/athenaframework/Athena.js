@@ -499,12 +499,21 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 					_page = _obj;
 				}
 			});
+			if(_page) return _page;
+			_.each(this._tempPages, function(_obj, _index){
+				if(_obj.data == data){
+					_page = _obj;
+				}
+			});
 			return _page;
 		},
 		getPageAt:function(depth){
 			var _depth = 0;
 			if(depth) _depth = this._checkDepth(depth);
-			return this._curPages[_depth];
+			var _page = this._curPages[_depth];
+			if(_page) return _page;
+			var _page = this._tempPages[_depth];
+			return _page;
 		},
 		fullScreen:function(bool){
 			if(!this.$stage) throw "athena havn't stage!!!";
