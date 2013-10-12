@@ -44,18 +44,18 @@ define(["baseView"],function(BaseView){
 					_self._isMouseOver = true;
 					_self.trigger(_self.MOUSE_OVER);
 					_self.mouseOverHandler(event);
-					//return false;
+					return false;
 				});
 				this.$el.on("mouseleave",function(event){
 					_self._isMouseOver = false;
 					_self.trigger(_self.MOSUE_OUT);
 					_self.mouseOutHandler(event);
-					//return false;
+					return false;
 				});
 				this.$el.on("click",function(event){
 					_self.trigger(_self.CLICK);
 					_self.clickHandler(event);
-					//return false;
+					return false;
 				});
 			}else{
 				this.$el.css("cursor","auto");

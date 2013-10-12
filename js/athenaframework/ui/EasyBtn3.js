@@ -10,16 +10,20 @@ define(["baseBtn","tweenMax"],function(BaseBtn,TweenMax){
 		},
 		mouseOverHandler:function(){
 			if(this._isSelected) return;
-			if(TweenMax.isTweening(this.$img2)){
+			if(TweenMax.isTweening(this.$img)){
+				TweenMax.killTweensOf(this.$img);
 				TweenMax.killTweensOf(this.$img2);
 			}
-			TweenMax.to(this.$img2, 0.2, {"opacity":0.9});
+			TweenMax.to(this.$img, 0.2, {"opacity":0});
+			TweenMax.to(this.$img2, 0.2, {"opacity":1});
 		},
 		mouseOutHandler:function(){
 			if(this._isSelected) return;
-			if(TweenMax.isTweening(this.$img2)){
+			if(TweenMax.isTweening(this.$img)){
+				TweenMax.killTweensOf(this.$img);
 				TweenMax.killTweensOf(this.$img2);
 			}
+			TweenMax.to(this.$img, 0.2, {"opacity":1});
 			TweenMax.to(this.$img2, 0.2, {"opacity":0});
 		}
 	});

@@ -271,8 +271,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			switch(_flow)
 			{
 				case this.NORMAL:
+					if(_curPage) _curPage.destroy();
 					this._preloaderOn();
-					
 					var _self = this;
 					require([data.view,"text!"+data.template],function(view,template){
 						_self._tempPage = new view({template:_.template(template,{}),data:data});
@@ -319,8 +319,14 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			switch(_flow)
 			{
 				case this.NORMAL:
+					this.listenToOnce(_tempPage, BasePageConst.TRANSITION_IN_COMPLETE, function(){
+						this._flowOutComplete(data);
+					});
+					_tempPage.transitionIn();
+					break;
 				case this.PRELOAD:
 				case this.CROSS:
+					if(_curPage) _curPage.destroy();
 					this.listenToOnce(_tempPage, BasePageConst.TRANSITION_IN_COMPLETE, function(){
 						this._flowOutComplete(data);
 					});
@@ -342,11 +348,16 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		_flowOutComplete:function(data){
 			var _curPage = this._curPages[data.depth];
 			var _tempPage = this._tempPages[data.depth];
-			
-			if(_curPage){
-				//requirejs.undef(this._curPage.data.view);
-				//requirejs.undef("text!"+this._curPage.data.template);
-				_curPage.destroy();
+			var _flow = data.flow?data.flow:this._flow;
+			switch(_flow)
+			{
+				case this.REVERSE:
+					if(_curPage){
+						//requirejs.undef(this._curPage.data.view);
+						//requirejs.undef("text!"+this._curPage.data.template);
+						_curPage.destroy();
+					}
+					break;
 			}
 			
 			if(_tempPage){
