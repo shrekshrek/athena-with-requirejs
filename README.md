@@ -122,6 +122,8 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **create**   将网站创建到之前site地址指定的位置  
 **clean**    清除site下相关网站文件及目录（慎用！！！）  
 **compile**  发布并优化css文件夹和js文件夹下文件，template中的html文件会自动打包成js文件以方便cdn跨域调用  
+**link-to-built** 将index.html中的css和js指向built文件夹  
+**link-to-origin** 将index.html中的css和js指向原始文件夹  
 目前compile命令只适用于windows系统  
 
 ##网站文件结构：
