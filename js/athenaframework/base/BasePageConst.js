@@ -1,9 +1,0 @@
-define({
-	PRELOAD:"preload",
-	PRELOAD_PROGRESS:"preloadProgress",
-	PRELOAD_COMPLETE:"preloadComplete",
-	TRANSITION_IN:"transitionIn",
-	TRANSITION_IN_COMPLETE:"transitionInComplete",
-	TRANSITION_OUT:"transitionOut",
-	TRANSITION_OUT_COMPLETE:"transitionOutComplete"
-});
