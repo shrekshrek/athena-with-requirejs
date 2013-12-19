@@ -98,10 +98,10 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 
 ##Athena CONST:
 页面深度常量  
-**PRELOAD:"preload"**  等价于z-index = 1000
-**TOP:"top"**          等价于z-index = 500
-**MIDDLE:"middle"**    等价于z-index = 0
-**BOTTOM:"bottom"**    等价于z-index = -500
+**PRELOAD:"preload"**  等价于z-index = 1000  
+**TOP:"top"**          等价于z-index = 500  
+**MIDDLE:"middle"**    等价于z-index = 0  
+**BOTTOM:"bottom"**    等价于z-index = -500  
 
 页面切换方式常量  
 **NORMAL:"normal"**    普通切换方式：1。当前页面退场。2。加载新页面。3。新页面进场。
