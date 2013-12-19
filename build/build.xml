@@ -48,7 +48,7 @@
 		<echo message="${os.name}" />
 	</target>
 	
-	<target name="compile" depends="optimize,html2js">
+	<target name="compile" depends="optimize,html2js,link-to-built">
 		<echo message="compile" />
 	</target>
 	
@@ -77,6 +77,24 @@
 		<delete dir="${temp}" />
 	</target>
 	
+	<target name="link-to-built" >
+		<replaceregexp  match="js/" replace="js-built/" flags="g" byline="false">
+			<fileset dir="${site}" includes="index.html" />
+		</replaceregexp>
+		<replaceregexp  match="css/" replace="css-built/" flags="g" byline="false">
+			<fileset dir="${site}" includes="index.html" />
+		</replaceregexp>
+	</target>
+	
+	<target name="link-to-origin" >
+		<replaceregexp  match="js-built/" replace="js/" flags="g" byline="false">
+			<fileset dir="${site}" includes="index.html" />
+		</replaceregexp>
+		<replaceregexp  match="css-built/" replace="css/" flags="g" byline="false">
+			<fileset dir="${site}" includes="index.html" />
+		</replaceregexp>
+	</target>
+	
 	<target name="concat" >
 		<concat destfile="${file}.js">
 			<fileset file="${build}/template/optimize/html2js/head.js" />
@@ -93,6 +111,10 @@
 		<exec executable="cmd" failonerror="true">
 			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${site} dir=${js-built} " />
 		</exec>
+		
+		<replaceregexp  match="&#34;js&#34;" replace="&#34;js-built&#34;" flags="g" byline="false">
+			<fileset dir="${js-built}" includes="main.js" />
+		</replaceregexp>
 	</target>
 	
 </project>
