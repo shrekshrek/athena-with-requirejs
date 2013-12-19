@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Set Ant Project Name -->
+<project name="Athena" default="main" basedir=".">
+	
+	<property name="version" value="0.1.0" />
+	
+	<property name="build" value="." />
+	<property file="${build}/site.properties" />
+
+	<property name="template" value="${build}/template" />
+	<property name="optimize" value="${template}/optimize" />
+	<property name="css" value="${site}/css" />
+	<property name="js" value="${site}/js" />
+	<property name="css-built" value="${site}/css-built" />
+	<property name="js-built" value="${site}/js-built" />
+	<property name="temp" value="${site}/temp" />
+	
+	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${build}/libs/ant-contrib-1.0b3.jar" />
+	
+	<target name="main" depends="clean, create">
+		<echo message="main" />
+	</target>
+	
+	<target name="clean" depends="clean-built">
+		<echo message="clean" />
+		<!--<delete dir="${site}" includes="**/*" excludes="build/" />-->
+		<delete dir="${site}/css" />
+		<delete dir="${site}/js" />
+		<delete dir="${site}/images" />
+		<delete file="${site}/favicon.ico" />
+		<delete file="${site}/index.html" />
+	</target>
+	
+	<target name="clean-built">
+		<echo message="clean-built" />
+		<delete dir="${css-built}" />
+		<delete dir="${js-built}" />
+	</target>
+
+	<target name="create">
+		<echo message="create" />
+		<copy toDir="${site}">
+			<fileset dir="${template}"  excludes="optimize/,js/athenaframework/" />
+		</copy>
+	</target>
+	
+	<target name="echo">
+		<echo message="${os.name}" />
+	</target>
+	
+	<target name="compile" depends="optimize,html2js">
+		<echo message="compile" />
+	</target>
+	
+	<target name="html2js" depends="">
+		<echo message="html2js" />
+		<copy toDir="${temp}">
+			<fileset dir="${js-built}" includes="**/*.html"/>
+		</copy>
+		
+		<replaceregexp  match="&#13;&#10;" replace="" flags="g" byline="false">
+			<fileset dir="${temp}" />
+		</replaceregexp>
+
+		<replaceregexp  match="&#9;" replace="" flags="g" byline="false">
+			<fileset dir="${temp}" />
+		</replaceregexp>
+		
+		<foreach list="" target="concat" param="file">
+			<fileset dir="${temp}" includes="**/*.html"/>
+		</foreach>
+		
+		<copy toDir="${js-built}">
+			<fileset dir="${temp}" />
+		</copy>
+		
+		<delete dir="${temp}" />
+	</target>
+	
+	<target name="concat" >
+		<concat destfile="${file}.js">
+			<fileset file="${build}/template/optimize/html2js/head.js" />
+			<fileset file="${file}" />
+			<fileset file="${build}/template/optimize/html2js/foot.js" />
+		</concat>
+	</target>
+	
+	<target name="optimize">
+		<echo message="optimize" />
+		<exec executable="cmd" failonerror="true">
+			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${css} baseUrl=${site} dir=${css-built} " />
+		</exec>
+		<exec executable="cmd" failonerror="true">
+			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${site} dir=${js-built} " />
+		</exec>
+	</target>
+	
+</project>
