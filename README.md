@@ -2,6 +2,9 @@
 a js web framework base on backbone.js & require.js  
 Athena是一个基于Backbone的js前端框架，主要功能是通过SiteMap设置的网站结构
 
+*version:0.1.0*  
+*date:2013.12.19*
+
 *version:0.0.3*  
 *date:2013.10.12*
 
@@ -35,6 +38,9 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **init(stage);**  
 设置关联根节点，初始化框架
 
+**flow("normal"|"preload"|"reverse"|"cross");**  
+设置页面切换流程
+
 **pageTo(data);**  
 *data*为节点对象 pagedata,一般情况下节点数据在sitemap.js中设置,一般转场都用这条命令即可  
 *data*也可以为节点信息的数组 [pagedata,pagedata,pagedata]，会统一加载后一起执行进场程序  
@@ -60,10 +66,20 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **fullScreen();**  
 返回bool布尔值
 
+**windowRect(rect);**  
+*rect*设置当前窗口分辨率  
+**windowRect();**  
+获取当前窗口分辨率
+
 **windowRectMin(rect);**  
-*rect*设置页面最小分辨率  
+*rect*设置窗口最小分辨率  
 **windowRectMin();**  
-获取页面最小分辨率
+获取窗口最小分辨率
+
+**stageRect(rect);**  
+*rect*设置当前场景分辨率  
+**stageRect();**  
+获取当前场景分辨率
 
 **getPage(data);**  
 获取指定data的页面实例
@@ -71,6 +87,43 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **getPageAt(depth);**  
 获取指定depth层级的页面实例
 
+**resize();**  
+当页面尺寸变化时自动调用，发布resize事件
+
+##Athena EVENTS:
+**Athena.trigger(this.WINDOW_RESIZE);**
+**Athena.trigger(self.PRELOAD_PREPARE);**
+**Athena.trigger(this.FLOW_COMPLETE, {data:当前流程的页面信息});**
+**Athena.trigger(this.FLOW_START, {data:当前流程的页面信息});**
+
+##Athena CONST:
+页面深度常量
+**PRELOAD:"preload"**  等价于z-index = 1000
+**TOP:"top"**          等价于z-index = 500
+**MIDDLE:"middle"**    等价于z-index = 0
+**BOTTOM:"bottom"**    等价于z-index = -500
+
+页面切换方式常量
+**NORMAL:"normal"**    普通切换方式：1。当前页面退场。2。加载新页面。3。新页面进场。
+**PRELOAD:"preload"**  预载切换方式：1。加载新页面。2。当前页面退场。3。新页面进场。
+**REVERSE:"reverse"**  反转切换方式：1。加载新页面。2。新页面进场。3。当前页面退场。
+**CROSS:"cross"**      交叉切换方式：1。加载新页面。2。新页面进场。当前页面退场。同时进行。
+
+页面间切换状态常量
+
+**FLOW_START:"flowStart"**           页面切换流程开始时发布此事件
+**FLOW_COMPLETE:"flowComplete"**     页面切换流程结束时发布此事件
+**WINDOW_RESIZE:"windowResize"**     窗体尺寸变化时发布此事件
+**PRELOAD_PREPARE:"preloadPrepare"** 预载页准备完成时发布此事件（常用于网站开始前侦听此事件）
+
+##build包使用简介：
+将build包下载放到网站目录下，
+修改site.properties文件中的site值，设置为网站相对当前build目录的相对路径
+将build.xml装载进ant，使用相关命令
+**create**   将网站创建到之前site地址指定的位置
+**clean**    清除site下相关网站文件及目录（慎用！！！）
+**compile**  发布并优化css文件夹和js文件夹下文件，template中的html文件会自动打包成js文件以方便cdn跨域调用
+目前compile命令只适用于windows系统
 
 ##网站文件结构：
 Athena.js 为框架主文件，组织图解如下：  
@@ -84,7 +137,6 @@ main.js 里需要为所有使用的js文件注册一个对应的变量名，以�
 在首页html中只需加入一行  
 ![首页代码](readme_img2.gif)
 即可载入并启动整站  
-
 
 ##应用案例：
 http://kyrios.hvsop.cn/  
