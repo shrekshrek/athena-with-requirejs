@@ -3,7 +3,8 @@ require.config({
 	baseUrl:"js",
     paths:{
     	//athena框架配置地址
-		"text":"libs/require/requirePlugin/text-min",
+		"text":"libs/require/requirePlugin/text",
+		"css":"libs/require/requirePlugin/css",
         "jquery":"libs/jquery/jquery-1.10.2.min",
         "underscore":"libs/backbone/underscore-1.5.2.min",
 		"backbone":"libs/backbone/backbone-1.1.0.min",

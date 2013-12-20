@@ -141,7 +141,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			if(_.isArray(data)){
 				var _a = [];
 				_.each(data,function(_obj,_index){
-					if(!(_obj.view && _obj.template)) throw "each page data has wrong!!! must has 'data.view','data.template'";
+					if(!(_obj.view && _obj.tpl)) throw "each page data has wrong!!! must has 'data.view','data.tpl'";
 					_obj.depth = self._checkDepth(_obj.depth);
 					
 					var _isUnique = true;
@@ -157,7 +157,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				});
 				return _a;
 			}else{
-				if(!(data.view && data.template)) throw "page data has wrong!!! must has 'data.view','data.template'";
+				if(!(data.view && data.tpl)) throw "page data has wrong!!! must has 'data.view','data.tpl'";
 				data.depth = self._checkDepth(data.depth);
 				return data;
 			}
@@ -248,8 +248,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				case this.CROSS:
 					this._preloaderOn();
 					
-					require([data.view,"text!"+data.template],function(view,template){
-						self._tempPage = new view({template:_.template(template.html?template.html:template,{}),data:data});
+					require([data.view,"text!"+data.tpl,data.css?"css!"+data.css:""],function(view,tpl){
+						self._tempPage = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
 						self._tempPages[data.depth] = self._tempPage;
 						self._initPreloader(data);
 						
@@ -269,10 +269,15 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			switch(_flow)
 			{
 				case this.NORMAL:
-					if(_curPage) _curPage.destroy();
+					if(_curPage){
+						_curPage.destroy();
+						//requirejs.undef(_curPage.data.view);
+						//requirejs.undef("text!"+_curPage.data.tpl);
+						//requirejs.undef("css!"+_curPage.data.css);
+					}
 					this._preloaderOn();
-					require([data.view,"text!"+data.template],function(view,template){
-						self._tempPage = new view({template:_.template(template.html?template.html:template,{}),data:data});
+					require([data.view,"text!"+data.tpl,data.css?"css!"+data.css:""],function(view,tpl){
+						self._tempPage = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
 						self._tempPages[data.depth] = self._tempPage;
 						self._initPreloader(data);
 						
@@ -322,7 +327,12 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 					_tempPage.transitionIn();
 					break;
 				case this.PRELOAD:
-					if(_curPage) _curPage.destroy();
+					if(_curPage){
+						_curPage.destroy();
+						//requirejs.undef(_curPage.data.view);
+						//requirejs.undef("text!"+_curPage.data.tpl);
+						//requirejs.undef("css!"+_curPage.data.css);
+					}
 					this.listenToOnce(_tempPage, BasePageConst.TRANSITION_IN_COMPLETE, function(){
 						this._flowOutComplete(data);
 					});
@@ -357,8 +367,9 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				case this.CROSS:
 					if(_curPage){
 						_curPage.destroy();
-						//requirejs.undef(this._curPage.data.view);
-						//requirejs.undef("text!"+this._curPage.data.template);
+						//requirejs.undef(_curPage.data.view);
+						//requirejs.undef("text!"+_curPage.data.tpl);
+						//requirejs.undef("css!"+_curPage.data.css);
 					}
 					break;
 			}
@@ -428,9 +439,10 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			if(!this.$stage) throw "athena havn't stage!!!";
 			
 			if(this._preloader != null){
-				//requirejs.undef(this._preloader.data.view);
-				//requirejs.undef("text!"+this._preloader.data.template);
 				this._preloader.destroy();
+				//requirejs.undef(this._preloader.data.view);
+				//requirejs.undef("text!"+this._preloader.data.tpl);
+				//requirejs.undef("css!"+this._preloader.data.css);
 				this._preloader = null;
 			}
 			
@@ -439,15 +451,14 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 			
 			data.depth = this._checkDepth(this.PRELOAD);
-			if(data.view && data.template && data.template != ""){
-				require([data.view,"text!"+data.template],function(view,template){
-					self._preloader = new view({template:_.template(template.html?template.html:template,{}),data:data});
+			if(data.view && data.tpl && data.tpl != ""){
+				require([data.view,"text!"+data.tpl,data.css?"css!"+data.css:""],function(view,tpl){
+					self._preloader = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
 					self.$stage.append(self._preloader.el);
-					//if(obj.complete && _.isFunction(obj.complete)) obj.complete();
 					self.trigger(self.PRELOAD_PREPARE);
 				});
 			}else{
-				throw "preloader must have data.template!!!";
+				throw "preloader must have data.tpl!!!";
 			}
 		},
 		_initPreloader:function(data){

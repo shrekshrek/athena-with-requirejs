@@ -1,9 +1,9 @@
 define({
-	preloader:{title:"preloader",view:"app/view/Preloader",template:"app/template/preloader.html",depth:"preload"},
-	header:{title:"header",view:"app/view/Header",template:"app/template/header.html",depth:"top-1"},
-	footer:{title:"footer",view:"app/view/Footer",template:"app/template/footer.html",depth:"top-2"},
+	preloader:{title:"preloader",view:"app/view/Preloader",tpl:"app/tpl/preloader.html",css:"app/tpl/preloader",depth:"preload"},
+	header:{title:"header",view:"app/view/Header",tpl:"app/tpl/header.html",css:"app/tpl/header",depth:"top-1"},
+	footer:{title:"footer",view:"app/view/Footer",tpl:"app/tpl/footer.html",css:"app/tpl/footer",depth:"top-2"},
 	//pages
-	home:{title:"home",view:"app/view/pages/HomePage",template:"app/template/pages/home-page.html"},
-	works:{title:"works",view:"app/view/pages/WorksPage",template:"app/template/pages/works-page.html"}
+	home:{title:"home",view:"app/view/pages/HomePage",tpl:"app/tpl/pages/home.html",css:"app/tpl/pages/home"},
+	works:{title:"works",view:"app/view/pages/WorksPage",tpl:"app/tpl/pages/works.html",css:"app/tpl/pages/works"}
 	//pops
 });

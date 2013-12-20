@@ -22,28 +22,6 @@ a:active{color:#999;}
 a:visited{color:#999;}
 a:hover{color:#fff;}
 
-/*
- * -----------------------------------------加载页
- */
-.loading-bar{
-	position:absolute;
-	top:50%;
-	left:50%;
-	width:1px;
-	height:1px;
-	overflow:hidden;
-	background:#fff;
-	opacity:0.8;
-}
-.loading-txt{
-	position:absolute;
-	top:50%;
-	left:50%;
-	font-size:10px;
-	width:200px;
-	margin:0 0 0 -100px;
-	text-align:center;
-}
 
 /*
  * -----------------------------------------弹出框
@@ -71,27 +49,4 @@ a:hover{color:#fff;}
  */
 .page{
 	position:absolute;
-}
-
-#header{
-	top:0px;
-}
-#header li{
-	display:block;
-	float:left;
-	width:50px;
-	height:10px;
-	line-height:10px;
-}
-
-#footer{
-	bottom:0px;
-}
-
-#home-page{
-	top:50px;
-}
-
-#works-page{
-	top:50px;
 }
