@@ -44,11 +44,12 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **pageTo(data);**  
 *data*为节点对象 pagedata,一般情况下节点数据在sitemap.js中设置,一般转场都用这条命令即可  
 *data*也可以为节点信息的数组 [pagedata,pagedata,pagedata]，会统一加载后一起执行进场程序  
-*pagedata*:{title:"home",routing:"首页",view:"app/view/HomePage",template:"app/template/home.html",depth:"top",flow:"normal"}  
+*pagedata*:{title:"home",routing:"首页",view:"app/view/HomePage",tpl:"app/tpl/home.html",css:"app/tpl/home",depth:"top",flow:"normal"}  
 *title*:用于识别区分，暂时无用  
 *routing*:用于设置页面标头文本  
 *view*:每个页面的js文件地址，  
-*template*:为页面模板html文件地址，  
+*tpl*:为页面模板html文件地址，  
+*css*:为页面的css文件地址，  
 *depth*:显示深度，可以使用关键词"preload","top","middle","bottom",也可以使用通配符"+","-",例如"top-"  
 *flow*:当前页面进场时流程设置，无效则使用全局流程  
 	
