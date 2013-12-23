@@ -44,11 +44,12 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **pageTo(data);**  
 *data*为节点对象 pagedata,一般情况下节点数据在sitemap.js中设置,一般转场都用这条命令即可  
 *data*也可以为节点信息的数组 [pagedata,pagedata,pagedata]，会统一加载后一起执行进场程序  
-*pagedata*:{title:"home",routing:"首页",view:"app/view/HomePage",template:"app/template/home.html",depth:"top",flow:"normal"}  
+*pagedata*:{title:"home",routing:"首页",view:"app/view/HomePage",tpl:"app/tpl/home.html",css:"app/tpl/home",depth:"top",flow:"normal"}  
 *title*:用于识别区分，暂时无用  
 *routing*:用于设置页面标头文本  
 *view*:每个页面的js文件地址，  
-*template*:为页面模板html文件地址，  
+*tpl*:为页面模板html文件地址，  
+*css*:为页面的css文件地址，  
 *depth*:显示深度，可以使用关键词"preload","top","middle","bottom",也可以使用通配符"+","-",例如"top-"  
 *flow*:当前页面进场时流程设置，无效则使用全局流程  
 	
@@ -91,10 +92,10 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 当页面尺寸变化时自动调用，发布resize事件
 
 ##Athena EVENTS:
-**Athena.trigger(this.WINDOW_RESIZE);**
-**Athena.trigger(self.PRELOAD_PREPARE);**
-**Athena.trigger(this.FLOW_COMPLETE, {data:当前流程的页面信息});**
-**Athena.trigger(this.FLOW_START, {data:当前流程的页面信息});**
+**Athena.trigger(this.WINDOW_RESIZE);**  
+**Athena.trigger(self.PRELOAD_PREPARE);**  
+**Athena.trigger(this.FLOW_COMPLETE, {data:当前流程的页面信息});**  
+**Athena.trigger(this.FLOW_START, {data:当前流程的页面信息});**  
 
 ##Athena CONST:
 页面深度常量  
@@ -104,10 +105,10 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **BOTTOM:"bottom"**    等价于z-index = -500  
 
 页面切换方式常量  
-**NORMAL:"normal"**    普通切换方式：1。当前页面退场。2。加载新页面。3。新页面进场。
-**PRELOAD:"preload"**  预载切换方式：1。加载新页面。2。当前页面退场。3。新页面进场。
-**REVERSE:"reverse"**  反转切换方式：1。加载新页面。2。新页面进场。3。当前页面退场。
-**CROSS:"cross"**      交叉切换方式：1。加载新页面。2。新页面进场。当前页面退场。同时进行。
+**NORMAL:"normal"**    普通切换方式：1。当前页面退场。2。加载新页面。3。新页面进场。  
+**PRELOAD:"preload"**  预载切换方式：1。加载新页面。2。当前页面退场。3。新页面进场。  
+**REVERSE:"reverse"**  反转切换方式：1。加载新页面。2。新页面进场。3。当前页面退场。  
+**CROSS:"cross"**      交叉切换方式：1。加载新页面。2。新页面进场。当前页面退场。同时进行。  
 
 页面间切换状态常量  
 **FLOW_START:"flowStart"**           页面切换流程开始时发布此事件  
@@ -124,7 +125,6 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **compile**  发布并优化css文件夹和js文件夹下文件，template中的html文件会自动打包成js文件以方便cdn跨域调用  
 **link-to-built** 将index.html中的css和js指向built文件夹  
 **link-to-origin** 将index.html中的css和js指向原始文件夹  
-目前compile命令只适用于windows系统  
 
 ##网站文件结构：
 Athena.js 为框架主文件，组织图解如下：  
