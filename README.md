@@ -92,10 +92,10 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 当页面尺寸变化时自动调用，发布resize事件
 
 ##Athena EVENTS:
-**Athena.trigger(this.WINDOW_RESIZE);**
-**Athena.trigger(self.PRELOAD_PREPARE);**
-**Athena.trigger(this.FLOW_COMPLETE, {data:当前流程的页面信息});**
-**Athena.trigger(this.FLOW_START, {data:当前流程的页面信息});**
+**Athena.trigger(this.WINDOW_RESIZE);**  
+**Athena.trigger(self.PRELOAD_PREPARE);**  
+**Athena.trigger(this.FLOW_COMPLETE, {data:当前流程的页面信息});**  
+**Athena.trigger(this.FLOW_START, {data:当前流程的页面信息});**  
 
 ##Athena CONST:
 页面深度常量  
