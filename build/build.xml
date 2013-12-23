@@ -45,6 +45,7 @@
 	</target>
 	
 	<target name="echo">
+		<echo message="${basedir}" />
 		<echo message="${os.name}" />
 	</target>
 	
@@ -103,15 +104,46 @@
 		</concat>
 	</target>
 	
-	<target name="optimize">
+	<!-- set the operating system test properties -->  
+	<condition property="isMac">
+		<os family="mac" />
+	</condition>
+	  
+	<condition property="isWindows">
+		<os family="windows" />
+	</condition>
+	  
+	<condition property="isUnix">
+		<os family="unix" />
+	</condition>
+	
+	<target name="optimize" depends="optimize-unix,optimize-windows">
 		<echo message="optimize" />
+	</target>
+	
+	<target name="optimize-unix" if="isUnix">
+		<echo message="optimize-unix" />
+		<exec executable="/bin/sh" failonerror="true">
+			<arg line="-c '/usr/local/bin/node ${optimize}/r.js -o ${optimize}/build.js appDir=${css} baseUrl=${site} dir=${css-built}'" />
+		</exec>
+		<exec executable="/bin/sh" failonerror="true">
+			<arg line="-c '/usr/local/bin/node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${site} dir=${js-built}'" />
+		</exec>
+		
+		<replaceregexp  match="&#34;js&#34;" replace="&#34;js-built&#34;" flags="g" byline="false">
+			<fileset dir="${js-built}" includes="main.js" />
+		</replaceregexp>
+	</target>
+	
+	<target name="optimize-windows" if="isWindows">
+		<echo message="optimize-windows" />
 		<exec executable="cmd" failonerror="true">
 			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${css} baseUrl=${site} dir=${css-built} " />
 		</exec>
 		<exec executable="cmd" failonerror="true">
 			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${site} dir=${js-built} " />
 		</exec>
-		
+		                
 		<replaceregexp  match="&#34;js&#34;" replace="&#34;js-built&#34;" flags="g" byline="false">
 			<fileset dir="${js-built}" includes="main.js" />
 		</replaceregexp>

@@ -8,6 +8,9 @@ require.config({
         "jquery":"libs/jquery/jquery-1.10.2.min",
         "underscore":"libs/backbone/underscore-1.5.2.min",
 		"backbone":"libs/backbone/backbone-1.1.0.min",
+        "easePack":"libs/greensock/easing/EasePack.min",
+        "cssPlugin":"libs/greensock/easing/CSSPlugin.min",
+        "tweenlite":"libs/greensock/TweenLite-1.11.2.min",
         "tweenmax":"libs/greensock/TweenMax-1.11.2.min",
     	"athena":"libs/athena/Athena",
 		"baseView":"libs/athena/base/BaseView",
@@ -58,6 +61,10 @@ require.config({
 		"backbone": {
 			deps:["underscore","jquery"],
 			exports:"Backbone"
+		},
+		"tweenlite":{
+			deps:["easePack","cssPlugin"],
+			exports:"TweenLite"
 		},
 		"tweenmax":{
 			exports:"TweenMax"
