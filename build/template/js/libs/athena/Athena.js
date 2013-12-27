@@ -361,17 +361,12 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			var _curPage = this._curPages[data.depth];
 			var _tempPage = this._tempPages[data.depth];
 			var _flow = data.flow?data.flow:this._flow;
-			switch(_flow)
-			{
-				case this.REVERSE:
-				case this.CROSS:
-					if(_curPage){
-						_curPage.destroy();
-						//requirejs.undef(_curPage.data.view);
-						//requirejs.undef("text!"+_curPage.data.tpl);
-						//requirejs.undef("css!"+_curPage.data.css);
-					}
-					break;
+			
+			if(_curPage){
+				_curPage.destroy();
+				//requirejs.undef(_curPage.data.view);
+				//requirejs.undef("text!"+_curPage.data.tpl);
+				//requirejs.undef("css!"+_curPage.data.css);
 			}
 			
 			if(_tempPage){

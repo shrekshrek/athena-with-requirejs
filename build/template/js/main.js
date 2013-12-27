@@ -38,7 +38,7 @@ require.config({
 		"siteModel":"app/model/SiteModel",
 		"siteRouter":"app/router/SiteRouter",
         "tracker":"app/model/Tracker",
-		"basePop":"app/view/base/BasePop"
+		"basePop":"app/view/pops/BasePop"
     },
     shim:{
 		"jquery":{

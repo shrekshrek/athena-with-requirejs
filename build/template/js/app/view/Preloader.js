@@ -8,7 +8,7 @@ define(["basePage","athena","siteModel","tweenmax"],function(BasePage,Athena,Sit
 			self = this;
 			BasePage.prototype.init.apply(this,[args]);
 			
-			this.$bar = $(this.el).find(".loading_bar");
+			this.$bar = $(this.el).find(".loading-bar");
 			
 			this.$el.css({opacity:0});
 		},
@@ -21,8 +21,8 @@ define(["basePage","athena","siteModel","tweenmax"],function(BasePage,Athena,Sit
 			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Quart.easeOut, onComplete:function(){
 				self.transitionInComplete();
 			}});
-			
-			this.$bar.css({width:0, left:Athena.stageRect().width/2});
+
+			this.$bar.css({width:0,left:"50%"});
 		},
 		transitionOut:function(){
 			BasePage.prototype.transitionOut.apply(this);
@@ -34,7 +34,7 @@ define(["basePage","athena","siteModel","tweenmax"],function(BasePage,Athena,Sit
 		},
 		progress:function(obj){
 			if(TweenMax.isTweening(this.$bar)) TweenMax.killTweensOf(this.$bar);
-			TweenMax.to(this.$bar, 0.3, {width:Athena.stageRect().width*obj.progress, left:Athena.stageRect().width*(1-obj.progress)*0.5});
+			TweenMax.to(this.$bar, 0.3, {width:obj.progress*100+"%", left:(1-obj.progress)*0.5*100+"%"});
 		}
 	});
 	return view;

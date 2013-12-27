@@ -1,4 +1,4 @@
-define(["baseBtn","tweenMax"],function(BaseBtn,TweenMax){
+define(["baseBtn","tweenmax"],function(BaseBtn,TweenMax){
 	var view = BaseBtn.extend({
 		$obj1:null,
 		$obj2:null,

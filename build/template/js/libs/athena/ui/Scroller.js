@@ -1,4 +1,4 @@
-define(["baseView","tweenMax","jquery.mousewheel"],function(BaseView,TweenMax){
+define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 	var self;
 	var view = BaseView.extend({
 		$parent:null,

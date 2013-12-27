@@ -4,14 +4,14 @@ define(["basePage","siteModel","athena"],function(BasePage,SiteModel,Athena){
 		$main:null,
 		$bg:null,
 		events:{
-			"click .pop_bg":"closeHandler",
+			"click .pop-bg":"closeHandler",
 			"click .close":"closeHandler"
 		},
 		init:function(args){
 			BasePage.prototype.init.apply(this,[args]);
 			
-			this.$main = this.$el.find(".pop_main");
-			this.$bg = this.$el.find(".pop_bg");
+			this.$main = this.$el.find(".pop-main");
+			this.$bg = this.$el.find(".pop-bg");
 		},
 		resize:function(){
 			$(this.el).width(Athena.stageRect().width);
