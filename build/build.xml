@@ -39,7 +39,7 @@
 
 	<target name="$create">
 		<echo message="create" />
-		<copy toDir="${site}" overwrite="false" >
+		<copy toDir="${site}" overwrite="false" encoding="UTF-8">
 			<fileset dir="${template}"  excludes="optimize/,js/athenaframework/" />
 		</copy>
 	</target>
