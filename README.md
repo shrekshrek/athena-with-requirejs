@@ -3,7 +3,7 @@ a js web framework base on backbone.js & require.js
 Athena是一个基于Backbone的js前端框架，主要功能是通过SiteMap设置的网站结构
 
 *version:0.1.0*  
-*date:2013.12.27*
+*date:2013.12.30*
 
 *version:0.0.3*  
 *date:2013.10.12*
