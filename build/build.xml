@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Set Ant Project Name -->
-<project name="DROSE" default="$main" basedir=".">
+<project name="Athena" default="$main" basedir=".">
 	
 	<property name="version" value="0.1.0" />
 	
