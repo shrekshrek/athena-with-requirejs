@@ -3,7 +3,6 @@
  * git:https://github.com/shrekshrek/athenaframework
  */
 define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageConst){
-	var self;
 	var athena = _.extend({}, Backbone.Events, {
 		/*
 		 * 页面深度常量
@@ -41,6 +40,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		$stage:null,
 		$window:null,
 		$document:null,
+		_skipPreload:null,
 		_flow:null,
 		_isFlowing:false,
 		_isFullScreen:false,
@@ -56,19 +56,20 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		_tempPreloadIndex:null,
 		_tempLoadedProgress:null,
 		init:function(stage){
-			self = this;
+			var _self = this;
 			this.$stage = stage?stage:$("body");
 			this.$body = $("body");
 			this.$window = $(window);
 			this.$document = $(document);
 			
+			this._skipPreload = false;
 			this._flow = this.NORMAL;
 			this._curPages = {};
 			this._tempPages = {};
 			this._pageQueue = [];
 			
 			this.$window.resize(function(){
-				self.resize();
+				_self.resize();
 			});
 			this.resize();
 		},
@@ -89,7 +90,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			if(!this.$stage) throw "athena havn't stage!!!";
 			
 			if(this._isFlowing) return;
-			
+
+			var _self = this;
 			this._isFlowing = true;
 			this._tempData = data;
 			
@@ -97,27 +99,28 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			var _data = {};
 			if(_.isArray(data)){
 				_.each(data, function(_obj, _index){
-					_obj.depth = self._checkDepth(_obj.depth);
-					_page = self._curPages[_obj.depth];
-					self.listenToOnce(_page, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
-						self._flowOutComplete(_data);
+					_obj.depth = _self._checkDepth(_obj.depth);
+					_page = _self._curPages[_obj.depth];
+					_self.listenToOnce(_page, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
+						_self._flowOutComplete(_data);
 					});
 					_page.transitionOut();
 				});
 			}else{
 				if(_.isString(data)){
-					_data.depth = self._checkDepth(data);
+					_data.depth = _self._checkDepth(data);
 				}else{
-					_data.depth = self._checkDepth(data.depth);
+					_data.depth = _self._checkDepth(data.depth);
 				}
-				_page = self._curPages[_data.depth];
-				self.listenToOnce(_page, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
-					self._flowOutComplete(_data);
+				_page = _self._curPages[_data.depth];
+				_self.listenToOnce(_page, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
+					_self._flowOutComplete(_data);
 				});
 				_page.transitionOut();
 			}
 		},
 		_playQueue:function(){
+			var _self = this;
 			if(this._pageQueue.length >= 1){
 				this._tempData = this._pageQueue.shift();
 				this._isFlowing = true;
@@ -126,7 +129,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				if(_.isArray(this._tempData)){
 					this._tempLoadedProgress = [];
 					_.each(this._tempData, function(_obj, _index){
-						self._flowIn(_obj);
+						_self._flowIn(_obj);
 					});
 				}else{
 					this._flowIn(this._tempData);
@@ -138,11 +141,12 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 		},
 		_checkData:function(data){
+			var _self = this;
 			if(_.isArray(data)){
 				var _a = [];
 				_.each(data,function(_obj,_index){
 					if(!(_obj.view && _obj.tpl)) throw "each page data has wrong!!! must has 'data.view','data.tpl'";
-					_obj.depth = self._checkDepth(_obj.depth);
+					_obj.depth = _self._checkDepth(_obj.depth);
 					
 					var _isUnique = true;
 					_.each(_a,function(_obj2, _index2){
@@ -158,7 +162,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				return _a;
 			}else{
 				if(!(data.view && data.tpl)) throw "page data has wrong!!! must has 'data.view','data.tpl'";
-				data.depth = self._checkDepth(data.depth);
+				data.depth = _self._checkDepth(data.depth);
 				return data;
 			}
 		},
@@ -227,6 +231,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			return _depth;
 		},
 		_flowIn:function(data){
+			var _self = this;
 			var _curPage = this._curPages[data.depth];
 			var _tempPage = this._tempPages[data.depth];
 			var _flow = data.flow?data.flow:this._flow;
@@ -236,7 +241,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 					if(_curPage)
 					{
 						this.listenToOnce(_curPage, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
-							self._flowInComplete(data);
+							_self._flowInComplete(data);
 						});
 						_curPage.transitionOut();
 					}else{
@@ -248,21 +253,22 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				case this.CROSS:
 					this._preloaderOn();
 					
-					require([data.view,"text!"+data.tpl,data.css?"css!"+data.css:""],function(view,tpl){
-						self._tempPage = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
-						self._tempPages[data.depth] = self._tempPage;
-						self._initPreloader(data);
-						
-						self.$stage.append(self._tempPage.el);
-						self.listenToOnce(self._tempPage, BasePageConst.PRELOAD_COMPLETE, function(){
-							self._preloadComplete(data);
+					require([data.view, data.css?"css!"+data.css:"", "text!"+data.tpl],function(view, css, tpl){
+						_self._tempPage = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
+						_self._tempPages[data.depth] = _self._tempPage;
+						_self.$stage.append(_self._tempPage.el);
+						_self._tempPage.init();
+						_self._initPreloader(data);
+						_self.listenToOnce(_self._tempPage, BasePageConst.PRELOAD_COMPLETE, function(){
+							_self._preloadComplete(data);
 						});
-						self._tempPage.preload();
+						_self._tempPage.preload(_self._skipPreload);
 					});
 					break;
 			}
 		},
 		_flowInComplete:function(data){
+			var _self = this;
 			var _curPage = this._curPages[data.depth];
 			var _tempPage = this._tempPages[data.depth];
 			var _flow = data.flow?data.flow:this._flow;
@@ -276,16 +282,16 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 						//requirejs.undef("css!"+_curPage.data.css);
 					}
 					this._preloaderOn();
-					require([data.view,"text!"+data.tpl,data.css?"css!"+data.css:""],function(view,tpl){
-						self._tempPage = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
-						self._tempPages[data.depth] = self._tempPage;
-						self._initPreloader(data);
-						
-						self.$stage.append(self._tempPage.el);
-						self.listenToOnce(self._tempPage, BasePageConst.PRELOAD_COMPLETE, function(){
-							self._preloadComplete(data);
+					require([data.view, data.css?"css!"+data.css:"", "text!"+data.tpl],function(view, css, tpl){
+						_self._tempPage = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
+						_self._tempPages[data.depth] = _self._tempPage;
+						_self.$stage.append(_self._tempPage.el);
+						_self._tempPage.init();
+						_self._initPreloader(data);
+						_self.listenToOnce(_self._tempPage, BasePageConst.PRELOAD_COMPLETE, function(){
+							_self._preloadComplete(data);
 						});
-						self._tempPage.preload();
+						_self._tempPage.preload(_self._skipPreload);
 					});
 					break;
 				case this.PRELOAD:
@@ -315,6 +321,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 		},
 		_flowOut:function(data){
+			var _self = this;
 			var _curPage = this._curPages[data.depth];
 			var _tempPage = this._tempPages[data.depth];
 			var _flow = data.flow?data.flow:this._flow;
@@ -358,6 +365,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 		},
 		_flowOutComplete:function(data){
+			var _self = this;
 			var _curPage = this._curPages[data.depth];
 			var _tempPage = this._tempPages[data.depth];
 			var _flow = data.flow?data.flow:this._flow;
@@ -393,46 +401,44 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 		},
 		_preloadComplete:function(data){
+			var _self = this;
 			var _flow = data.flow?data.flow:this._flow;
 			if(_.isArray(this._tempData)){
 				this._tempFlowIndex++;
 				if(this._tempFlowIndex >= this._tempData.length){
 					this._tempFlowIndex = 0;
-					setTimeout(function(){
-						_.each(self._tempData,function(_obj,_index){
-							switch(_flow)
-							{
-								case self.NORMAL:
-									self._flowOut(_obj);
-									break;
-								case self.PRELOAD:
-								case self.REVERSE:
-								case self.CROSS:
-									self._flowInComplete(_obj);
-									break;
-							}
-						});
-					},10);
+					_.each(_self._tempData,function(_obj,_index){
+						switch(_flow)
+						{
+							case _self.NORMAL:
+								_self._flowOut(_obj);
+								break;
+							case _self.PRELOAD:
+							case _self.REVERSE:
+							case _self.CROSS:
+								_self._flowInComplete(_obj);
+								break;
+						}
+					});
 				}
 			}else{
-				setTimeout(function(){
-					switch(_flow)
-					{
-						case self.NORMAL:
-							self._flowOut(data);
-							break;
-						case self.PRELOAD:
-						case self.REVERSE:
-						case self.CROSS:
-							self._flowInComplete(data);
-							break;
-					}
-				},10);
+				switch(_flow)
+				{
+					case _self.NORMAL:
+						_self._flowOut(data);
+						break;
+					case _self.PRELOAD:
+					case _self.REVERSE:
+					case _self.CROSS:
+						_self._flowInComplete(data);
+						break;
+				}
 			}
 		},
 		preloader:function(data, obj){
 			if(!this.$stage) throw "athena havn't stage!!!";
-			
+
+			var _self = this;
 			if(this._preloader != null){
 				this._preloader.destroy();
 				//requirejs.undef(this._preloader.data.view);
@@ -447,10 +453,11 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			
 			data.depth = this._checkDepth(this.PRELOAD);
 			if(data.view && data.tpl && data.tpl != ""){
-				require([data.view,"text!"+data.tpl,data.css?"css!"+data.css:""],function(view,tpl){
-					self._preloader = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
-					self.$stage.append(self._preloader.el);
-					self.trigger(self.PRELOAD_PREPARE);
+				require([data.view, data.css?"css!"+data.css:"", "text!"+data.tpl],function(view, css, tpl){
+					_self._preloader = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
+					_self.$stage.append(_self._preloader.el);
+					_self._preloader.init();
+					_self.trigger(_self.PRELOAD_PREPARE);
 				});
 			}else{
 				throw "preloader must have data.tpl!!!";
@@ -483,12 +490,13 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 		},
 		_preloaderProgress:function(obj){
+			var _self = this;
 			if(this._preloader == null) return;
 			if(_.isArray(this._tempData)){
 				var _n = 0;
 				this._tempLoadedProgress[obj.data.depth] = obj.progress;
 				_.each(this._tempLoadedProgress, function(_obj,_index){
-					_n += _obj/self._tempData.length;
+					_n += _obj/_self._tempData.length;
 				});
 				this._preloader.progress({progress:_n});
 			}else{
@@ -544,6 +552,11 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			}
 			
 			return this._isFullScreen;
+		},
+		skipPreload:function(bool){
+			if(bool) this._skipPreload = bool;
+			
+			return this._skipPreload;
 		},
 		isFlowing:function(){
 			return _isFlowing;

@@ -1,15 +1,14 @@
 define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenmax"],function(Tracker,BasePage,Athena,SiteMap,SiteModel,SiteRouter,TweenMax){
-	var self;
 	var view = BasePage.extend({
 		id:"header",
 		className:"page",
 		init:function(args){
-			self = this;
+			var _self = this;
 			BasePage.prototype.init.apply(this,[args]);
 			
-			_.each(this.$el.find("a"), function(obj, index) {
+			_.each(this.$el.find("li"), function(obj, index) {
 				$(obj).on("click",function(){
-					self._navHandler(index);
+					_self._navHandler(index);
 					return false;
 				});
 			});
@@ -27,17 +26,19 @@ define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenm
 			BasePage.prototype.resize.apply(this);
 		},
 		transitionIn:function(){
+			var _self = this;
 			BasePage.prototype.transitionIn.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Quart.easeOut, onComplete:function(){
-				self.transitionInComplete();
+				_self.transitionInComplete();
 			}});
 		},
 		transitionOut:function(){
+			var _self = this;
 			BasePage.prototype.transitionOut.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.5, {opacity:0, ease:Quart.easeIn, onComplete:function(){
-				self.transitionOutComplete();
+				_self.transitionOutComplete();
 			}});
 		},
 		_checkPage:function(){
@@ -71,6 +72,9 @@ define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenm
 				break;
 				case 1:
 					SiteRouter.navigate(SiteMap.works.title, {trigger: true});
+				break;
+				case 2:
+					Athena.pageTo(SiteMap.tips);
 				break;
 			}
 		}

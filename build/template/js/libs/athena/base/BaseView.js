@@ -6,13 +6,15 @@ define(["backbone"],function(BackBone){
 		},
 		initialize:function(args){
 			this.children = [];
-			if((args && args.template)){
+			if(!args) return;
+			if(args.template){
 				this.template = args.template;
 			}
-			if(!(args && args.el)){
+			if(args.el){
+				this.init(args);
+			}else{
 				this.render();
 			}
-			this.init(args);
 		},
 		init:function(args){
 		},
@@ -24,7 +26,7 @@ define(["backbone"],function(BackBone){
 			this.remove();
 		},
 		render:function(){
-			if(this.template) $(this.el).html(this.template);
+			if(this.template) this.$el.html(this.template);
 		},
 		resize:function(){
 			_.each(this.children, function(obj){

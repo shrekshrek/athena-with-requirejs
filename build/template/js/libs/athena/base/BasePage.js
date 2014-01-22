@@ -1,13 +1,13 @@
 define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Athena){
 	var view = BaseView.extend({
-		//loader:null,
 		loadMax:null,
 		loaded:null,
 		data:null,
 		initialize:function(args){
 			BaseView.prototype.initialize.apply(this,[args]);
+			
 			this.data = args.data;
-			this.$el.css({"display":"none","z-index":this.data.depth});
+			this.$el.css({"z-index":this.data.depth});
 			this.preloadArray = [];
 		},
 		init:function(args){
@@ -20,8 +20,13 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 		destroy:function(){
 			BaseView.prototype.destroy.apply(this);
 		},
-		preload:function(){
+		preload:function(skip){
 			this.trigger(BasePageConst.PRELOAD, {data:this.data});
+			
+			if(skip){
+				this.completeHandle();
+				return;
+			}
 			
 			var _self = this;
 			var _imgs = _.without(_.pluck(this.$el.find("img"),"src"),"");
@@ -32,9 +37,9 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 			}else{
 				_.each(_imgs, function(url){
 					$(new Image()).load(function(){
-				    	_self._assetLoadComplete();
-				    }).error(function() {
 						_self._assetLoadComplete();
+				    }).error(function() {
+				    	_self._assetLoadComplete();
 					}).attr("src", url);
 				});
 			}
@@ -53,7 +58,7 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 			this.trigger(BasePageConst.PRELOAD_COMPLETE, {data:this.data});
 		},
 		transitionIn:function(){
-			this.$el.css({"display":"block"});
+			//this.$el.css({"display":"block"});
 			this.resize();
 			this.trigger(BasePageConst.TRANSITION_IN, {data:this.data});
 		},
@@ -64,7 +69,7 @@ define(["baseView","basePageConst","athena"],function(BaseView,BasePageConst,Ath
 			this.trigger(BasePageConst.TRANSITION_OUT, {data:this.data});
 		},
 		transitionOutComplete:function(){
-			this.$el.css({"display":"none"});
+			//this.$el.css({"display":"none"});
 			this.trigger(BasePageConst.TRANSITION_OUT_COMPLETE, {data:this.data});
 		}
 	});

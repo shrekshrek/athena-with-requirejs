@@ -87,6 +87,7 @@ require(["jquery","athena","siteMap","siteRouter","siteModel","im20"],function($
 		Athena.fullScreen(true);
 		Athena.windowRectMin({width:1000,height:600});
 		Athena.flow(Athena.NORMAL);
+		//Athena.skipPreload(true);
 		if(SiteMap.preloader){
 			Athena.on(Athena.PRELOAD_PREPARE, init);
 			Athena.preloader(SiteMap.preloader);

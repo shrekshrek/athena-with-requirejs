@@ -23,22 +23,21 @@ define(["baseView"],function(BaseView){
 		},
 		clickHandler:function(){
 		},
-		selected:function(_bool){
-			if(_bool == this._isSelected) return;
-			var _self = this;
-			if(_bool){
+		selected:function(bool){
+			if(bool == this._isSelected) return;
+			if(bool){
 				this.mouseOverHandler();
-				this._isSelected = _bool;
+				this._isSelected = bool;
 			}else{
-				this._isSelected = _bool;
+				this._isSelected = bool;
 				this.mouseOutHandler();
 			}
-			//this.enable(!_bool);
+			//this.enable(!bool);
 		},
-		enable:function(_bool){
-			if(_bool == this._isEnable) return;
+		enable:function(bool){
+			if(bool == this._isEnable) return;
 			var _self = this;
-			if(_bool){
+			if(bool){
 				this.$el.css("cursor","pointer");
 				this.$el.on("mouseenter",function(event){
 					_self._isMouseOver = true;
@@ -63,7 +62,7 @@ define(["baseView"],function(BaseView){
 				this.$el.off("mouseleave");
 				this.$el.off("click");
 			}
-			this._isEnable = _bool;
+			this._isEnable = bool;
 		}
 	});
 	return view;

@@ -1,10 +1,8 @@
 define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenmax"],function(Tracker,BasePage,Athena,SiteMap,SiteModel,SiteRouter,TweenMax){
-	var self;
 	var view = BasePage.extend({
 		id:"home-page",
 		className:"page",
 		init:function(args){
-			self = this;
 			BasePage.prototype.init.apply(this,[args]);
 
 			this.$el.css({opacity:0});
@@ -16,17 +14,19 @@ define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenm
 			BasePage.prototype.resize.apply(this);
 		},
 		transitionIn:function(){
+			var _self = this;
 			BasePage.prototype.transitionIn.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Quart.easeOut, onComplete:function(){
-				self.transitionInComplete();
+				_self.transitionInComplete();
 			}});
 		},
 		transitionOut:function(){
+			var _self = this;
 			BasePage.prototype.transitionOut.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.5, {opacity:0, ease:Quart.easeIn, onComplete:function(){
-				self.transitionOutComplete();
+				_self.transitionOutComplete();
 			}});
 		}
 	});

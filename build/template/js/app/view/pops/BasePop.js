@@ -14,8 +14,8 @@ define(["basePage","siteModel","athena"],function(BasePage,SiteModel,Athena){
 			this.$bg = this.$el.find(".pop-bg");
 		},
 		resize:function(){
-			$(this.el).width(Athena.stageRect().width);
-			$(this.el).height(Athena.stageRect().height);
+			this.$el.width(Athena.stageRect().width);
+			this.$el.height(Athena.stageRect().height);
 			
 			BasePage.prototype.resize.apply(this);
 		},
