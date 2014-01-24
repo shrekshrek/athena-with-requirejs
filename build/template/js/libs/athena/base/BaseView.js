@@ -2,6 +2,7 @@ define(["backbone"],function(BackBone){
 	var view = Backbone.View.extend({
 		template:null,
 		children:null,
+		_inited:null,
 		events:{
 		},
 		initialize:function(args){
@@ -17,6 +18,8 @@ define(["backbone"],function(BackBone){
 			}
 		},
 		init:function(args){
+			if(this._inited) return;
+			this._inited = true;
 		},
 		destroy:function(){
 			_.each(this.children, function(obj){
@@ -40,11 +43,16 @@ define(["backbone"],function(BackBone){
 			this.children.push(view);
 			if($dom){
 				$dom.append(view.el);
+				view.init();
 			}
 		},
 		removeChild:function(view){
 			_.each(this.children, function(index,obj){
-				if(obj == view) this.children.splice(index,1);
+				if(obj == view){
+					this.children.splice(index,1);
+					view.destroy();
+					return;
+				}
 			});
 		}
 	});

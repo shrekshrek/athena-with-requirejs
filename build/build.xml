@@ -9,11 +9,11 @@
 
 	<property name="template" value="${build}/template" />
 	<property name="optimize" value="${template}/optimize" />
-	<property name="css" value="${site}/css" />
-	<property name="js" value="${site}/js" />
-	<property name="css-built" value="${site}/css-built" />
-	<property name="js-built" value="${site}/js-built" />
-	<property name="temp" value="${site}/temp" />
+	<property name="css" value="${siteroot}/css" />
+	<property name="js" value="${siteroot}/js" />
+	<property name="css-built" value="${siteroot}/css-built" />
+	<property name="js-built" value="${siteroot}/js-built" />
+	<property name="temp" value="${siteroot}/temp" />
 	
 	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${build}/libs/ant-contrib-1.0b3.jar" />
 	
@@ -23,12 +23,12 @@
 	
 	<target name="_!_clean" depends="_!_clean-built">
 		<echo message="clean" />
-		<!--<delete dir="${site}" includes="**/*" excludes="build/" />-->
-		<delete dir="${site}/css" />
-		<delete dir="${site}/js" />
-		<delete dir="${site}/images" />
-		<delete file="${site}/favicon.ico" />
-		<delete file="${site}/index.html" />
+		<!--<delete dir="${siteroot}" includes="**/*" excludes="build/" />-->
+		<delete dir="${siteroot}/css" />
+		<delete dir="${siteroot}/js" />
+		<delete dir="${siteroot}/images" />
+		<delete file="${siteroot}/favicon.ico" />
+		<delete file="${siteroot}/index.html" />
 	</target>
 	
 	<target name="_!_clean-built">
@@ -39,8 +39,13 @@
 
 	<target name="$create">
 		<echo message="create" />
-		<copy toDir="${site}" overwrite="false" encoding="UTF-8">
+		<copy toDir="${siteroot}" overwrite="false" encoding="UTF-8">
 			<fileset dir="${template}"  excludes="optimize/,js/athenaframework/" />
+			<filterchain>
+				<replacetokens>
+					<token key="sitename" value="${sitename}" />
+				</replacetokens>
+			</filterchain>
 		</copy>
 	</target>
 	
@@ -95,7 +100,7 @@
 	</target>
 
 	<target name="__cdn-footer" >
-		<concat append="yes" destfile="${file}">${newLine}</concat>
+		<concat append="yes" destfile="${file}">${newline}</concat>
 	</target>
 	
 	<target name="__mainjs-to-built" >
@@ -107,20 +112,20 @@
 	<target name="$link-to-built" >
 		<echo message="link-to-built" />
 		<replaceregexp  match="js/" replace="js-built/" flags="g" byline="false">
-			<fileset dir="${site}" includes="index.html" />
+			<fileset dir="${siteroot}" includes="index.html" />
 		</replaceregexp>
 		<replaceregexp  match="css/" replace="css-built/" flags="g" byline="false">
-			<fileset dir="${site}" includes="index.html" />
+			<fileset dir="${siteroot}" includes="index.html" />
 		</replaceregexp>
 	</target>
 	
 	<target name="$link-to-origin" >
 		<echo message="link-to-origin" />
 		<replaceregexp  match="js-built/" replace="js/" flags="g" byline="false">
-			<fileset dir="${site}" includes="index.html" />
+			<fileset dir="${siteroot}" includes="index.html" />
 		</replaceregexp>
 		<replaceregexp  match="css-built/" replace="css/" flags="g" byline="false">
-			<fileset dir="${site}" includes="index.html" />
+			<fileset dir="${siteroot}" includes="index.html" />
 		</replaceregexp>
 	</target>
 	
@@ -144,10 +149,10 @@
 	<target name="__optimize-unix" if="__isUnix">
 		<echo message="optimize-unix" />
 		<exec executable="/bin/sh" failonerror="true">
-			<arg line="-c '/usr/local/bin/node ${optimize}/r.js -o ${optimize}/build.js appDir=${css} baseUrl=${site} dir=${css-built}'" />
+			<arg line="-c '/usr/local/bin/node ${optimize}/r.js -o ${optimize}/build.js appDir=${css} baseUrl=${siteroot} dir=${css-built}'" />
 		</exec>
 		<exec executable="/bin/sh" failonerror="true">
-			<arg line="-c '/usr/local/bin/node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${site} dir=${js-built}'" />
+			<arg line="-c '/usr/local/bin/node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${siteroot} dir=${js-built}'" />
 		</exec>
 		
 		<replaceregexp  match="&#34;js&#34;" replace="&#34;js-built&#34;" flags="g" byline="false">
@@ -158,10 +163,10 @@
 	<target name="__optimize-windows" if="__isWindows">
 		<echo message="optimize-windows" />
 		<exec executable="cmd" failonerror="true">
-			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${css} baseUrl=${site} dir=${css-built} " />
+			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${css} baseUrl=${siteroot} dir=${css-built} " />
 		</exec>
 		<exec executable="cmd" failonerror="true">
-			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${site} dir=${js-built} " />
+			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${siteroot} dir=${js-built} " />
 		</exec>
 		                
 		<replaceregexp  match="&#34;js&#34;" replace="&#34;js-built&#34;" flags="g" byline="false">
