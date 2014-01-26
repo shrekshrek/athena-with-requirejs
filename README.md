@@ -2,17 +2,8 @@
 a js web framework base on backbone.js & require.js  
 Athena是一个基于Backbone和requirejs的前端框架。结构清晰，管理方便。
 
-*version:0.2.0*  
+*version:1.0.0*  
 *date:2014.01.23*
-
-*version:0.1.0*  
-*date:2013.12.30*
-
-*version:0.0.3*  
-*date:2013.10.12*
-
-*version:0.0.2*  
-*date:2013.08.11*
 
 *version:0.0.1*  
 *date:2013.06.13*
