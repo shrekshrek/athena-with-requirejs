@@ -2,7 +2,7 @@ require.config({
 	waitSeconds:60,
 	baseUrl:"js",
     paths:{
-    	//athena框架配置地址
+	//athena框架配置地址
 		"text":"libs/require/requirePlugin/text",
 		"css":"libs/require/requirePlugin/css",
         "jquery":"libs/jquery/jquery-1.10.2.min",
@@ -87,7 +87,7 @@ require(["jquery","athena","siteMap","siteRouter","siteModel","im20"],function($
 		Athena.fullScreen(true);
 		Athena.windowRectMin({width:1000,height:600});
 		Athena.flow(Athena.NORMAL);
-		//Athena.skipPreload(true);
+		//Athena.preloadFast(true);
 		if(SiteMap.preloader){
 			Athena.on(Athena.PRELOAD_PREPARE, init);
 			Athena.preloader(SiteMap.preloader);
