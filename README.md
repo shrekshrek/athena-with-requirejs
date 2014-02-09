@@ -73,9 +73,9 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **preloader(data,{complete:function});**  
 *data*为节点对象，function为加载设置完成的回调函数，data为空则取消preload显示组件
 
-**skipPreload(bool);**  
+**preloadFast(bool);**  
 *bool*为布尔值，是否跳过预载。true时在加载完html和css文件后立即置入场景触发进场。false时会在html页面中所有img标签的图片全部加载完成后置入场景触发进场动画。  
-**skipPreload();**  
+**preloadFast();**  
 返回bool布尔值
 
 **fullScreen(bool);**  
