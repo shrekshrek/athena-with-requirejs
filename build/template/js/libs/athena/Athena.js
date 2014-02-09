@@ -40,7 +40,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		$stage:null,
 		$window:null,
 		$document:null,
-		_skipPreload:null,
+		_preloadFast:null,
 		_flow:null,
 		_isFlowing:false,
 		_isFullScreen:false,
@@ -62,7 +62,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			this.$window = $(window);
 			this.$document = $(document);
 			
-			this._skipPreload = false;
+			this._preloadFast = false;
 			this._flow = this.NORMAL;
 			this._curPages = {};
 			this._tempPages = {};
@@ -262,7 +262,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 						_self.listenToOnce(_self._tempPage, BasePageConst.PRELOAD_COMPLETE, function(){
 							_self._preloadComplete(data);
 						});
-						_self._tempPage.preload(_self._skipPreload);
+						_self._tempPage.preload(_self._preloadFast);
 					});
 					break;
 			}
@@ -291,7 +291,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 						_self.listenToOnce(_self._tempPage, BasePageConst.PRELOAD_COMPLETE, function(){
 							_self._preloadComplete(data);
 						});
-						_self._tempPage.preload(_self._skipPreload);
+						_self._tempPage.preload(_self._preloadFast);
 					});
 					break;
 				case this.PRELOAD:
@@ -553,10 +553,10 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			
 			return this._isFullScreen;
 		},
-		skipPreload:function(bool){
-			if(bool) this._skipPreload = bool;
+		preloadFast:function(bool){
+			if(bool) this._preloadFast = bool;
 			
-			return this._skipPreload;
+			return this._preloadFast;
 		},
 		isFlowing:function(){
 			return _isFlowing;
