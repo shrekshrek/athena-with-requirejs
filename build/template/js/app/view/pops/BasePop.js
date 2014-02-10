@@ -9,6 +9,8 @@ define(["basePage","siteModel","athena"],function(BasePage,SiteModel,Athena){
 		},
 		init:function(args){
 			BasePage.prototype.init.apply(this,[args]);
+
+			this.$el.css({opacity:0});
 			
 			this.$main = this.$el.find(".pop-main");
 			this.$bg = this.$el.find(".pop-bg");
