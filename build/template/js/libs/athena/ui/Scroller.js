@@ -110,6 +110,7 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 		_mouseWheel:function(event, delta){
 			var _self = event.data.self;
 			_self._scrollTo(_self.$box.position().top - delta*30);
+			return false;
 		},
 		_mouseMove:function(event){
 			var _self = event.data.self;
