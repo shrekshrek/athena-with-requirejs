@@ -3,6 +3,7 @@ define(["tracker","basePop","athena","siteMap","siteModel","siteRouter","tweenma
 		id:"tips-pop",
 		init:function(){
 			BasePop.prototype.init.apply(this);
+			this.$el.css({opacity:0});
 		},
 		resize:function(){
 			BasePop.prototype.resize.apply(this);

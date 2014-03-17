@@ -1,10 +1,10 @@
-define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenmax"],function(Tracker,BasePage,Athena,SiteMap,SiteModel,SiteRouter,TweenMax){
-	var view = BasePage.extend({
+define(["tracker","athena","siteMap","siteModel","siteRouter","tweenmax"],function(Tracker,Athena,SiteMap,SiteModel,SiteRouter,TweenMax){
+	var view = Athena.view.BasePage.extend({
 		id:"header",
 		className:"page",
 		init:function(args){
 			var _self = this;
-			BasePage.prototype.init.apply(this,[args]);
+			Athena.view.BasePage.prototype.init.apply(this,[args]);
 			
 			_.each(this.$el.find("li"), function(obj, index) {
 				$(obj).on("click",function(){
@@ -20,14 +20,14 @@ define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenm
 			this.$el.css({opacity:0});
 		},
 		destroy:function(){
-			BasePage.prototype.destroy.apply(this);
+			Athena.view.BasePage.prototype.destroy.apply(this);
 		},
 		resize:function(){
-			BasePage.prototype.resize.apply(this);
+			Athena.view.BasePage.prototype.resize.apply(this);
 		},
 		transitionIn:function(){
 			var _self = this;
-			BasePage.prototype.transitionIn.apply(this);
+			Athena.view.BasePage.prototype.transitionIn.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Quart.easeOut, onComplete:function(){
 				_self.transitionInComplete();
@@ -35,14 +35,14 @@ define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenm
 		},
 		transitionOut:function(){
 			var _self = this;
-			BasePage.prototype.transitionOut.apply(this);
+			Athena.view.BasePage.prototype.transitionOut.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.5, {opacity:0, ease:Quart.easeIn, onComplete:function(){
 				_self.transitionOutComplete();
 			}});
 		},
 		_checkPage:function(){
-			var _page = Athena.getPageAt();
+			var _page = Athena.api.getPageAt();
 			var _id = 0;
 			
 			if(_page){
@@ -74,7 +74,7 @@ define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenm
 					SiteRouter.navigate(SiteMap.works.title, {trigger: true});
 				break;
 				case 2:
-					Athena.pageTo(SiteMap.tips);
+					Athena.api.pageTo(SiteMap.tips);
 				break;
 			}
 		}

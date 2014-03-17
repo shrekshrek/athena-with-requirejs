@@ -1,12 +1,12 @@
-define(["baseBtn","tweenmax"],function(BaseBtn,TweenMax){
-	var view = BaseBtn.extend({
+define(["athena","tweenmax"],function(Athena,TweenMax){
+	var view = Athena.view.BaseBtn.extend({
 		$obj1:null,
 		$obj2:null,
 		alpha1:[1,0],
 		alpha2:[0,1],
 		time:0.2,
 		init:function(args){
-			BaseBtn.prototype.init.apply(this,[args]);
+			Athena.view.BaseBtn.prototype.init.apply(this,[args]);
 			if(args.time){
 				this.time = args.time;
 			}

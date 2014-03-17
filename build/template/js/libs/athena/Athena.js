@@ -2,8 +2,39 @@
  * authur:shrek.wang
  * git:https://github.com/shrekshrek/athenaframework
  */
-define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageConst){
-	var athena = _.extend({}, Backbone.Events, {
+
+(function(root, factory) {
+
+	root.Athena = factory(root, {}, root._, root.Backbone, (root.jQuery || root.Zepto || root.ender || root.$));
+
+}(this, function(root, Athena, _, Backbone, $) {
+	
+	var previousAthena = root.Athena;
+	
+	var array = [];
+	var push = array.push;
+	var slice = array.slice;
+	var splice = array.splice;
+	
+	Athena.VERSION = '1.0.1';
+	
+	Athena.noConflict = function() {
+		root.Athena = previousAthena;
+		return this;
+	};
+	
+	/*
+	 * 框架事件名
+	 */
+	_.extend(Athena, {
+		PRELOAD:"preload",
+		PRELOAD_PROGRESS:"preloadProgress",
+		PRELOAD_COMPLETE:"preloadComplete",
+		TRANSITION_IN:"transitionIn",
+		TRANSITION_IN_COMPLETE:"transitionInComplete",
+		TRANSITION_OUT:"transitionOut",
+		TRANSITION_OUT_COMPLETE:"transitionOutComplete",
+		
 		/*
 		 * 页面深度常量
 		 * preload 相当于 z-index = 1000
@@ -32,10 +63,13 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		FLOW_START:"flowStart",
 		FLOW_COMPLETE:"flowComplete",
 		WINDOW_RESIZE:"windowResize",
-		PRELOAD_PREPARE:"preloadPrepare",
-		/*
-		 * 其他参数
-		 */
+		PRELOAD_PREPARE:"preloadPrepare"
+	});
+	
+	/*
+	 * 框架主控制器逻辑
+	 */
+	_.extend(Athena, Backbone.Events, {
 		$body:null,
 		$stage:null,
 		$window:null,
@@ -101,7 +135,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				_.each(data, function(_obj, _index){
 					_obj.depth = _self._checkDepth(_obj.depth);
 					_page = _self._curPages[_obj.depth];
-					_self.listenToOnce(_page, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
+					_self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function(){
 						_self._flowOutComplete(_data);
 					});
 					_page.transitionOut();
@@ -113,7 +147,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 					_data.depth = _self._checkDepth(data.depth);
 				}
 				_page = _self._curPages[_data.depth];
-				_self.listenToOnce(_page, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
+				_self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function(){
 					_self._flowOutComplete(_data);
 				});
 				_page.transitionOut();
@@ -134,7 +168,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				}else{
 					this._flowIn(this._tempData);
 				}
-				this.trigger(this.FLOW_START, {data:this._tempData});
+				_self.trigger(_self.FLOW_START, {data:this._tempData});
 			}else{
 				this._tempData = null;
 				this._isFlowing = false;
@@ -240,7 +274,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				case this.NORMAL:
 					if(_curPage)
 					{
-						this.listenToOnce(_curPage, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
+						this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function(){
 							_self._flowInComplete(data);
 						});
 						_curPage.transitionOut();
@@ -259,10 +293,10 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 						_self.$stage.append(_self._tempPage.el);
 						_self._tempPage.init();
 						_self._initPreloader(data);
-						_self.listenToOnce(_self._tempPage, BasePageConst.PRELOAD_COMPLETE, function(){
+						_self.listenToOnce(_self._tempPage, _self.PRELOAD_COMPLETE, function(){
 							_self._preloadComplete(data);
 						});
-						_self._tempPage.preload(_self._preloadFast);
+						_self._tempPage.preload(_self._preloadFast||data.fast=="true");
 					});
 					break;
 			}
@@ -277,9 +311,7 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 				case this.NORMAL:
 					if(_curPage){
 						_curPage.destroy();
-						//requirejs.undef(_curPage.data.view);
-						//requirejs.undef("text!"+_curPage.data.tpl);
-						//requirejs.undef("css!"+_curPage.data.css);
+						delete this._curPages[data.depth];
 					}
 					this._preloaderOn();
 					require([data.view, data.css?"css!"+data.css:"", "text!"+data.tpl],function(view, css, tpl){
@@ -288,17 +320,17 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 						_self.$stage.append(_self._tempPage.el);
 						_self._tempPage.init();
 						_self._initPreloader(data);
-						_self.listenToOnce(_self._tempPage, BasePageConst.PRELOAD_COMPLETE, function(){
+						_self.listenToOnce(_self._tempPage, _self.PRELOAD_COMPLETE, function(){
 							_self._preloadComplete(data);
 						});
-						_self._tempPage.preload(_self._preloadFast);
+						_self._tempPage.preload(_self._preloadFast||data.fast=="true");
 					});
 					break;
 				case this.PRELOAD:
 					if(_curPage)
 					{
-						this.listenToOnce(_curPage, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
-							this._flowOut(data);
+						this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function(){
+							_self._flowOut(data);
 						});
 						_curPage.transitionOut();
 					}else{
@@ -306,8 +338,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 					}
 					break;
 				case this.REVERSE:
-					this.listenToOnce(_tempPage, BasePageConst.TRANSITION_IN_COMPLETE, function(){
-						this._flowOut(data);
+					this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function(){
+						_self._flowOut(data);
 					});
 					_tempPage.transitionIn();
 					break;
@@ -328,28 +360,26 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			switch(_flow)
 			{
 				case this.NORMAL:
-					this.listenToOnce(_tempPage, BasePageConst.TRANSITION_IN_COMPLETE, function(){
-						this._flowOutComplete(data);
+					this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function(){
+						_self._flowOutComplete(data);
 					});
 					_tempPage.transitionIn();
 					break;
 				case this.PRELOAD:
 					if(_curPage){
 						_curPage.destroy();
-						//requirejs.undef(_curPage.data.view);
-						//requirejs.undef("text!"+_curPage.data.tpl);
-						//requirejs.undef("css!"+_curPage.data.css);
+						delete this._curPages[data.depth];
 					}
-					this.listenToOnce(_tempPage, BasePageConst.TRANSITION_IN_COMPLETE, function(){
-						this._flowOutComplete(data);
+					this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function(){
+						_self._flowOutComplete(data);
 					});
 					_tempPage.transitionIn();
 					break;
 				case this.REVERSE:
 					if(_curPage)
 					{
-						this.listenToOnce(_curPage, BasePageConst.TRANSITION_OUT_COMPLETE, function(){
-							this._flowOutComplete(data);
+						this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function(){
+							_self._flowOutComplete(data);
 						});
 						_curPage.transitionOut();
 					}else{
@@ -357,8 +387,8 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 					}
 					break;
 				case this.CROSS:
-					this.listenToOnce(_tempPage, BasePageConst.TRANSITION_IN_COMPLETE, function(){
-						this._flowOutComplete(data);
+					this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function(){
+						_self._flowOutComplete(data);
 					});
 					_tempPage.transitionIn();
 					break;
@@ -372,18 +402,14 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			
 			if(_curPage){
 				_curPage.destroy();
-				//requirejs.undef(_curPage.data.view);
-				//requirejs.undef("text!"+_curPage.data.tpl);
-				//requirejs.undef("css!"+_curPage.data.css);
 			}
 			
 			if(_tempPage){
 				this._curPages[data.depth] = _tempPage;
+				delete this._tempPages[data.depth];
 			}else{
-				if(this._curPages[data.depth]) delete this._curPages[data.depth];
+				if(_curPage) delete this._curPages[data.depth];
 			}
-			
-			delete this._tempPages[data.depth];
 			
 			if(data.routing){
 				document.title = data.routing;
@@ -392,11 +418,11 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			if(_.isArray(this._tempData)){
 				this._tempFlowIndex++;
 				if(this._tempFlowIndex >= this._tempData.length){
-					this.trigger(this.FLOW_COMPLETE, {data:this._tempData});
+					_self.trigger(_self.FLOW_COMPLETE, {data:this._tempData});
 					this._playQueue();
 				}
 			}else{
-				this.trigger(this.FLOW_COMPLETE, {data:this._tempData});
+				_self.trigger(_self.FLOW_COMPLETE, {data:this._tempData});
 				this._playQueue();
 			}
 		},
@@ -441,9 +467,6 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			var _self = this;
 			if(this._preloader != null){
 				this._preloader.destroy();
-				//requirejs.undef(this._preloader.data.view);
-				//requirejs.undef("text!"+this._preloader.data.tpl);
-				//requirejs.undef("css!"+this._preloader.data.css);
 				this._preloader = null;
 			}
 			
@@ -466,16 +489,14 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 		_initPreloader:function(data){
 			if(this._preloader == null) return;
 			var _tempPage = this._tempPages[data.depth];
-			//this.listenTo(_tempPage, BasePageConst.PRELOAD, this._preloaderOn);
-			this.listenTo(_tempPage, BasePageConst.PRELOAD_PROGRESS, this._preloaderProgress);
-			this.listenTo(_tempPage, BasePageConst.PRELOAD_COMPLETE, this._preloaderOff);
+			this.listenTo(_tempPage, this.PRELOAD_PROGRESS, this._preloaderProgress);
+			this.listenTo(_tempPage, this.PRELOAD_COMPLETE, this._preloaderOff);
 		},
 		_clearPreloader:function(data){
 			if(this._preloader == null) return;
 			var _tempPage = this._tempPages[data.depth];
-			//this.stopListening(_tempPage, BasePageConst.PRELOAD, this._preloaderOn);
-			this.stopListening(_tempPage, BasePageConst.PRELOAD_PROGRESS, this._preloaderProgress);
-			this.stopListening(_tempPage, BasePageConst.PRELOAD_COMPLETE, this._preloaderOff);
+			this.stopListening(_tempPage, this.PRELOAD_PROGRESS, this._preloaderProgress);
+			this.stopListening(_tempPage, this.PRELOAD_COMPLETE, this._preloaderOff);
 		},
 		_preloaderOn:function(obj){
 			if(this._preloader == null) return;
@@ -638,5 +659,247 @@ define(["underscore","backbone","basePageConst"],function(_,Backbone,BasePageCon
 			this.trigger(this.WINDOW_RESIZE);
 		}
 	});
-	return athena;
-});
+	
+	/* 
+	 * 将Athena的所有方法归纳到 Athena.api下
+	 */
+	Athena.api = {};
+	
+	var apiMethods = ["init",
+					"pageTo",
+					"pageOn",
+					"pageOff",
+					"calcDepth",
+					"preloader",
+					"getPage",
+					"getPageAt",
+					"fullScreen",
+					"preloadFast",
+					"isFlowing",
+					"windowRect",
+					"windowRectMin",
+					"stageRect",
+					"flow",
+					"resize",
+					"on",
+					"once",
+					"off",
+					"trigger",
+					"listenTo",
+					"listenToOnce",
+					"stopListening"];
+	
+	_.each(apiMethods, function(method){
+		Athena.api[method] = function(){
+			var args = slice.call(arguments);
+			return Athena[method].apply(Athena, args);
+		};
+	});
+	
+	/* 
+	 * Athena.view下为本框架所有基本view类，包括BaseView,BaseBtn,BasePage。
+	 * BaseView：所有视图类的基类，需要添加入本框架的视图元素都可以从此类扩展。
+	 * BaseBtn：所有按钮类的基类，需要添加入本框架的按钮元素都可以从此类扩展。
+	 * BasePage：所有页面类的基类，需要添加入本框架的页面元素都可以从此类扩展（sitemap中配置的就是网站所有页面）。
+	 */
+	Athena.view = {};
+	
+	Athena.view.BaseView = Backbone.View.extend({
+		template:null,
+		children:null,
+		_inited:null,
+		events:{
+		},
+		initialize:function(args){
+			this.children = [];
+			if(!args) return;
+			if(args.template){
+				this.template = args.template;
+			}
+			if(args.el){
+				this.init(args);
+			}else{
+				this.render();
+			}
+		},
+		init:function(args){
+			if(this._inited) return;
+			this._inited = true;
+		},
+		destroy:function(){
+			_.each(this.children, function(obj){
+				obj.destroy();
+			});
+			this.children = null;
+			this.remove();
+		},
+		render:function(){
+			if(this.template) this.$el.html(this.template);
+		},
+		resize:function(){
+			_.each(this.children, function(obj){
+				obj.resize();
+			});
+		},
+		addChild:function(view,$dom){
+			_.each(this.children, function(obj){
+				if(obj == view) return;
+			});
+			this.children.push(view);
+			if($dom){
+				$dom.append(view.el);
+				view.init();
+			}
+		},
+		removeChild:function(view){
+			_.each(this.children, function(index,obj){
+				if(obj == view){
+					this.children.splice(index,1);
+					view.destroy();
+					return;
+				}
+			});
+		}
+	});
+	
+	Athena.view.BaseBtn = Athena.view.BaseView.extend({
+		MOUSE_OVER:"mouseover",
+		MOUSE_OUT:"mouseout",
+		CLICK:"click",
+		_isMouseOver:null,
+		_isSelected:null,
+		_isEnable:null,
+		init:function(args){
+			Athena.view.BaseView.prototype.init.apply(this,[args]);
+			this._isMouseOver = false,
+			this._isSelected = false,
+			this._isEnable = false,
+			this.enable(true);
+		},
+		destroy:function(){
+			this.enable(false);
+			Athena.view.BaseView.prototype.destroy.apply(this);
+		},
+		mouseOverHandler:function(){
+		},
+		mouseOutHandler:function(){
+		},
+		clickHandler:function(){
+		},
+		selected:function(bool){
+			if(bool == this._isSelected) return;
+			if(bool){
+				this.mouseOverHandler();
+				this._isSelected = bool;
+			}else{
+				this._isSelected = bool;
+				this.mouseOutHandler();
+			}
+		},
+		enable:function(bool){
+			if(bool == this._isEnable) return;
+			var _self = this;
+			if(bool){
+				this.$el.css("cursor","pointer");
+				this.$el.on("mouseenter",function(event){
+					_self._isMouseOver = true;
+					_self.trigger(_self.MOUSE_OVER);
+					_self.mouseOverHandler(event);
+					return false;
+				});
+				this.$el.on("mouseleave",function(event){
+					_self._isMouseOver = false;
+					_self.trigger(_self.MOUSE_OUT);
+					_self.mouseOutHandler(event);
+					return false;
+				});
+				this.$el.on("click",function(event){
+					_self.trigger(_self.CLICK);
+					_self.clickHandler(event);
+					return false;
+				});
+			}else{
+				this.$el.css("cursor","auto");
+				this.$el.off("mouseenter");
+				this.$el.off("mouseleave");
+				this.$el.off("click");
+			}
+			this._isEnable = bool;
+		}
+	});
+	
+	Athena.view.BasePage = Athena.view.BaseView.extend({
+		loadMax:null,
+		loaded:null,
+		data:null,
+		initialize:function(args){
+			Athena.view.BaseView.prototype.initialize.apply(this,[args]);
+			
+			this.data = args.data;
+			this.$el.css({"z-index":this.data.depth});
+			this.preloadArray = [];
+		},
+		init:function(args){
+			Athena.view.BaseView.prototype.init.apply(this,[args]);
+			
+			this.listenTo(Athena, Athena.WINDOW_RESIZE, function(){
+				this.resize();
+			});
+		},
+		destroy:function(){
+			Athena.view.BaseView.prototype.destroy.apply(this);
+		},
+		preload:function(skip){
+			this.trigger(Athena.PRELOAD, {data:this.data});
+			
+			if(skip){
+				this.completeHandle();
+				return;
+			}
+			
+			var _self = this;
+			var _imgs = _.without(_.pluck(this.$el.find("img"),"src"),"");
+			this.loadMax = _imgs.length;
+			this.loaded = 0;
+			if(this.loadMax == 0){ 
+				this.completeHandle();
+			}else{
+				_.each(_imgs, function(url){
+					$(new Image()).load(function(){
+						_self._assetLoadComplete();
+				    }).error(function() {
+				    	_self._assetLoadComplete();
+					}).attr("src", url);
+				});
+			}
+		},
+		_assetLoadComplete:function(){
+			this.loaded++;
+			this.progressHandle(this.loaded/this.loadMax);
+			if(this.loaded >= this.loadMax){
+				this.completeHandle();
+			}
+		},
+		progressHandle:function (obj) {
+			this.trigger(Athena.PRELOAD_PROGRESS, {data:this.data, progress:obj});
+		},
+		completeHandle:function () {
+			this.trigger(Athena.PRELOAD_COMPLETE, {data:this.data});
+		},
+		transitionIn:function(){
+			this.resize();
+			this.trigger(Athena.TRANSITION_IN, {data:this.data});
+		},
+		transitionInComplete:function(){
+			this.trigger(Athena.TRANSITION_IN_COMPLETE, {data:this.data});
+		},
+		transitionOut:function(){
+			this.trigger(Athena.TRANSITION_OUT, {data:this.data});
+		},
+		transitionOutComplete:function(){
+			this.trigger(Athena.TRANSITION_OUT_COMPLETE, {data:this.data});
+		}
+	});
+	
+	return Athena;
+}));

@@ -13,10 +13,6 @@ require.config({
         "tweenlite":"libs/greensock/TweenLite-1.11.2.min",
         "tweenmax":"libs/greensock/TweenMax-1.11.2.min",
     	"athena":"libs/athena/Athena",
-		"baseView":"libs/athena/base/BaseView",
-		"basePage":"libs/athena/base/BasePage",
-		"basePageConst":"libs/athena/base/BasePageConst",
-		"baseBtn":"libs/athena/base/BaseBtn",
 		//辅助类
 		"jquery.cookie":"libs/jquery/jquery.cookie-min",
         "jquery.md5":"libs/jquery/jquery.md5-min",
@@ -69,6 +65,10 @@ require.config({
 		"tweenmax":{
 			exports:"TweenMax"
 		},
+		"athena": {
+			deps:["underscore","backbone","jquery","tweenmax"],
+			exports:"Athena"
+		},
 		"easel": {
 			exports:"createjs"
 		},
@@ -83,14 +83,14 @@ require.config({
 
 require(["jquery","athena","siteMap","siteRouter","siteModel","im20"],function($,Athena,SiteMap,SiteRouter,SiteModel){
 	$(function(){
-		Athena.init();
-		Athena.fullScreen(true);
-		Athena.windowRectMin({width:1000,height:600});
-		Athena.flow(Athena.NORMAL);
-		//Athena.preloadFast(true);
+		Athena.api.init();
+		Athena.api.fullScreen(true);
+		Athena.api.windowRectMin({width:1000,height:600});
+		Athena.api.flow(Athena.NORMAL);
+		//Athena.api.preloadFast(true);
 		if(SiteMap.preloader){
-			Athena.on(Athena.PRELOAD_PREPARE, init);
-			Athena.preloader(SiteMap.preloader);
+			Athena.api.on(Athena.PRELOAD_PREPARE, init);
+			Athena.api.preloader(SiteMap.preloader);
 		}else{
 			init();
 		}

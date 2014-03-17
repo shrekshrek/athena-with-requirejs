@@ -1,21 +1,21 @@
-define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenmax"],function(Tracker,BasePage,Athena,SiteMap,SiteModel,SiteRouter,TweenMax){
-	var view = BasePage.extend({
+define(["tracker","athena","siteMap","siteModel","siteRouter","tweenmax"],function(Tracker,Athena,SiteMap,SiteModel,SiteRouter,TweenMax){
+	var view = Athena.view.BasePage.extend({
 		id:"home-page",
 		className:"page",
 		init:function(args){
-			BasePage.prototype.init.apply(this,[args]);
+			Athena.view.BasePage.prototype.init.apply(this,[args]);
 
 			this.$el.css({opacity:0});
 		},
 		destroy:function(){
-			BasePage.prototype.destroy.apply(this);
+			Athena.view.BasePage.prototype.destroy.apply(this);
 		},
 		resize:function(){
-			BasePage.prototype.resize.apply(this);
+			Athena.view.BasePage.prototype.resize.apply(this);
 		},
 		transitionIn:function(){
 			var _self = this;
-			BasePage.prototype.transitionIn.apply(this);
+			Athena.view.BasePage.prototype.transitionIn.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Quart.easeOut, onComplete:function(){
 				_self.transitionInComplete();
@@ -23,7 +23,7 @@ define(["tracker","basePage","athena","siteMap","siteModel","siteRouter","tweenm
 		},
 		transitionOut:function(){
 			var _self = this;
-			BasePage.prototype.transitionOut.apply(this);
+			Athena.view.BasePage.prototype.transitionOut.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			TweenMax.to(this.$el, 0.5, {opacity:0, ease:Quart.easeIn, onComplete:function(){
 				_self.transitionOutComplete();

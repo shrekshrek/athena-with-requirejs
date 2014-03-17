@@ -1,9 +1,10 @@
-define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
-	var view = BaseView.extend({
+define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
+	var view = Athena.view.BaseView.extend({
 		$target:null,
 		$parent:null,
 		$box:null,
 		$bg:null,
+		targetPos0:null,
 		mousePos0:null,
 		touchPos0:null,
 		direction:null,//v竖向，h横向
@@ -11,7 +12,11 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 		targetRect:null,
 		dragRect:null,
 		init:function(args){
-			BaseView.prototype.init.apply(this,[args]);
+			Athena.view.BaseView.prototype.init.apply(this,[args]);
+			
+			if(args.direction || args.direction=="v" || args.direction=="h") this.direction = args.direction;
+			this.$target = this.$el;
+			this.$parent = this.$target.parent();
 			
 			this.mousePos0 = {x:0,y:0};
 			this.touchPos0 = {x:0,y:0};
@@ -19,14 +24,17 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 			this.parentRect = {width:0,height:0};
 			this.targetRect = {width:0,height:0};
 			this.dragRect = {width:0,height:0};
+			this.targetPos0 = {x:parseInt(this.$target.css("margin-left")),y:parseInt(this.$target.css("margin-top"))};
 			
-			if(args.direction || args.direction=="v" || args.direction=="h") this.direction = args.direction;
-			this.$target = this.$el;
-			this.$parent = this.$target.parent();
-			//if(this.$parent.css("position") != "absolute") this.$parent.css({"position":"relative"});
-			this.$target.css({"position":"absolute","left":0,"top":0});
-			if(this.$parent.find(".scroll-bar").length == 0) this.$parent.append("<div class='scroll-bar'><div class='scroll-bg'></div><div class='scroll-box'></div></div>");
-			this.$el = this.$parent.find(".scroll-bar");
+			if(args.bar){
+				this.$el = args.bar;
+			}else if(this.$parent.find(".scroll-bar").length == 0){
+				this.$parent.append("<div class='scroll-bar'><div class='scroll-bg'></div><div class='scroll-box'></div></div>");
+				this.$el = this.$parent.find(".scroll-bar");
+			}else{
+				throw "scoller havn't bar!!!";
+			}
+			
 			this.$el.css({"position":"absolute"});
 			this.$bg = this.$el.find(".scroll-bg");
 			this.$bg.css({"position":"absolute","left":0,"top":0});
@@ -37,10 +45,10 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 		},
 		destroy:function(){
 			this.frozen();
-			//this.$el = null;
-			BaseView.prototype.destroy.apply(this);
+			Athena.view.BaseView.prototype.destroy.apply(this);
 		},
 		active:function(){
+			this.frozen();
 			this.$box.on("mousedown",{self:this},this._mouseDown);
 			this.$parent.on("mousewheel",{self:this},this._mouseWheel);
 			this.$parent.on('touchstart',{self:this},this._touchStart);
@@ -76,11 +84,11 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 			switch(_self.direction){
 				case "v":
 					var _dy = (_self.touchPos0.y - event.clientY)/_self.targetRect.height*_self.parentRect.height;
-		            _self._scrollTo(_self.$box.position().top+_dy);
+		            _self._scrollTo(parseInt(_self.$box.css("margin-top"))+_dy);
 					break;
 				case "h":
 					var _dx = (_self.touchPos0.x - event.clientX)/_self.targetRect.width*_self.parentRect.width;
-		            _self._scrollTo(_self.$box.position().left+_dx);
+		            _self._scrollTo(parseInt(_self.$box.css("margin-left"))+_dx);
 					break;
 			}
 			_self.touchPos0.y = event.clientY;
@@ -102,14 +110,14 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 		},
 		_mouseDown:function(event){
 			var _self = event.data.self;
-			_self.mousePos0.y = event.clientY - _self.$box.position().top;
-			_self.mousePos0.x = event.clientX - _self.$box.position().left;
+			_self.mousePos0.y = event.clientY - parseInt(_self.$box.css("margin-top"));
+			_self.mousePos0.x = event.clientX - parseInt(_self.$box.css("margin-left"));
 			_self._dragOn();
 			return false;
 		},
 		_mouseWheel:function(event, delta){
 			var _self = event.data.self;
-			_self._scrollTo(_self.$box.position().top - delta*30);
+			_self._scrollTo(parseInt(_self.$box.css("margin-top")) - delta*30);
 			return false;
 		},
 		_mouseMove:function(event){
@@ -138,24 +146,24 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 				case "v":
 					var _dy = num;
 		            _dy = Math.min(_self.dragRect.height, Math.max(0, _dy));
-		            _self.$box.css({"top":_dy});
-		            var _y = -_dy/_self.dragRect.height*(_self.targetRect.height-_self.parentRect.height);
-		            TweenMax.to(_self.$target, 0.3, {"top":_y});
+		            _self.$box.css({"margin-top":_dy});
+		            var _y = -_dy/_self.dragRect.height*(_self.targetRect.height-_self.parentRect.height) + this.targetPos0.y;
+		            TweenMax.to(_self.$target, 0.3, {"margin":_y+" 0 0 "+this.targetPos0.x});
 					break;
 				case "h":
 					var _dx = num;
 		            _dx = Math.min(_self.dragRect.width, Math.max(0, _dx));
-		            _self.$box.css({"left":_dx});
-		            var _x = -_dx/_self.dragRect.width*(_self.targetRect.width-_self.parentRect.width);
-		            TweenMax.to(_self.$target, 0.3, {"left":_x});
+		            _self.$box.css({"margin-left":_dx});
+		            var _x = -_dx/_self.dragRect.width*(_self.targetRect.width-_self.parentRect.width) + this.targetPos0.x;
+		            TweenMax.to(_self.$target, 0.3, {"margin":this.targetPos0.y+" 0 0 "+_x});
 					break;
 			}
 		},
 		update:function(){
 			this.parentRect.width = this.$parent.width();
 			this.parentRect.height = this.$parent.height();
-			this.targetRect.width = this.$target.width();
-			this.targetRect.height = this.$target.height();
+			this.targetRect.width = this.$target.width()+this.targetPos0.x;
+			this.targetRect.height = this.$target.height()+this.targetPos0.y;
 			
 			switch(this.direction){
 				case "v":
@@ -169,7 +177,7 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 					var _n = this.parentRect.height/this.targetRect.height*this.parentRect.height|0;
 					this.$box.height(_n);
 					this.dragRect.height = this.parentRect.height-_n;
-					this.$box.css({"top":this.$target.position().top/(this.parentRect.height-this.targetRect.height)*this.dragRect.height});
+					this.$box.css({"margin-top":parseInt(this.$target.css("margin-top"))/(this.parentRect.height-this.targetRect.height)*this.dragRect.height});
 					break;
 				case "h":
 					if(this.targetRect.width <= this.parentRect.width){
@@ -182,15 +190,15 @@ define(["baseView","tweenmax","jquery.mousewheel"],function(BaseView,TweenMax){
 					var _n = this.parentRect.width/this.targetRect.width*this.parentRect.width|0;
 					this.$box.width(_n);
 					this.dragRect.width = this.parentRect.width-_n;
-					this.$box.css({"left":this.$target.position.left/(this.targetRect.width-this.parentRect.width)*this.dragRect.width});
+					this.$box.css({"margin-left":parseInt(this.$target.css("margin-left"))/(this.targetRect.width-this.parentRect.width)*this.dragRect.width});
 					break;
 			}
 			if(this.targetRect.height > 0) this.active();
 			else this.frozen();
 		},
 		reset:function(){
-			this.$box.css({"left":0,"top":0});
-			this.$target.css({"left":0,"top":0});
+			this.$box.css({"margin-left":0,"margin-top":0});
+			this.$target.css({"margin-left":this.targetPos0.x,"margin-top":this.targetPos0.y});
 		}
 	});
 	return view;

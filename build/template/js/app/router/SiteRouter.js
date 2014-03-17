@@ -12,10 +12,10 @@ define(["backbone","athena","siteMap"],function(BackBone,Athena,SiteMap){
 					var _action = actions.split("?")[0];
 					_.each(SiteMap, function(obj, index){
 						if(_action == obj.title){
-							if(Athena.getPage(SiteMap.header)){
-								Athena.pageTo(obj);
+							if(Athena.api.getPage(SiteMap.header)){
+								Athena.api.pageTo(obj);
 							}else{
-								Athena.pageTo([SiteMap.header,SiteMap.footer,obj]);
+								Athena.api.pageTo([SiteMap.header,SiteMap.footer,obj]);
 							}
 						}
 					});

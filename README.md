@@ -2,6 +2,9 @@
 a js web framework base on backbone.js & require.js  
 Athena是一个基于Backbone和requirejs的前端框架。结构清晰，管理方便。
 
+*version:1.0.1*  
+*date:2014.03.17*
+
 *version:1.0.0*  
 *date:2014.01.23*
 
@@ -46,6 +49,8 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **$link-to-origin** 将index.html中的css和js指向原始文件夹  
 
 ##Athena API:
+Athena所有命令都置于Athena.api下，
+
 **init(stage);**  
 设置关联根节点，初始化框架
 
@@ -100,14 +105,18 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **getPageAt(depth);**  
 获取指定depth层级的页面实例,默认depth为0，即"middle"层。
 
+**preloadFast(bool);**  
+设置快速预载，bool为true，则当加载完模版tpl文件和css文件后即算加载完成，bool为false，则当模版tpl和css文件加载完成后继续预载模版tpl中所有img标签图片，全部加载完成才为页面加载完成。
+
 **resize();**  
-当页面尺寸变化时自动调用，发布resize事件
+当页面尺寸变化时自动调用，发布resize事件。需要时也可以主动调用，所有page扩展页会响应全局resize事件一起刷新。
 
 ##Athena EVENTS:
-**Athena.trigger(this.WINDOW_RESIZE);**  
-**Athena.trigger(self.PRELOAD_PREPARE);**  
-**Athena.trigger(this.FLOW_COMPLETE, {data:当前流程的页面信息});**  
-**Athena.trigger(this.FLOW_START, {data:当前流程的页面信息});**  
+**Athena.trigger(Athena.WINDOW_RESIZE);**  
+**Athena.trigger(Athena.PRELOAD_PREPARE);**  
+**Athena.trigger(Athena.FLOW_COMPLETE, {data:当前流程的页面信息});**  
+**Athena.trigger(Athena.FLOW_START, {data:当前流程的页面信息});**  
+使用Backbone的on或listenTo就可以监听这些全局事件。
 
 ##Athena CONST:
 页面深度常量  
@@ -115,18 +124,67 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **TOP:"top"**          等价于z-index = 500  
 **MIDDLE:"middle"**    等价于z-index = 0  
 **BOTTOM:"bottom"**    等价于z-index = -500  
+Athena.api.getPageAt(depth);此命令有时会需要用到这些变量以获取相应层级的页面。
 
 页面切换方式常量  
 **NORMAL:"normal"**    普通切换方式：1。当前页面退场。2。加载新页面。3。新页面进场。  
 **PRELOAD:"preload"**  预载切换方式：1。加载新页面。2。当前页面退场。3。新页面进场。  
 **REVERSE:"reverse"**  反转切换方式：1。加载新页面。2。新页面进场。3。当前页面退场。  
 **CROSS:"cross"**      交叉切换方式：1。加载新页面。2。新页面进场。当前页面退场。同时进行。  
+Athena.api.flow(flow);此命令会用到这些变量以用来设置页面切换方式。
 
 页面间切换状态常量  
 **FLOW_START:"flowStart"**           页面切换流程开始时发布此事件  
 **FLOW_COMPLETE:"flowComplete"**     页面切换流程结束时发布此事件  
 **WINDOW_RESIZE:"windowResize"**     窗体尺寸变化时发布此事件  
-**PRELOAD_PREPARE:"preloadPrepare"** 预载页准备完成时发布此事件（常用于网站开始前侦听此事件）
+**PRELOAD_PREPARE:"preloadPrepare"** 预载页准备完成时发布此事件（常用于网站开始前侦听此事件）  
+这些是全局事件变量，任何地方有需要都可以通过使用Backbone的on或listenTo就可以监听这些全局事件。
+
+##Athena 相关基类:
+Athena所有基类都置于Athena.view下  
+**BaseView**   为视图类基类，当页面中有需要添加新元素是可以直接继承此类做各种扩展  
+	init:function(args){
+		Athena.view.BasePage.prototype.init.apply(this,[args]);
+	},
+	destroy:function(){
+		Athena.view.BasePage.prototype.destroy.apply(this);
+	},
+	resize:function(){
+		Athena.view.BasePage.prototype.resize.apply(this);
+	}
+另：本基类含有两个方法：
+addChild(view,$dom); 将视图类加入view视图类中，添加入page页面类的view视图会跟随page类执行resize()和destroy().  
+removeChild(view);   将视图类移出view视图类。移出后自动执行destroy();  
+
+**BaseBtn**    为按钮类基类，继承自BaseView，有css搞不定的特殊需求按钮时可以使用此类扩展自己所需按钮类（当然如果能使用css做按钮会方便很多，省得创建很多js来管理按钮了）  
+
+**BasePage**   为页面类的基类，所有page和pop都继承自此类，继承并可以覆写的方法如下（可参考js/app/view/下页面和弹窗文件）：  
+	init:function(args){
+		Athena.view.BasePage.prototype.init.apply(this,[args]);
+	},
+	destroy:function(){
+		Athena.view.BasePage.prototype.destroy.apply(this);
+	},
+	resize:function(){
+		Athena.view.BasePage.prototype.resize.apply(this);
+	},
+	transitionIn:function(){
+		Athena.view.BasePage.prototype.transitionIn.apply(this);
+	},
+	transitionInComplete:function(){
+		Athena.view.BasePage.prototype.transitionInComplete.apply(this);
+	},
+	transitionOut:function(){
+		Athena.view.BasePage.prototype.transitionOut.apply(this);
+	},
+	transitionOutComplete:function(){
+		Athena.view.BasePage.prototype.transitionOutComplete.apply(this);
+	}
+
+##Athena 扩展组件:
+组件在app/js/libs/athena/ui/下，目前可以使用的组件只有两个，  
+scroller 范例参考workspage  
+easybtn  目前没在范例中使用  
 
 ##网站文件结构：
 Athena.js 为框架主文件，组织图解如下：  
@@ -145,3 +203,10 @@ main.js 里需要为所有使用的js文件注册一个对应的变量名，以�
 http://kyrios.hvsop.cn/  
 http://pc4.hvsop.cn/  
 http://outdoor.adidasevent.com/  
+
+##其他：
+范例中用到相关im20的类库可以删除，仅为本人为了方便调用公司后台类库加入的...
+
+
+
+

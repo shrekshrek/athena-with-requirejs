@@ -2,7 +2,7 @@
 <!-- Set Ant Project Name -->
 <project name="Athena" default="$main" basedir=".">
 	
-	<property name="version" value="0.1.0" />
+	<property name="version" value="1.0.1" />
 	
 	<property name="build" value="." />
 	<property file="${build}/site.properties" />
@@ -63,7 +63,11 @@
 			<fileset dir="${js-built}" includes="**/*.html"/>
 		</copy>
 		
-		<replaceregexp  match="&#13;&#10;" replace="" flags="g" byline="false">
+		<replaceregexp  match="&#13;" replace="" flags="g" byline="false">
+			<fileset dir="${temp}" />
+		</replaceregexp>
+
+		<replaceregexp  match="&#10;" replace="" flags="g" byline="false">
 			<fileset dir="${temp}" />
 		</replaceregexp>
 
