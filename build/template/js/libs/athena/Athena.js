@@ -834,7 +834,7 @@
 				this.resize();
 			});
 		},
-		destroy:function(){console.log("destroy",this.data);
+		destroy:function(){
 			Athena.view.BaseView.prototype.destroy.apply(this);
 		},
 		preload:function(skip){
