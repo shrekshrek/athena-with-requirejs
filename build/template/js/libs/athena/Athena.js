@@ -309,10 +309,6 @@
 			switch(_flow)
 			{
 				case this.NORMAL:
-					if(_curPage){
-						_curPage.destroy();
-						delete this._curPages[data.depth];
-					}
 					this._preloaderOn();
 					require([data.view, data.css?"css!"+data.css:"", "text!"+data.tpl],function(view, css, tpl){
 						_self._tempPage = new view({template:_.template(tpl.html?tpl.html:tpl,{}),data:data});
@@ -366,10 +362,6 @@
 					_tempPage.transitionIn();
 					break;
 				case this.PRELOAD:
-					if(_curPage){
-						_curPage.destroy();
-						delete this._curPages[data.depth];
-					}
 					this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function(){
 						_self._flowOutComplete(data);
 					});
@@ -400,15 +392,11 @@
 			var _tempPage = this._tempPages[data.depth];
 			var _flow = data.flow?data.flow:this._flow;
 			
-			if(_curPage){
-				_curPage.destroy();
-			}
+			if(_curPage) delete this._curPages[data.depth];
 			
 			if(_tempPage){
 				this._curPages[data.depth] = _tempPage;
 				delete this._tempPages[data.depth];
-			}else{
-				if(_curPage) delete this._curPages[data.depth];
 			}
 			
 			if(data.routing){
@@ -846,7 +834,7 @@
 				this.resize();
 			});
 		},
-		destroy:function(){
+		destroy:function(){console.log("destroy",this.data);
 			Athena.view.BaseView.prototype.destroy.apply(this);
 		},
 		preload:function(skip){
@@ -897,6 +885,7 @@
 			this.trigger(Athena.TRANSITION_OUT, {data:this.data});
 		},
 		transitionOutComplete:function(){
+			this.destroy();
 			this.trigger(Athena.TRANSITION_OUT_COMPLETE, {data:this.data});
 		}
 	});

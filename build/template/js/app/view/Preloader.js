@@ -33,6 +33,9 @@ define(["athena","siteModel","tweenmax"],function(Athena,SiteModel,TweenMax){
 				_self.$el.css({"display":"none"});
 			}});
 		},
+		transitionOutComplete:function(){
+			this.trigger(Athena.TRANSITION_OUT_COMPLETE, {data:this.data});
+		},
 		progress:function(obj){
 			if(TweenMax.isTweening(this.$bar)) TweenMax.killTweensOf(this.$bar);
 			TweenMax.to(this.$bar, 0.3, {width:obj.progress*100+"%", left:(1-obj.progress)*0.5*100+"%"});
