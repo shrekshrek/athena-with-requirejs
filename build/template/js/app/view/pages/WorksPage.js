@@ -2,10 +2,11 @@ define(["tracker","athena","siteMap","siteModel","siteRouter","tweenmax","scroll
 	var view = Athena.view.BasePage.extend({
 		id:"works-page",
 		className:"page",
-		init:function(args){
-			Athena.view.BasePage.prototype.init.apply(this,[args]);
+		init:function(){
+			Athena.view.BasePage.prototype.init.apply(this);
 			
-			this.scroller = new Scroller({el:this.$el.find("#content"),bar:this.$el.find(".scroll-bar")});
+			this.scroller = new Scroller({content:this.$el.find("#content"),bar:this.$el.find(".scroll-bar")});
+			this.scroller.init();
 			this.addChild(this.scroller);
 			
 			this.$el.css({opacity:0});
@@ -20,7 +21,7 @@ define(["tracker","athena","siteMap","siteModel","siteRouter","tweenmax","scroll
 			var _self = this;
 			Athena.view.BasePage.prototype.transitionIn.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
-			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Quart.easeOut, onComplete:function(){
+			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Linear.ease, onComplete:function(){
 				_self.transitionInComplete();
 			}});
 			
@@ -30,7 +31,7 @@ define(["tracker","athena","siteMap","siteModel","siteRouter","tweenmax","scroll
 			var _self = this;
 			Athena.view.BasePage.prototype.transitionOut.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
-			TweenMax.to(this.$el, 0.5, {opacity:0, ease:Quart.easeIn, onComplete:function(){
+			TweenMax.to(this.$el, 0.5, {opacity:0, ease:Linear.ease, onComplete:function(){
 				_self.transitionOutComplete();
 			}});
 		}

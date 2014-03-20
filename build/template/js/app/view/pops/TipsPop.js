@@ -12,7 +12,7 @@ define(["tracker","basePop","athena","siteMap","siteModel","siteRouter","tweenma
 			var _self = this;
 			BasePop.prototype.transitionIn.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
-			TweenMax.to(this.$el, 0.3, {opacity:1, onComplete:function(){
+			TweenMax.to(this.$el, 0.3, {opacity:1, ease:Linear.ease, onComplete:function(){
 				_self.transitionInComplete();
 			}});
 		},
@@ -20,7 +20,7 @@ define(["tracker","basePop","athena","siteMap","siteModel","siteRouter","tweenma
 			var _self = this;
 			BasePop.prototype.transitionOut.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
-			TweenMax.to(this.$el, 0.3, {opacity:0, onComplete:function(){
+			TweenMax.to(this.$el, 0.3, {opacity:0, ease:Linear.ease, onComplete:function(){
 				_self.transitionOutComplete();
 			}});
 		},

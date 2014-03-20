@@ -11,12 +11,15 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 		parentRect:null,
 		targetRect:null,
 		dragRect:null,
-		init:function(args){
-			Athena.view.BaseView.prototype.init.apply(this,[args]);
+		init:function(){
+			Athena.view.BaseView.prototype.init.apply(this);
 			
-			if(args.direction || args.direction=="v" || args.direction=="h") this.direction = args.direction;
-			this.$target = this.$el;
-			this.$parent = this.$target.parent();
+			if(this.args.direction || this.args.direction=="v" || this.args.direction=="h") this.direction = this.args.direction;
+			
+			if(this.args.content){
+				this.$target = this.args.content;
+				this.$parent = this.$target.parent();
+			}
 			
 			this.mousePos0 = {x:0,y:0};
 			this.touchPos0 = {x:0,y:0};
@@ -26,8 +29,8 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 			this.dragRect = {width:0,height:0};
 			this.targetPos0 = {x:parseInt(this.$target.css("margin-left")),y:parseInt(this.$target.css("margin-top"))};
 			
-			if(args.bar){
-				this.$el = args.bar;
+			if(this.args.bar){
+				this.$el = this.args.bar;
 			}else if(this.$parent.find(".scroll-bar").length == 0){
 				this.$parent.append("<div class='scroll-bar'><div class='scroll-bg'></div><div class='scroll-box'></div></div>");
 				this.$el = this.$parent.find(".scroll-bar");

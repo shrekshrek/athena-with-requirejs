@@ -105,9 +105,6 @@ Athena所有命令都置于Athena.api下，
 **getPageAt(depth);**  
 获取指定depth层级的页面实例,默认depth为0，即"middle"层。
 
-**preloadFast(bool);**  
-设置快速预载，bool为true，则当加载完模版tpl文件和css文件后即算加载完成，bool为false，则当模版tpl和css文件加载完成后继续预载模版tpl中所有img标签图片，全部加载完成才为页面加载完成。
-
 **resize();**  
 当页面尺寸变化时自动调用，发布resize事件。需要时也可以主动调用，所有page扩展页会响应全局resize事件一起刷新。
 
@@ -143,8 +140,8 @@ Athena.api.flow(flow);此命令会用到这些变量以用来设置页面切换�
 ##Athena 相关基类:
 Athena所有基类都置于Athena.view下  
 **BaseView**   为视图类基类，当页面中有需要添加新元素是可以直接继承此类做各种扩展  
-	init:function(args){  
-		Athena.view.BasePage.prototype.init.apply(this,[args]);  
+	init:function(){  
+		Athena.view.BasePage.prototype.init.apply(this);  
 	},  
 	destroy:function(){  
 		Athena.view.BasePage.prototype.destroy.apply(this);  
@@ -159,8 +156,8 @@ removeChild(view);   将视图类移出view视图类。移出后自动执行dest
 **BaseBtn**    为按钮类基类，继承自BaseView，有css搞不定的特殊需求按钮时可以使用此类扩展自己所需按钮类（当然如果能使用css做按钮会方便很多，省得创建很多js来管理按钮了）  
 
 **BasePage**   为页面类的基类，所有page和pop都继承自此类，继承并可以覆写的方法如下（可参考js/app/view/下页面和弹窗文件）：  
-	init:function(args){  
-		Athena.view.BasePage.prototype.init.apply(this,[args]);  
+	init:function(){  
+		Athena.view.BasePage.prototype.init.apply(this);  
 	},  
 	destroy:function(){  
 		Athena.view.BasePage.prototype.destroy.apply(this);  

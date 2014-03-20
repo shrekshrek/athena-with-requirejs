@@ -5,14 +5,14 @@ define(["athena","tweenmax"],function(Athena,TweenMax){
 		alpha1:[1,0],
 		alpha2:[0,1],
 		time:0.2,
-		init:function(args){
-			Athena.view.BaseBtn.prototype.init.apply(this,[args]);
-			if(args.time){
-				this.time = args.time;
+		init:function(){
+			Athena.view.BaseBtn.prototype.init.apply(this);
+			if(this.args.time){
+				this.time = this.args.time;
 			}
-			if(args.alpha){
-				if(args.alpha[0]) this.alpha1 = args.alpha[0];
-				if(args.alpha[1]) this.alpha2 = args.alpha[1];
+			if(this.args.alpha){
+				if(this.args.alpha[0]) this.alpha1 = this.args.alpha[0];
+				if(this.args.alpha[1]) this.alpha2 = this.args.alpha[1];
 			}
 			this.$obj1 = $(this.el).children('.normal');
 			this.$obj2 = $(this.el).children('.hover');

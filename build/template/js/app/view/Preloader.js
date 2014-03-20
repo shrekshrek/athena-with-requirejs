@@ -3,8 +3,8 @@ define(["athena","siteModel","tweenmax"],function(Athena,SiteModel,TweenMax){
 		id:"preloader",
 		className:"pop",
 		$bar:null,
-		init:function(args){
-			Athena.view.BasePage.prototype.init.apply(this,[args]);
+		init:function(){
+			Athena.view.BasePage.prototype.init.apply(this);
 			
 			this.$bar = $(this.el).find("#loading-bar");
 			
@@ -18,7 +18,7 @@ define(["athena","siteModel","tweenmax"],function(Athena,SiteModel,TweenMax){
 			Athena.view.BasePage.prototype.transitionIn.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
 			this.$el.css({"display":"block"});
-			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Quart.easeOut, onComplete:function(){
+			TweenMax.to(this.$el, 0.5, {opacity:1, ease:Linear.ease, onComplete:function(){
 				_self.transitionInComplete();
 			}});
 
@@ -28,9 +28,9 @@ define(["athena","siteModel","tweenmax"],function(Athena,SiteModel,TweenMax){
 			var _self = this;
 			Athena.view.BasePage.prototype.transitionOut.apply(this);
 			if(TweenMax.isTweening(this.$el)) TweenMax.killTweensOf(this.$el);
-			TweenMax.to(this.$el, 0.5, {opacity:0, ease:Quart.easeIn, onComplete:function(){
-				_self.transitionOutComplete();
+			TweenMax.to(this.$el, 0.5, {opacity:0, ease:Linear.ease, onComplete:function(){
 				_self.$el.css({"display":"none"});
+				_self.transitionOutComplete();
 			}});
 		},
 		transitionOutComplete:function(){

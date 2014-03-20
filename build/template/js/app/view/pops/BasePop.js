@@ -7,8 +7,8 @@ define(["athena","siteModel"],function(Athena,SiteModel){
 			"click .pop-bg":"closeHandler",
 			"click .close":"closeHandler"
 		},
-		init:function(args){
-			Athena.view.BasePage.prototype.init.apply(this,[args]);
+		init:function(){
+			Athena.view.BasePage.prototype.init.apply(this);
 			
 			this.$main = this.$el.find(".pop-main");
 			this.$bg = this.$el.find(".pop-bg");

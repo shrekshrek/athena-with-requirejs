@@ -449,7 +449,7 @@
 				}
 			}
 		},
-		preloader:function(data, obj){
+		preloader:function(data){
 			if(!this.$stage) throw "athena havn't stage!!!";
 
 			var _self = this;
@@ -473,6 +473,7 @@
 			}else{
 				throw "preloader must have data.tpl!!!";
 			}
+			
 		},
 		_initPreloader:function(data){
 			if(this._preloader == null) return;
@@ -695,22 +696,20 @@
 	Athena.view.BaseView = Backbone.View.extend({
 		template:null,
 		children:null,
+		args:null,
 		_inited:null,
 		events:{
 		},
 		initialize:function(args){
 			this.children = [];
 			if(!args) return;
+			this.args = args;
 			if(args.template){
 				this.template = args.template;
-			}
-			if(args.el){
-				this.init(args);
-			}else{
 				this.render();
 			}
 		},
-		init:function(args){
+		init:function(){
 			if(this._inited) return;
 			this._inited = true;
 		},
@@ -757,8 +756,8 @@
 		_isMouseOver:null,
 		_isSelected:null,
 		_isEnable:null,
-		init:function(args){
-			Athena.view.BaseView.prototype.init.apply(this,[args]);
+		init:function(){
+			Athena.view.BaseView.prototype.init.apply(this);
 			this._isMouseOver = false,
 			this._isSelected = false,
 			this._isEnable = false,
@@ -827,8 +826,8 @@
 			this.$el.css({"z-index":this.data.depth});
 			this.preloadArray = [];
 		},
-		init:function(args){
-			Athena.view.BaseView.prototype.init.apply(this,[args]);
+		init:function(){
+			Athena.view.BaseView.prototype.init.apply(this);
 			
 			this.listenTo(Athena, Athena.WINDOW_RESIZE, function(){
 				this.resize();

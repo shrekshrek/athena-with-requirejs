@@ -89,7 +89,7 @@ require(["jquery","athena","siteMap","siteRouter","siteModel","im20"],function($
 		Athena.api.flow(Athena.NORMAL);
 		//Athena.api.preloadFast(true);
 		if(SiteMap.preloader){
-			Athena.api.on(Athena.PRELOAD_PREPARE, init);
+			Athena.api.once(Athena.PRELOAD_PREPARE, init);
 			Athena.api.preloader(SiteMap.preloader);
 		}else{
 			init();
