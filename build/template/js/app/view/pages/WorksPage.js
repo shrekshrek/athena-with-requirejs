@@ -25,7 +25,7 @@ define(["tracker","athena","siteMap","siteModel","siteRouter","tweenmax","scroll
 				_self.transitionInComplete();
 			}});
 			
-			this.scroller.update();
+			//this.scroller.update();
 		},
 		transitionOut:function(){
 			var _self = this;

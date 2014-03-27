@@ -50,3 +50,31 @@ a:hover{color:#fff;}
 .page{
 	position:absolute;
 }
+
+/*
+ * -----------------------------------------页面
+ */
+.scroll-bar{
+	position:absolute;
+	right:0px;
+	top:0px;
+	width:16px;
+}
+.scroll-bar .scroll-box{
+	position:absolute;
+	top:0px;
+	width:16px;
+	background:#000000;
+	cursor:pointer;
+}
+.scroll-bar .scroll-bg{
+	position:absolute;
+	top:0px;
+	width:2px;
+	margin:0 0 0 7px;
+	background:#000000;
+}
+
+
+
+

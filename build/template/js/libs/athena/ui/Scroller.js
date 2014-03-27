@@ -38,11 +38,8 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 				throw "scoller havn't bar!!!";
 			}
 			
-			this.$el.css({"position":"absolute"});
 			this.$bg = this.$el.find(".scroll-bg");
-			this.$bg.css({"position":"absolute","left":0,"top":0});
 			this.$box = this.$el.find(".scroll-box");
-			this.$box.css({"position":"absolute","left":0,"top":0,"cursor":"pointer"});
 			
 			this.update();
 		},
@@ -180,7 +177,7 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 					var _n = this.parentRect.height/this.targetRect.height*this.parentRect.height|0;
 					this.$box.height(_n);
 					this.dragRect.height = this.parentRect.height-_n;
-					this.$box.css({"margin-top":parseInt(this.$target.css("margin-top"))/(this.parentRect.height-this.targetRect.height)*this.dragRect.height});
+					this.$box.css({"margin-top":(parseInt(this.$target.css("margin-top"))-this.targetPos0.y)/(this.parentRect.height-this.targetRect.height)*this.dragRect.height});
 					break;
 				case "h":
 					if(this.targetRect.width <= this.parentRect.width){
@@ -193,7 +190,7 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 					var _n = this.parentRect.width/this.targetRect.width*this.parentRect.width|0;
 					this.$box.width(_n);
 					this.dragRect.width = this.parentRect.width-_n;
-					this.$box.css({"margin-left":parseInt(this.$target.css("margin-left"))/(this.targetRect.width-this.parentRect.width)*this.dragRect.width});
+					this.$box.css({"margin-left":(parseInt(this.$target.css("margin-left"))-this.targetPos0.x)/(this.targetRect.width-this.parentRect.width)*this.dragRect.width});
 					break;
 			}
 			if(this.targetRect.height > 0) this.active();
