@@ -5,7 +5,7 @@ define(["backbone"],function(BackBone){
 		shareContent:"",
 		shareUrl:"",
 		shareImg:"",
-		shareVideo:"",
+		shareVideo:""
 		
 	});
 	return model;

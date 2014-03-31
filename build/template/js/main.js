@@ -101,7 +101,7 @@ require(["jquery","athena","siteMap","siteRouter","siteModel","im20"],function($
 		
 		Backbone.history.start({pushState:false});
 		
-		Communication.init(SiteModel.url);
+		//Communication.init(SiteModel.url);
 		
 	}
 	
