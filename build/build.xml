@@ -6,7 +6,7 @@
 	
 	<property name="build" value="." />
 	<property file="${build}/site.properties" />
-
+	
 	<property name="template" value="${build}/template" />
 	<property name="optimize" value="${template}/optimize" />
 	<property name="css" value="${siteroot}/css" />
@@ -36,7 +36,7 @@
 		<delete dir="${css-built}" />
 		<delete dir="${js-built}" />
 	</target>
-
+	
 	<target name="$create">
 		<echo message="create" />
 		<copy toDir="${siteroot}" overwrite="false" encoding="UTF-8">
@@ -85,7 +85,7 @@
 		
 		<delete dir="${temp}" />
 	</target>
-
+	
 	<target name="__header-footer" >
 		<concat destfile="${file}.js">
 			<header filtering="no" trimleading="yes">define({html:'</header>
@@ -93,7 +93,7 @@
 			<footer filtering="no" trimleading="yes">'});</footer>
 		</concat>
 	</target>
-
+	
 	<target name="__cdn-format" >
 		<foreach list="" target="__cdn-footer" param="file">
 			<fileset dir="${css-built}"  includes="**/*.js,**/*.html,**/*.css" />
@@ -102,13 +102,13 @@
 			<fileset dir="${js-built}"  includes="**/*.js,**/*.html,**/*.css" />
 		</foreach>
 	</target>
-
+	
 	<target name="__cdn-footer" >
 		<concat append="yes" destfile="${file}">${newline}</concat>
 	</target>
 	
 	<target name="__mainjs-to-built" >
-		<replaceregexp  match="js&quot;," replace="js-built&quot;," flags="g" byline="false">
+		<replaceregexp  match="js&#34;," replace="js-built&#34;," flags="g" byline="false">
 			<fileset dir="${js-built}" includes="main.js" />
 		</replaceregexp>
 	</target>
@@ -137,11 +137,11 @@
 	<condition property="__isMac">
 		<os family="mac" />
 	</condition>
-	  
+	
 	<condition property="__isWindows">
 		<os family="windows" />
 	</condition>
-	  
+	
 	<condition property="__isUnix">
 		<os family="unix" />
 	</condition>
@@ -158,10 +158,6 @@
 		<exec executable="/bin/sh" failonerror="true">
 			<arg line="-c '/usr/local/bin/node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${siteroot} dir=${js-built}'" />
 		</exec>
-		
-		<replaceregexp  match="&#34;js&#34;" replace="&#34;js-built&#34;" flags="g" byline="false">
-			<fileset dir="${js-built}" includes="main.js" />
-		</replaceregexp>
 	</target>
 	
 	<target name="__optimize-windows" if="__isWindows">
@@ -172,10 +168,6 @@
 		<exec executable="cmd" failonerror="true">
 			<arg line="/c node ${optimize}/r.js -o ${optimize}/build.js appDir=${js} baseUrl=${siteroot} dir=${js-built} " />
 		</exec>
-		                
-		<replaceregexp  match="&#34;js&#34;" replace="&#34;js-built&#34;" flags="g" byline="false">
-			<fileset dir="${js-built}" includes="main.js" />
-		</replaceregexp>
 	</target>
 	
 </project>
