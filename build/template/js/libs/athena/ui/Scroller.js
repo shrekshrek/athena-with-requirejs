@@ -27,7 +27,7 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 			this.parentRect = {width:0,height:0};
 			this.targetRect = {width:0,height:0};
 			this.dragRect = {width:0,height:0};
-			this.targetPos0 = {x:parseInt(this.$target.css("margin-left")),y:parseInt(this.$target.css("margin-top"))};
+			this.targetPos0 = {x:parseFloat(this.$target.css("margin-left")),y:parseFloat(this.$target.css("margin-top"))};
 			
 			if(this.args.bar){
 				this.$el = this.args.bar;
@@ -38,8 +38,11 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 				throw "scoller havn't bar!!!";
 			}
 			
+			//this.$el.css({"position":"absolute"});
 			this.$bg = this.$el.find(".scroll-bg");
+			//this.$bg.css({"position":"absolute","left":0,"top":0});
 			this.$box = this.$el.find(".scroll-box");
+			//this.$box.css({"position":"absolute","left":0,"top":0,"cursor":"pointer"});
 			
 			this.update();
 		},
@@ -84,11 +87,11 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 			switch(_self.direction){
 				case "v":
 					var _dy = (_self.touchPos0.y - event.clientY)/_self.targetRect.height*_self.parentRect.height;
-		            _self._scrollTo(parseInt(_self.$box.css("margin-top"))+_dy);
+		            _self._scrollTo(parseFloat(_self.$box.css("margin-top"))+_dy);
 					break;
 				case "h":
 					var _dx = (_self.touchPos0.x - event.clientX)/_self.targetRect.width*_self.parentRect.width;
-		            _self._scrollTo(parseInt(_self.$box.css("margin-left"))+_dx);
+		            _self._scrollTo(parseFloat(_self.$box.css("margin-left"))+_dx);
 					break;
 			}
 			_self.touchPos0.y = event.clientY;
@@ -110,14 +113,14 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 		},
 		_mouseDown:function(event){
 			var _self = event.data.self;
-			_self.mousePos0.y = event.clientY - parseInt(_self.$box.css("margin-top"));
-			_self.mousePos0.x = event.clientX - parseInt(_self.$box.css("margin-left"));
+			_self.mousePos0.y = event.clientY - parseFloat(_self.$box.css("margin-top"));
+			_self.mousePos0.x = event.clientX - parseFloat(_self.$box.css("margin-left"));
 			_self._dragOn();
 			return false;
 		},
 		_mouseWheel:function(event, delta){
 			var _self = event.data.self;
-			_self._scrollTo(parseInt(_self.$box.css("margin-top")) - delta*30);
+			_self._scrollTo(parseFloat(_self.$box.css("margin-top")) - delta*30);
 			return false;
 		},
 		_mouseMove:function(event){
@@ -177,7 +180,7 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 					var _n = this.parentRect.height/this.targetRect.height*this.parentRect.height|0;
 					this.$box.height(_n);
 					this.dragRect.height = this.parentRect.height-_n;
-					this.$box.css({"margin-top":(parseInt(this.$target.css("margin-top"))-this.targetPos0.y)/(this.parentRect.height-this.targetRect.height)*this.dragRect.height});
+					this.$box.css({"margin-top":parseFloat(this.$target.css("margin-top"))/(this.parentRect.height-this.targetRect.height)*this.dragRect.height});
 					break;
 				case "h":
 					if(this.targetRect.width <= this.parentRect.width){
@@ -190,7 +193,7 @@ define(["athena","tweenmax","jquery.mousewheel"],function(Athena,TweenMax){
 					var _n = this.parentRect.width/this.targetRect.width*this.parentRect.width|0;
 					this.$box.width(_n);
 					this.dragRect.width = this.parentRect.width-_n;
-					this.$box.css({"margin-left":(parseInt(this.$target.css("margin-left"))-this.targetPos0.x)/(this.targetRect.width-this.parentRect.width)*this.dragRect.width});
+					this.$box.css({"margin-left":parseFloat(this.$target.css("margin-left"))/(this.targetRect.width-this.parentRect.width)*this.dragRect.width});
 					break;
 			}
 			if(this.targetRect.height > 0) this.active();
