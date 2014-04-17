@@ -38,7 +38,8 @@ define(["athena","siteModel","tweenmax"],function(Athena,SiteModel,TweenMax){
 		},
 		progress:function(obj){
 			if(TweenMax.isTweening(this.$bar)) TweenMax.killTweensOf(this.$bar);
-			TweenMax.to(this.$bar, 0.3, {width:obj.progress*100+"%", left:(1-obj.progress)*0.5*100+"%"});
+			var _n = obj.progress?obj.progress:0;
+			TweenMax.to(this.$bar, 0.3, {width:_n*100+"%", left:(1-_n)*0.5*100+"%"});
 		}
 	});
 	return view;
