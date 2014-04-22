@@ -506,7 +506,7 @@
 				var _n = 0;
 				this._tempLoadedProgress[obj.data.depth] = obj.progress;
 				_.each(this._tempLoadedProgress, function(_obj,_index){
-					_n += _obj/_self._tempData.length;
+					if(_obj) _n += _obj/_self._tempData.length;
 				});
 				this._preloader.progress({progress:_n});
 			}else{
