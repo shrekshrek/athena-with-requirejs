@@ -161,7 +161,7 @@
 				this._tempFlowIndex = 0;
 				this._tempPreloadIndex = 0;
 				if(_.isArray(this._tempData)){
-					this._tempLoadedProgress = [];
+					this._tempLoadedProgress = {};
 					_.each(this._tempData, function(_obj, _index){
 						_self._flowIn(_obj);
 					});
@@ -505,7 +505,7 @@
 			if(_.isArray(this._tempData)){
 				var _n = 0;
 				this._tempLoadedProgress[obj.data.depth] = obj.progress;
-				_.each(this._tempLoadedProgress, function(_obj,_index){
+				_.each(this._tempLoadedProgress, function(_obj){
 					if(_obj) _n += _obj/_self._tempData.length;
 				});
 				this._preloader.progress({progress:_n});
