@@ -2,6 +2,10 @@
 a js web framework base on backbone.js & require.js  
 Athena是一个基于Backbone和requirejs的前端框架。结构清晰，管理方便。
 
+*version:1.1.0*  
+*date:2014.07.31*  
+添加grunt-imagemin图片压缩功能。
+
 *version:1.0.1*  
 *date:2014.03.17*
 
@@ -23,6 +27,7 @@ backbone，优秀的mvc框架，方便oop开发，让大家继续使用熟悉的
 requirejs，让我们可以把臃肿复杂的js按照模块分拆，然后按需加载使用，结合backbone，可以让我们的开发习惯延续其他语言的习惯，工程文件结构清晰，代码结构也更加友善易懂，  
 jquery，功能大家都懂得，虽然稍显庞大  
 underscore，非常好用的方法集，也是backbone的强依赖库，其他项目中也推荐独立使用  
+TweenMax，功能强大的第三方类库，原as下就很好用，出了js版后延续了易用强大的特点，继续成为html网站开发不可或缺的运动控制类  
 
 Athena，整合以上各种强大通用的第三方库，使html网站开发变得更加美好。  
 让开发者可以快速搭建网站，更方便的调整加载流程，层级控制，以及页面管理。对表现层不做任何干预。  
@@ -44,9 +49,11 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 将build.xml装载进ant，使用相关命令  
 **$create**   将网站创建到之前site地址指定的位置  
 **$clean**    清除site下相关网站文件及目录（慎用！！！）  
+**$clean-built**    清除site下所有压缩过的built文件夹  
 **$compile**  发布并优化css文件夹和js文件夹下文件，tpl中的html文件会自动打包成js文件以方便cdn跨域调用。生成新的优化文件包，以-build结尾。最后会将index.html中相关地址指向新的优化文件包  
-**$link-to-built** 将index.html中的css和js指向built文件夹  
+**$link-to-built** 将index.html中的css和js指向压缩过的built文件夹  
 **$link-to-origin** 将index.html中的css和js指向原始文件夹  
+**$grunt-install** 在使用$compile命令前请先使用此命令安装grunt相关组件，以便使用grunt-imagemin功能  
 
 ##Athena API:
 Athena所有命令都置于Athena.api下，
@@ -181,7 +188,7 @@ removeChild(view);   将视图类移出view视图类。移出后自动执行dest
 ##Athena 扩展组件:
 组件在app/js/libs/athena/ui/下，目前可以使用的组件只有两个，  
 scroller 范例参考workspage  
-easybtn  目前没在范例中使用  
+easybtn  目前没在范例中使用，一般情况下的按钮交互效果建议尽量使用css实现  
 
 ##网站文件结构：
 Athena.js 为框架主文件，组织图解如下：  
@@ -200,9 +207,10 @@ main.js 里需要为所有使用的js文件注册一个对应的变量名，以�
 http://kyrios.hvsop.cn/  
 http://pc4.hvsop.cn/  
 http://outdoor.adidasevent.com/  
+http://minutemaid.qq.com/  
 
 ##其他：
-范例中用到相关im20的类库可以删除，仅为本人为了方便调用公司后台类库加入的...
+本框架仅为本人开发方便之用，如有问题，不吝赐教。QQ:274924021  
 
 
 
