@@ -1,9 +1,9 @@
 {
-	//appDir:'../css',
-	//baseUrl:'./',
-	//dir:'../css-build',
-	optimize:"uglify2",
-	optimizeCss:'standard',
-	fileExclusionRegExp:/^((r|build)\.js)|(\.svn)$/,
-	removeCombined:true
+    //appDir:'../css',
+    //baseUrl:'./',
+    //dir:'../css-build',
+    optimize:"uglify2",
+    optimizeCss:'standard',
+    fileExclusionRegExp:/^((r|build)\.js)|(\.svn)$/,
+    removeCombined:true
 }
