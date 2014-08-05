@@ -19,6 +19,7 @@
     <property name="grunt-images" value="../../${images}" />
     <property name="grunt-images-built" value="../../${images-built}" />
     <property name="temp" value="${siteroot}/temp" />
+    <!--<property name="newline" value="&#92;&#110;" />-->
 
     <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${build}/libs/ant-contrib-1.0b3.jar" />
 
@@ -57,6 +58,7 @@
     <target name="_echo">
         <echo message="${basedir}" />
         <echo message="${os.name}" />
+        <echo message="${newline}" />
     </target>
 
     <target name="$compile" depends="__optimize,__images-to-built,__html2js,__cdn-format,__mainjs-to-built,$link-to-built">
@@ -67,35 +69,35 @@
         <copy toDir="${temp}">
             <fileset dir="${js-built}" includes="**/*.html"/>
         </copy>
-
-        <replace dir="${temp}" >
-            <replacefilter token="'" value="\'" />
-        </replace>
+        
+        <replaceregexp  match="&#39;" replace="\\\\&#39;" flags="g" byline="false">
+            <fileset dir="${temp}" />
+        </replaceregexp>
         
         <replaceregexp  match="&#32;&#32;&#32;&#32;" replace="" flags="g" byline="false">
             <fileset dir="${temp}" />
         </replaceregexp>
-
+        
         <replaceregexp  match="&#13;" replace="" flags="g" byline="false">
             <fileset dir="${temp}" />
         </replaceregexp>
-
+        
         <replaceregexp  match="&#10;" replace="" flags="g" byline="false">
             <fileset dir="${temp}" />
         </replaceregexp>
-
+        
         <replaceregexp  match="&#9;" replace="" flags="g" byline="false">
             <fileset dir="${temp}" />
         </replaceregexp>
-
+        
         <foreach list="" target="__header-footer" param="file">
             <fileset dir="${temp}" includes="**/*.html"/>
         </foreach>
-
+        
         <copy toDir="${js-built}">
             <fileset dir="${temp}" />
         </copy>
-
+        
         <delete dir="${temp}" />
     </target>
 
