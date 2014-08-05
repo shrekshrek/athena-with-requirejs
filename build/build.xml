@@ -70,10 +70,6 @@
             <fileset dir="${js-built}" includes="**/*.html"/>
         </copy>
         
-        <replaceregexp  match="&#39;" replace="\\\\&#39;" flags="g" byline="false">
-            <fileset dir="${temp}" />
-        </replaceregexp>
-        
         <replaceregexp  match="&#32;&#32;&#32;&#32;" replace="" flags="g" byline="false">
             <fileset dir="${temp}" />
         </replaceregexp>
@@ -90,9 +86,17 @@
             <fileset dir="${temp}" />
         </replaceregexp>
         
+        <replaceregexp  match="&#39;" replace="&#92;&#92;&#92;&#92;&#39;" flags="g" byline="false">
+            <fileset dir="${temp}" includes="**/*.html"/>
+        </replaceregexp>
+        
         <foreach list="" target="__header-footer" param="file">
             <fileset dir="${temp}" includes="**/*.html"/>
         </foreach>
+        
+        <replaceregexp  match="&#92;&#92;&#39;" replace="&#39;" flags="g" byline="false">
+            <fileset dir="${temp}" includes="**/*.html"/>
+        </replaceregexp>
         
         <copy toDir="${js-built}">
             <fileset dir="${temp}" />
