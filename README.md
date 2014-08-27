@@ -72,7 +72,7 @@ Athena所有命令都置于Athena.api下，
 *data*为节点对象 pagedata,一般情况下节点数据在sitemap.js中设置,一般转场都用这条命令即可  
 *data*也可以为节点信息的数组 [pagedata,pagedata,pagedata]，会统一加载后一起执行进场程序  
 
-*pagedata*:{title:"home",routing:"首页",view:"app/view/HomePage",tpl:"app/tpl/home.html",css:"app/tpl/home",depth:"top",flow:"normal",assets:[]}  
+**pagedata**:{title:"home",routing:"首页",view:"app/view/HomePage",tpl:"app/tpl/home.html",css:"app/tpl/home",depth:"top",flow:"normal",assets:[]}  
 *title*:用于识别区分，暂时无用  
 *routing*:用于设置页面标头文本  
 *view*:每个页面的js文件地址，  
