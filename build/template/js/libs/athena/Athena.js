@@ -16,7 +16,7 @@
     var slice = array.slice;
     var splice = array.splice;
 
-    Athena.VERSION = '1.0.1';
+    Athena.VERSION = '1.1.1';
 
     Athena.noConflict = function() {
         root.Athena = previousAthena;

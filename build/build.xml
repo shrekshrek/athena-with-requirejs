@@ -2,7 +2,7 @@
 <!-- Set Ant Project Name -->
 <project name="athena" default="$main" basedir=".">
 
-    <property name="version" value="1.1.0" />
+    <property name="version" value="1.1.1" />
 
     <property name="build" value="." />
     <property file="${build}/site.properties" />
