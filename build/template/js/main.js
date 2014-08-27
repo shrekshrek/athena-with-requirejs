@@ -49,7 +49,7 @@ require.config({
         "jquery.validate-additional-methods": ["jquery.validate"],
         "jquery-ui": ["jquery"],
         "jquery.zclip": ["jquery"],
-        "im20": ["jquery"],
+        "im20": ["jquery.md5"],
         "underscore": {
             exports: "_"
         },
