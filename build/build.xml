@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Set Ant Project Name -->
-<project name="Athena" default="$main" basedir=".">
+<project name="athena" default="$main" basedir=".">
 
     <property name="version" value="1.1.0" />
 
@@ -19,6 +19,7 @@
     <property name="grunt-images" value="../../${images}" />
     <property name="grunt-images-built" value="../../${images-built}" />
     <property name="temp" value="${siteroot}/temp" />
+    <property name="env-mac" value="/usr/local/bin" />
     <!--<property name="newline" value="&#92;&#110;" />-->
 
     <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${build}/libs/ant-contrib-1.0b3.jar" />
@@ -59,6 +60,7 @@
         <echo message="${basedir}" />
         <echo message="${os.name}" />
         <echo message="${newline}" />
+        <echo message="${grunt}" />
     </target>
 
     <target name="$compile" depends="__optimize,__images-to-built,__html2js,__cdn-format,__mainjs-to-built,$link-to-built">
@@ -131,7 +133,7 @@
             <fileset dir="${css-built}" includes="**/*.css" />
         </replaceregexp>
         <replaceregexp  match="images/" replace="images-built/" flags="g" byline="false">
-            <fileset dir="${js-built}" includes="**/*.html" />
+            <fileset dir="${js-built}" includes="**/*.html,**/*.js" />
         </replaceregexp>
     </target>
 
@@ -187,10 +189,12 @@
     <target name="__optimize-unix" if="__isUnix">
         <echo message="optimize-unix" />
         <exec executable="/bin/sh" failonerror="true">
-            <arg line="-c '/usr/local/bin/node ${require-optimize}/r.js -o ${require-optimize}/build.js appDir=${css} baseUrl=${siteroot} dir=${css-built}'" />
+            <env key="PATH" path="${env-mac}"/>
+            <arg line="-c 'node ${require-optimize}/r.js -o ${require-optimize}/build.js appDir=${css} baseUrl=${siteroot} dir=${css-built}'" />
         </exec>
         <exec executable="/bin/sh" failonerror="true">
-            <arg line="-c '/usr/local/bin/node ${require-optimize}/r.js -o ${require-optimize}/build.js appDir=${js} baseUrl=${siteroot} dir=${js-built}'" />
+            <env key="PATH" path="${env-mac}"/>
+            <arg line="-c 'node ${require-optimize}/r.js -o ${require-optimize}/build.js appDir=${js} baseUrl=${siteroot} dir=${js-built}'" />
         </exec>
     </target>
 
@@ -207,14 +211,15 @@
     <target name="__image-min-unix" if="__isUnix" depends="__gruntfile-update">
         <echo message="image-min-unix" />
         <exec executable="/bin/sh" failonerror="true">
-            <arg line="-c &quot;d: &amp;&amp; cd ${grunt} &amp;&amp; grunt imagemin&quot;" />
+            <env key="PATH" path="${env-mac}"/>
+            <arg line="-c &quot;cd ${grunt} &amp;&amp; grunt imagemin&quot;" />
         </exec>
     </target>
 
     <target name="__image-min-windows" if="__isWindows" depends="__gruntfile-update">
         <echo message="image-min-windows" />
         <exec executable="cmd" failonerror="true">
-            <arg line="/c &quot;d: &amp;&amp; cd ${grunt} &amp;&amp; grunt imagemin&quot; " />
+            <arg line="/c &quot;cd ${grunt} &amp;&amp; grunt imagemin&quot; " />
         </exec>
     </target>
 
@@ -237,15 +242,16 @@
 
     <target name="__grunt-unix" if="__isUnix">
         <echo message="grunt-unix" />
-        <exec executable="/bin/sh" failonerror="true">
-            <arg line="-c &quot;d: &amp;&amp; cd ${grunt} &amp;&amp; npm install&quot;" />
+        <exec executable="/bin/sh" failonerror="true" >
+            <env key="PATH" path="${env-mac}"/>
+            <arg line="-c &quot;cd ${grunt} &amp;&amp; npm install&quot;" />
         </exec>
     </target>
 
     <target name="__grunt-windows" if="__isWindows">
         <echo message="grunt-windows" />
         <exec executable="cmd" failonerror="true">
-            <arg line="/c &quot;d: &amp;&amp; cd ${grunt} &amp;&amp; npm install&quot; " />
+            <arg line="/c &quot;cd ${grunt} &amp;&amp; npm install&quot; " />
         </exec>
     </target>
 

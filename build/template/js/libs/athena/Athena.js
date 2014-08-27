@@ -846,15 +846,21 @@
     });
 
     Athena.view.BasePage = Athena.view.BaseView.extend({
-        loadMax: null,
-        loaded: null,
+        _loadMax: null,
+        _loaded: null,
         data: null,
         initialize: function(args) {
             Athena.view.BaseView.prototype.initialize.apply(this, [args]);
-
+            var _self = this;
             this.data = args.data;
             this.$el.css({"z-index": this.data.depth});
-            this.preloadArray = [];
+            
+            var _assets = [];
+            var _imgs = this.data.assets&&_.isArray(this.data.assets)?this.data.assets:[];
+            _.each(_imgs,function(obj,index){
+               _assets.push($(new Image()).attr({src:obj})[0].src); 
+            });
+            this.data.assets = _assets;
         },
         init: function() {
             Athena.view.BaseView.prototype.init.apply(this);
@@ -875,10 +881,10 @@
             }
 
             var _self = this;
-            var _imgs = _.without(_.pluck(this.$el.find("img"), "src"), "");
-            this.loadMax = _imgs.length;
-            this.loaded = 0;
-            if (this.loadMax === 0) {
+            var _imgs = _.without(_.pluck(this.$el.find("img"), "src"), "").concat(this.data.assets);
+            this._loadMax = _imgs.length;
+            this._loaded = 0;
+            if (this._loadMax === 0) {
                 this.completeHandle();
             } else {
                 _.each(_imgs, function(url) {
@@ -891,9 +897,9 @@
             }
         },
         _assetLoadComplete: function() {
-            this.loaded++;
-            this.progressHandle(this.loaded / this.loadMax);
-            if (this.loaded >= this.loadMax) {
+            this._loaded++;
+            this.progressHandle(this._loaded / this._loadMax);
+            if (this._loaded >= this._loadMax) {
                 this.completeHandle();
             }
         },
