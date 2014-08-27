@@ -5,13 +5,11 @@ require.config({
         //athena框架配置地址
         "text": "libs/require/requirePlugin/text",
         "css": "libs/require/requirePlugin/css",
-        "jquery": "libs/jquery/jquery-1.10.2.min",
-        "underscore": "libs/backbone/underscore-1.5.2.min",
-        "backbone": "libs/backbone/backbone-1.1.0.min",
-        "easePack": "libs/greensock/easing/EasePack.min",
-        "cssPlugin": "libs/greensock/easing/CSSPlugin.min",
-        "tweenlite": "libs/greensock/TweenLite-1.11.2.min",
-        "tweenmax": "libs/greensock/TweenMax-1.11.2.min",
+        "jquery": "libs/jquery/jquery-1.11.1.min",
+        "underscore": "libs/backbone/underscore-1.7.0.min",
+        "backbone": "libs/backbone/backbone-1.1.2.min",
+        "tweenmax": "libs/greensock/TweenMax-1.13.2.min",
+        "timelinemax": "libs/greensock/TimelineMax-1.13.2.min",
         "athena": "libs/athena/Athena",
         //辅助类
         "jquery.cookie": "libs/jquery/jquery.cookie-min",
@@ -22,7 +20,7 @@ require.config({
         "jquery.qrcode": "libs/jquery/jquery.qrcode.min",
         "jquery.zclip": "libs/jquery/jquery.zclip.min",
         "jquery-ui": "libs/jquery-ui/jquery-ui-1.9.2.custom.min",
-        "video": "libs/videojs/video-4.3.0.min",
+        "video": "libs/videojs/video-4.7.3.min",
         "json2": "libs/json2.min",
         "easel": "libs/createjs/easeljs-0.7.1.min",
         "three": "libs/threejs/three-r64.min",
@@ -59,12 +57,12 @@ require.config({
             deps: ["underscore", "jquery"],
             exports: "Backbone"
         },
-        "tweenlite": {
-            deps: ["easePack", "cssPlugin"],
-            exports: "TweenLite"
-        },
         "tweenmax": {
             exports: "TweenMax"
+        },
+        "timelinemax": {
+            deps: ["tweenmax"],
+            exports: "TimelineMax"
         },
         "athena": {
             deps: ["underscore", "backbone", "jquery", "tweenmax"],
