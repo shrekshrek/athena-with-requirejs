@@ -16,7 +16,7 @@
     var slice = array.slice;
     var splice = array.splice;
 
-    Athena.VERSION = '1.1.1';
+    Athena.VERSION = '1.0.1';
 
     Athena.noConflict = function() {
         root.Athena = previousAthena;
@@ -27,68 +27,73 @@
      * 框架事件名
      */
     _.extend(Athena, {
-        PRELOAD_START: "preloadStart",
-        PRELOAD_PROGRESS: "preloadProgress",
-        PRELOAD_COMPLETE: "preloadComplete",
-        TRANSITION_IN: "transitionIn",
-        TRANSITION_IN_COMPLETE: "transitionInComplete",
-        TRANSITION_OUT: "transitionOut",
-        TRANSITION_OUT_COMPLETE: "transitionOutComplete",
+        PRELOAD_START : "preloadStart",
+        PRELOAD_PROGRESS : "preloadProgress",
+        PRELOAD_COMPLETE : "preloadComplete",
+        TRANSITION_IN : "transitionIn",
+        TRANSITION_IN_COMPLETE : "transitionInComplete",
+        TRANSITION_OUT : "transitionOut",
+        TRANSITION_OUT_COMPLETE : "transitionOutComplete",
         /*
-         * 页面深度常量
-         * preload 相当于 z-index = 1000
-         * top 相当于 z-index = 500
-         * middle 相当于 z-index = 0
-         * bottom 相当于 z-index = -500
+         * 页面深度常量 preload 相当于 z-index = 1000 top 相当于 z-index = 500 middle 相当于
+         * z-index = 0 bottom 相当于 z-index = -500
          */
-        PRELOAD:"preload",
-        TOP: "top",
-        MIDDLE: "middle",
-        BOTTOM: "bottom",
-        /* 
-         * 页面切换方式常量
-         * normal 为普通切换方式，1。当前页面退场。2。加载新页面。3。新页面进场。
-         * preload 为普通切换方式，1。加载新页面。2。当前页面退场。3。新页面进场。
-         * reverse 为普通切换方式，1。加载新页面。2。新页面进场。3。当前页面退场。
-         * cross 为普通切换方式，1。加载新页面。2。新页面进场。当前页面退场。同时进行。
+        PRELOAD : "preload",
+        TOP : "top",
+        MIDDLE : "middle",
+        BOTTOM : "bottom",
+        /*
+         * 页面切换方式常量 normal 为普通切换方式，1。当前页面退场。2。加载新页面。3。新页面进场。 preload
+         * 为普通切换方式，1。加载新页面。2。当前页面退场。3。新页面进场。 reverse
+         * 为普通切换方式，1。加载新页面。2。新页面进场。3。当前页面退场。 cross
+         * 为普通切换方式，1。加载新页面。2。新页面进场。当前页面退场。同时进行。
          */
-        NORMAL: "normal",
-//        PRELOAD:"preload",
-        REVERSE: "reverse",
-        CROSS: "cross",
+        NORMAL : "normal",
+        // PRELOAD:"preload",
+        REVERSE : "reverse",
+        CROSS : "cross",
         /*
          * 页面间切换状态常量
          */
-        FLOW_START: "flowStart",
-        FLOW_COMPLETE: "flowComplete",
-        WINDOW_RESIZE: "windowResize",
-        PRELOAD_PREPARE: "preloadPrepare"
+        FLOW_START : "flowStart",
+        FLOW_COMPLETE : "flowComplete",
+        WINDOW_RESIZE : "windowResize",
+        PRELOAD_PREPARE : "preloadPrepare"
     });
 
     /*
      * 框架主控制器逻辑
      */
     _.extend(Athena, Backbone.Events, {
-        $body: null,
-        $stage: null,
-        $window: null,
-        $document: null,
-        _preloadFast: null,
-        _flow: null,
-        _isFlowing: false,
-        _isFullScreen: false,
-        _windowRect: {width: 0, height: 0},
-        _windowRectMin: {width: 1, height: 1},
-        _stageRect: {width: 0, height: 0},
-        _curPages: null,
-        _tempPages: null,
-        _pageQueue: null,
-        _preloader: null,
-        _tempData: null,
-        _tempFlowIndex: null,
-        _tempPreloadIndex: null,
-        _tempLoadedProgress: null,
-        init: function(stage) {
+        $body : null,
+        $stage : null,
+        $window : null,
+        $document : null,
+        _preloadFast : null,
+        _flow : null,
+        _isFlowing : false,
+        _isFullScreen : false,
+        _windowRect : {
+            width : 0,
+            height : 0
+        },
+        _windowRectMin : {
+            width : 1,
+            height : 1
+        },
+        _stageRect : {
+            width : 0,
+            height : 0
+        },
+        _curPages : null,
+        _tempPages : null,
+        _pageQueue : null,
+        _preloader : null,
+        _tempData : null,
+        _tempFlowIndex : null,
+        _tempPreloadIndex : null,
+        _tempLoadedProgress : null,
+        init : function(stage) {
             var _self = this;
             this.$stage = stage ? stage : $("body");
             this.$body = $("body");
@@ -106,7 +111,7 @@
             });
             this.resize();
         },
-        pageTo: function(data) {
+        pageTo : function(data) {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
@@ -118,10 +123,10 @@
 
             this._playQueue();
         },
-        pageOn: function(data) {
+        pageOn : function(data) {
             this.pageTo(data);
         },
-        pageOff: function(data) {
+        pageOff : function(data) {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
@@ -156,7 +161,7 @@
                 _page.transitionOut();
             }
         },
-        _playQueue: function() {
+        _playQueue : function() {
             var _self = this;
             if (this._pageQueue.length >= 1) {
                 this._tempData = this._pageQueue.shift();
@@ -171,13 +176,15 @@
                 } else {
                     this._flowIn(this._tempData);
                 }
-                _self.trigger(_self.FLOW_START, {data: this._tempData});
+                _self.trigger(_self.FLOW_START, {
+                    data : this._tempData
+                });
             } else {
                 this._tempData = null;
                 this._isFlowing = false;
             }
         },
-        _checkData: function(data) {
+        _checkData : function(data) {
             var _self = this;
             if (_.isArray(data)) {
                 var _a = [];
@@ -205,10 +212,10 @@
                 return data;
             }
         },
-        calcDepth: function(depth) {
+        calcDepth : function(depth) {
             return this._checkDepth(depth);
         },
-        _checkDepth: function(depth) {
+        _checkDepth : function(depth) {
             var _depth = 0;
 
             if (_.isString(depth)) {
@@ -235,29 +242,28 @@
                     _depth = depth;
                 }
 
-                switch (_depth)
-                {
-                    case this.PRELOAD:
+                switch (_depth) {
+                    case this.PRELOAD :
                         _depth = 1000;
                         break;
-                    case this.TOP:
+                    case this.TOP :
                         _depth = 500;
                         break;
-                    case this.MIDDLE:
+                    case this.MIDDLE :
                         _depth = 0;
                         break;
-                    case this.BOTTOM:
+                    case this.BOTTOM :
                         _depth = -500;
                         break;
-                    default:
+                    default :
                         _depth = 0;
                 }
 
                 switch (_plus) {
-                    case "+":
+                    case "+" :
                         _depth += _num;
                         break;
-                    case "-":
+                    case "-" :
                         _depth -= _num;
                         break;
                 }
@@ -269,16 +275,14 @@
 
             return _depth;
         },
-        _flowIn: function(data) {
+        _flowIn : function(data) {
             var _self = this;
             var _curPage = this._curPages[data.depth];
             var _tempPage = this._tempPages[data.depth];
             var _flow = data.flow ? data.flow : this._flow;
-            switch (_flow)
-            {
-                case this.NORMAL:
-                    if (_curPage)
-                    {
+            switch (_flow) {
+                case this.NORMAL :
+                    if (_curPage) {
                         this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function() {
                             _self._flowInComplete(data);
                         });
@@ -287,13 +291,16 @@
                         this._flowInComplete(data);
                     }
                     break;
-                case this.PRELOAD:
-                case this.REVERSE:
-                case this.CROSS:
+                case this.PRELOAD :
+                case this.REVERSE :
+                case this.CROSS :
                     this._preloaderOn();
 
                     require([data.view, data.css ? "css!" + data.css : "", "text!" + data.tpl], function(view, css, tpl) {
-                        _self._tempPage = new view({template: _.template(tpl.html ? tpl.html : tpl, {}), data: data});
+                        _self._tempPage = new view({
+                            template : _.template(tpl.html ? tpl.html : tpl, {}),
+                            data : data
+                        });
                         _self._tempPages[data.depth] = _self._tempPage;
                         _self.$stage.append(_self._tempPage.el);
                         _self._tempPage.init();
@@ -306,17 +313,19 @@
                     break;
             }
         },
-        _flowInComplete: function(data) {
+        _flowInComplete : function(data) {
             var _self = this;
             var _curPage = this._curPages[data.depth];
             var _tempPage = this._tempPages[data.depth];
             var _flow = data.flow ? data.flow : this._flow;
-            switch (_flow)
-            {
-                case this.NORMAL:
+            switch (_flow) {
+                case this.NORMAL :
                     this._preloaderOn();
                     require([data.view, data.css ? "css!" + data.css : "", "text!" + data.tpl], function(view, css, tpl) {
-                        _self._tempPage = new view({template: _.template(tpl.html ? tpl.html : tpl, {}), data: data});
+                        _self._tempPage = new view({
+                            template : _.template(tpl.html ? tpl.html : tpl, {}),
+                            data : data
+                        });
                         _self._tempPages[data.depth] = _self._tempPage;
                         _self.$stage.append(_self._tempPage.el);
                         _self._tempPage.init();
@@ -327,9 +336,8 @@
                         _self._tempPage.preload(_self._preloadFast || data.fast === "true");
                     });
                     break;
-                case this.PRELOAD:
-                    if (_curPage)
-                    {
+                case this.PRELOAD :
+                    if (_curPage) {
                         this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function() {
                             _self._flowOut(data);
                         });
@@ -338,43 +346,40 @@
                         this._flowOut(data);
                     }
                     break;
-                case this.REVERSE:
+                case this.REVERSE :
                     this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function() {
                         _self._flowOut(data);
                     });
                     _tempPage.transitionIn();
                     break;
-                case this.CROSS:
-                    if (_curPage)
-                    {
+                case this.CROSS :
+                    if (_curPage) {
                         _curPage.transitionOut();
                     }
                     this._flowOut(data);
                     break;
             }
         },
-        _flowOut: function(data) {
+        _flowOut : function(data) {
             var _self = this;
             var _curPage = this._curPages[data.depth];
             var _tempPage = this._tempPages[data.depth];
             var _flow = data.flow ? data.flow : this._flow;
-            switch (_flow)
-            {
-                case this.NORMAL:
+            switch (_flow) {
+                case this.NORMAL :
                     this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function() {
                         _self._flowOutComplete(data);
                     });
                     _tempPage.transitionIn();
                     break;
-                case this.PRELOAD:
+                case this.PRELOAD :
                     this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function() {
                         _self._flowOutComplete(data);
                     });
                     _tempPage.transitionIn();
                     break;
-                case this.REVERSE:
-                    if (_curPage)
-                    {
+                case this.REVERSE :
+                    if (_curPage) {
                         this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function() {
                             _self._flowOutComplete(data);
                         });
@@ -383,7 +388,7 @@
                         this._flowOutComplete(data);
                     }
                     break;
-                case this.CROSS:
+                case this.CROSS :
                     this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function() {
                         _self._flowOutComplete(data);
                     });
@@ -391,7 +396,7 @@
                     break;
             }
         },
-        _flowOutComplete: function(data) {
+        _flowOutComplete : function(data) {
             var _self = this;
             var _curPage = this._curPages[data.depth];
             var _tempPage = this._tempPages[data.depth];
@@ -412,15 +417,19 @@
             if (_.isArray(this._tempData)) {
                 this._tempFlowIndex++;
                 if (this._tempFlowIndex >= this._tempData.length) {
-                    _self.trigger(_self.FLOW_COMPLETE, {data: this._tempData});
+                    _self.trigger(_self.FLOW_COMPLETE, {
+                        data : this._tempData
+                    });
                     this._playQueue();
                 }
             } else {
-                _self.trigger(_self.FLOW_COMPLETE, {data: this._tempData});
+                _self.trigger(_self.FLOW_COMPLETE, {
+                    data : this._tempData
+                });
                 this._playQueue();
             }
         },
-        _preloadComplete: function(data) {
+        _preloadComplete : function(data) {
             var _self = this;
             var _flow = data.flow ? data.flow : this._flow;
             if (_.isArray(this._tempData)) {
@@ -428,34 +437,32 @@
                 if (this._tempFlowIndex >= this._tempData.length) {
                     this._tempFlowIndex = 0;
                     _.each(_self._tempData, function(_obj, _index) {
-                        switch (_flow)
-                        {
-                            case _self.NORMAL:
+                        switch (_flow) {
+                            case _self.NORMAL :
                                 _self._flowOut(_obj);
                                 break;
-                            case _self.PRELOAD:
-                            case _self.REVERSE:
-                            case _self.CROSS:
+                            case _self.PRELOAD :
+                            case _self.REVERSE :
+                            case _self.CROSS :
                                 _self._flowInComplete(_obj);
                                 break;
                         }
                     });
                 }
             } else {
-                switch (_flow)
-                {
-                    case _self.NORMAL:
+                switch (_flow) {
+                    case _self.NORMAL :
                         _self._flowOut(data);
                         break;
-                    case _self.PRELOAD:
-                    case _self.REVERSE:
-                    case _self.CROSS:
+                    case _self.PRELOAD :
+                    case _self.REVERSE :
+                    case _self.CROSS :
                         _self._flowInComplete(data);
                         break;
                 }
             }
         },
-        preloader: function(data) {
+        preloader : function(data) {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
@@ -472,7 +479,10 @@
             data.depth = this._checkDepth(this.PRELOAD);
             if (data.view && data.tpl && data.tpl !== "") {
                 require([data.view, data.css ? "css!" + data.css : "", "text!" + data.tpl], function(view, css, tpl) {
-                    _self._preloader = new view({template: _.template(tpl.html ? tpl.html : tpl, {}), data: data});
+                    _self._preloader = new view({
+                        template : _.template(tpl.html ? tpl.html : tpl, {}),
+                        data : data
+                    });
                     _self.$stage.append(_self._preloader.el);
                     _self._preloader.init();
                     _self.trigger(_self.PRELOAD_PREPARE);
@@ -482,21 +492,21 @@
             }
 
         },
-        _initPreloader: function(data) {
+        _initPreloader : function(data) {
             if (this._preloader === null)
                 return;
             var _tempPage = this._tempPages[data.depth];
             this.listenTo(_tempPage, this.PRELOAD_PROGRESS, this._preloaderProgress);
             this.listenTo(_tempPage, this.PRELOAD_COMPLETE, this._preloaderOff);
         },
-        _clearPreloader: function(data) {
+        _clearPreloader : function(data) {
             if (this._preloader === null)
                 return;
             var _tempPage = this._tempPages[data.depth];
             this.stopListening(_tempPage, this.PRELOAD_PROGRESS, this._preloaderProgress);
             this.stopListening(_tempPage, this.PRELOAD_COMPLETE, this._preloaderOff);
         },
-        _preloaderOn: function(obj) {
+        _preloaderOn : function(obj) {
             if (this._preloader === null)
                 return;
             if (_.isArray(this._tempData)) {
@@ -509,7 +519,7 @@
                 this._preloader.transitionIn(obj);
             }
         },
-        _preloaderProgress: function(obj) {
+        _preloaderProgress : function(obj) {
             var _self = this;
             if (this._preloader === null)
                 return;
@@ -520,12 +530,14 @@
                     if (_obj)
                         _n += _obj / _self._tempData.length;
                 });
-                this._preloader.progress({progress: _n});
+                this._preloader.progress({
+                    progress : _n
+                });
             } else {
                 this._preloader.progress(obj);
             }
         },
-        _preloaderOff: function(obj) {
+        _preloaderOff : function(obj) {
             if (this._preloader === null)
                 return;
             this._clearPreloader(obj.data);
@@ -539,7 +551,7 @@
                 this._preloader.transitionOut(obj);
             }
         },
-        getPage: function(data) {
+        getPage : function(data) {
             var _page = null;
             _.each(this._tempPages, function(_obj, _index) {
                 if (_obj.data === data) {
@@ -555,7 +567,7 @@
             });
             return _page;
         },
-        getPageAt: function(depth) {
+        getPageAt : function(depth) {
             var _depth = 0;
             if (depth)
                 _depth = this._checkDepth(depth);
@@ -565,7 +577,7 @@
             var _page = this._curPages[_depth];
             return _page;
         },
-        fullScreen: function(bool) {
+        fullScreen : function(bool) {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
@@ -580,22 +592,22 @@
 
             return this._isFullScreen;
         },
-        preloadFast: function(bool) {
+        preloadFast : function(bool) {
             if (bool)
                 this._preloadFast = bool;
 
             return this._preloadFast;
         },
-        isFlowing: function() {
+        isFlowing : function() {
             return _isFlowing;
         },
-        windowRect: function() {
+        windowRect : function() {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
             return this._windowRect;
         },
-        windowRectMin: function(rect) {
+        windowRectMin : function(rect) {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
@@ -611,23 +623,23 @@
 
             return this._windowRectMin;
         },
-        stageRect: function() {
+        stageRect : function() {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
             return this._stageRect;
         },
-        flow: function(str) {
+        flow : function(str) {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
             if (str) {
                 str = str.toLowerCase();
                 switch (str) {
-                    case this.NORMAL:
-                    case this.PRELOAD:
-                    case this.REVERSE:
-                    case this.CROSS:
+                    case this.NORMAL :
+                    case this.PRELOAD :
+                    case this.REVERSE :
+                    case this.CROSS :
                         this._flow = str;
                         break;
                 }
@@ -638,7 +650,7 @@
 
             return this._flow;
         },
-        resize: function() {
+        resize : function() {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
@@ -673,34 +685,13 @@
         }
     });
 
-    /* 
+    /*
      * 将Athena的所有方法归纳到 Athena.api下
      */
     Athena.api = {};
 
-    var apiMethods = ["init",
-        "pageTo",
-        "pageOn",
-        "pageOff",
-        "calcDepth",
-        "preloader",
-        "getPage",
-        "getPageAt",
-        "fullScreen",
-        "preloadFast",
-        "isFlowing",
-        "windowRect",
-        "windowRectMin",
-        "stageRect",
-        "flow",
-        "resize",
-        "on",
-        "once",
-        "off",
-        "trigger",
-        "listenTo",
-        "listenToOnce",
-        "stopListening"];
+    var apiMethods = ["init", "pageTo", "pageOn", "pageOff", "calcDepth", "preloader", "getPage", "getPageAt", "fullScreen", "preloadFast", "isFlowing", "windowRect", "windowRectMin", "stageRect",
+            "flow", "resize", "on", "once", "off", "trigger", "listenTo", "listenToOnce", "stopListening"];
 
     _.each(apiMethods, function(method) {
         Athena.api[method] = function() {
@@ -709,7 +700,7 @@
         };
     });
 
-    /* 
+    /*
      * Athena.view下为本框架所有基本view类，包括BaseView,BaseBtn,BasePage。
      * BaseView：所有视图类的基类，需要添加入本框架的视图元素都可以从此类扩展。
      * BaseBtn：所有按钮类的基类，需要添加入本框架的按钮元素都可以从此类扩展。
@@ -718,13 +709,13 @@
     Athena.view = {};
 
     Athena.view.BaseView = Backbone.View.extend({
-        template: null,
-        children: null,
-        args: null,
-        _inited: null,
-        events: {
-        },
-        initialize: function(args) {
+        template : null,
+        parent : null,
+        children : null,
+        args : null,
+        _inited : null,
+        events : {},
+        initialize : function(args) {
             this.children = [];
             if (!args)
                 return;
@@ -734,39 +725,41 @@
                 this.render();
             }
         },
-        init: function() {
+        init : function() {
             if (this._inited)
                 return;
             this._inited = true;
         },
-        destroy: function() {
+        destroy : function() {
+            this.parent = null;
             _.each(this.children, function(obj) {
                 obj.destroy();
             });
             this.children = null;
             this.remove();
         },
-        render: function() {
+        render : function() {
             if (this.template)
                 this.$el.html(this.template);
         },
-        resize: function() {
+        resize : function() {
             _.each(this.children, function(obj) {
                 obj.resize();
             });
         },
-        addChild: function(view, $dom) {
+        addChild : function(view, $dom) {
             _.each(this.children, function(obj) {
                 if (obj === view)
                     return;
             });
+            view.parent = this;
             this.children.push(view);
             if ($dom) {
                 $dom.append(view.el);
                 view.init();
             }
         },
-        removeChild: function(view) {
+        removeChild : function(view) {
             _.each(this.children, function(index, obj) {
                 if (obj === view) {
                     this.children.splice(index, 1);
@@ -778,30 +771,27 @@
     });
 
     Athena.view.BaseBtn = Athena.view.BaseView.extend({
-        MOUSE_OVER: "mouseover",
-        MOUSE_OUT: "mouseout",
-        CLICK: "click",
-        _isMouseOver: null,
-        _isSelected: null,
-        _isEnable: null,
-        init: function() {
+        MOUSE_OVER : "mouseover",
+        MOUSE_OUT : "mouseout",
+        CLICK : "click",
+        _isMouseOver : null,
+        _isSelected : null,
+        _isEnable : null,
+        init : function() {
             Athena.view.BaseView.prototype.init.apply(this);
-            this._isMouseOver = false,
-                    this._isSelected = false,
-                    this._isEnable = false,
-                    this.enable(true);
+            this._isMouseOver = false, this._isSelected = false, this._isEnable = false, this.enable(true);
         },
-        destroy: function() {
+        destroy : function() {
             this.enable(false);
             Athena.view.BaseView.prototype.destroy.apply(this);
         },
-        mouseOverHandler: function() {
+        mouseOverHandler : function() {
         },
-        mouseOutHandler: function() {
+        mouseOutHandler : function() {
         },
-        clickHandler: function() {
+        clickHandler : function() {
         },
-        selected: function(bool) {
+        selected : function(bool) {
             if (bool === this._isSelected)
                 return;
             if (bool) {
@@ -812,7 +802,7 @@
                 this.mouseOutHandler();
             }
         },
-        enable: function(bool) {
+        enable : function(bool) {
             if (bool === this._isEnable)
                 return;
             var _self = this;
@@ -846,34 +836,40 @@
     });
 
     Athena.view.BasePage = Athena.view.BaseView.extend({
-        _loadMax: null,
-        _loaded: null,
-        data: null,
-        initialize: function(args) {
+        _loadMax : null,
+        _loaded : null,
+        data : null,
+        initialize : function(args) {
             Athena.view.BaseView.prototype.initialize.apply(this, [args]);
             var _self = this;
             this.data = args.data;
-            this.$el.css({"z-index": this.data.depth});
-            
+            this.$el.css({
+                "z-index" : this.data.depth
+            });
+
             var _assets = [];
-            var _imgs = this.data.assets&&_.isArray(this.data.assets)?this.data.assets:[];
-            _.each(_imgs,function(obj,index){
-               _assets.push($(new Image()).attr({src:obj})[0].src); 
+            var _imgs = this.data.assets && _.isArray(this.data.assets) ? this.data.assets : [];
+            _.each(_imgs, function(obj, index) {
+                _assets.push($(new Image()).attr({
+                    src : obj
+                })[0].src);
             });
             this.data.assets = _assets;
         },
-        init: function() {
+        init : function() {
             Athena.view.BaseView.prototype.init.apply(this);
 
             this.listenTo(Athena, Athena.WINDOW_RESIZE, function() {
                 this.resize();
             });
         },
-        destroy: function() {
+        destroy : function() {
             Athena.view.BaseView.prototype.destroy.apply(this);
         },
-        preload: function(skip) {
-            this.trigger(Athena.PRELOAD_START, {data: this.data});
+        preload : function(skip) {
+            this.trigger(Athena.PRELOAD_START, {
+                data : this.data
+            });
 
             if (skip) {
                 this.completeHandle();
@@ -896,32 +892,45 @@
                 });
             }
         },
-        _assetLoadComplete: function() {
+        _assetLoadComplete : function() {
             this._loaded++;
             this.progressHandle(this._loaded / this._loadMax);
             if (this._loaded >= this._loadMax) {
                 this.completeHandle();
             }
         },
-        progressHandle: function(obj) {
-            this.trigger(Athena.PRELOAD_PROGRESS, {data: this.data, progress: obj});
+        progressHandle : function(obj) {
+            this.trigger(Athena.PRELOAD_PROGRESS, {
+                data : this.data,
+                progress : obj
+            });
         },
-        completeHandle: function() {
-            this.trigger(Athena.PRELOAD_COMPLETE, {data: this.data});
+        completeHandle : function() {
+            this.trigger(Athena.PRELOAD_COMPLETE, {
+                data : this.data
+            });
         },
-        transitionIn: function() {
+        transitionIn : function() {
             this.resize();
-            this.trigger(Athena.TRANSITION_IN, {data: this.data});
+            this.trigger(Athena.TRANSITION_IN, {
+                data : this.data
+            });
         },
-        transitionInComplete: function() {
-            this.trigger(Athena.TRANSITION_IN_COMPLETE, {data: this.data});
+        transitionInComplete : function() {
+            this.trigger(Athena.TRANSITION_IN_COMPLETE, {
+                data : this.data
+            });
         },
-        transitionOut: function() {
-            this.trigger(Athena.TRANSITION_OUT, {data: this.data});
+        transitionOut : function() {
+            this.trigger(Athena.TRANSITION_OUT, {
+                data : this.data
+            });
         },
-        transitionOutComplete: function() {
+        transitionOutComplete : function() {
             this.destroy();
-            this.trigger(Athena.TRANSITION_OUT_COMPLETE, {data: this.data});
+            this.trigger(Athena.TRANSITION_OUT_COMPLETE, {
+                data : this.data
+            });
         }
     });
 
