@@ -149,9 +149,11 @@
                     _page.transitionOut();
                 });
             } else {
-                if (_.isString(data)) {
+                if(_.isNumber(data)){
+                    _data.depth = data;
+                }else if (_.isString(data)) {
                     _data.depth = _self._checkDepth(data);
-                } else {
+                } else if (data.depth) {
                     _data.depth = _self._checkDepth(data.depth);
                 }
                 _page = _self._curPages[_data.depth];
@@ -463,34 +465,38 @@
             }
         },
         preloader : function(data) {
-            if (!this.$stage)
-                throw "athena havn't stage!!!";
+            if(data){
+                if (!this.$stage)
+                    throw "athena havn't stage!!!";
 
-            var _self = this;
-            if (this._preloader !== null) {
-                this._preloader.destroy();
-                this._preloader = null;
-            }
+                var _self = this;
+                if (this._preloader !== null) {
+                    this._preloader.destroy();
+                    this._preloader = null;
+                }
 
-            if (!data) {
-                return;
-            }
+                if (!data) {
+                    return;
+                }
 
-            data.depth = this._checkDepth(this.PRELOAD);
-            if (data.view && data.tpl && data.tpl !== "") {
-                require([data.view, data.css ? "css!" + data.css : "", "text!" + data.tpl], function(view, css, tpl) {
-                    _self._preloader = new view({
-                        template : _.template(tpl.html ? tpl.html : tpl, {}),
-                        data : data
+                data.depth = this._checkDepth(this.PRELOAD);
+                if (data.view && data.tpl && data.tpl !== "") {
+                    require([data.view, data.css ? "css!" + data.css : "", "text!" + data.tpl], function(view, css, tpl) {
+                        _self._preloader = new view({
+                            template : _.template(tpl.html ? tpl.html : tpl, {}),
+                            data : data
+                        });
+                        _self.$stage.append(_self._preloader.el);
+                        _self._preloader.init();
+                        _self.trigger(_self.PRELOAD_PREPARE);
                     });
-                    _self.$stage.append(_self._preloader.el);
-                    _self._preloader.init();
-                    _self.trigger(_self.PRELOAD_PREPARE);
-                });
-            } else {
-                throw "preloader must have data.tpl!!!";
+                } else {
+                    throw "preloader must have data.tpl!!!";
+                }
+                return this._preloader;
+            }else{
+                return this._preloader;
             }
-
         },
         _initPreloader : function(data) {
             if (this._preloader === null)

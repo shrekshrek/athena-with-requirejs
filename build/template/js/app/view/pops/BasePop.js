@@ -20,7 +20,7 @@ define(["athena", "siteModel"], function(Athena, SiteModel) {
             Athena.view.BasePage.prototype.resize.apply(this);
         },
         closeHandler: function() {
-            Athena.api.pageOff(Athena.TOP);
+            Athena.api.pageOff(this.data);
         }
     });
     return view;
