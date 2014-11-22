@@ -29,7 +29,8 @@
         'jquery.validate-additional-methods': 'libs/jquery/validatePlugin/additional-methods',
         'jquery.qrcode': 'libs/jquery/jquery.qrcode.min',
         'jquery.zclip': 'libs/jquery/jquery.zclip.min',
-        'json2': 'libs/json2.min'
+        'json2': 'libs/json2.min',
+        'css3d' : 'libs/css3d/css3d'
         // app其他辅助类
     },
     modules: [
@@ -46,31 +47,32 @@
                       'model',
                       'router',
                       'tracker'
-            ]
+            ],
+            exclude: ['normalize']
         },
         {
             name: 'app/view/preloader',
-            exclude: ['main']
+            exclude: ['main','normalize']
         },
         {
             name: 'app/view/header',
-            exclude: ['main']
+            exclude: ['main','normalize']
         },
         {
             name: 'app/view/pages/homePage',
-            exclude: ['main']
+            exclude: ['main','normalize']
         },
         {
             name: 'app/view/pages/workPage',
-            exclude: ['main']
+            exclude: ['main','normalize']
+        },
+        {
+            name: 'app/view/pages/threePage',
+            exclude: ['main','normalize']
         },
         {
             name: 'app/view/pops/tip1Pop',
-            exclude: ['main']
-        },
-        {
-            name: 'app/view/pops/tip2Pop',
-            exclude: ['main']
+            exclude: ['main','normalize']
         }
     ]
 }

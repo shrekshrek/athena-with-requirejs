@@ -1,0 +1,17 @@
+#work-page{
+    top:50px;
+}
+#work-page #scoller{
+    position:relative;
+    float:left;
+    margin: 50px 0 0 50px;
+    width:500px;
+    height:300px;
+    background:#999999;
+    overflow:hidden;
+}
+#work-page #scoller #content{
+    float:left;
+    margin:50px 0 0 50px;
+}
+

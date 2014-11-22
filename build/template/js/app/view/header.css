@@ -1,0 +1,14 @@
+#header{
+    top:0px;
+}
+#header li{
+    display:block;
+    float:left;
+    width:50px;
+    height:10px;
+    line-height:10px;
+    cursor:pointer;
+}
+#header li:hover{
+    color:#f00;
+}
