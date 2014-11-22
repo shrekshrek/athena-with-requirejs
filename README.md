@@ -2,6 +2,15 @@
 a js web framework base on backbone.js & require.js  
 Athena是一个基于Backbone和requirejs的前端框架。结构清晰，管理方便。
 
+*version:2.0.0*  
+*date:2014.11.20*  
+版本更新到2.0，主要更新：  
+1.增加了require的文件合并功能，让整个框架的http请求数量显著降低，文件大小也有小幅缩减。增加build/js-built.js，用于进行require优化的配置。  
+2.增强了pageOn()的功能，可以在参数中增加el等backbone.view的初始参数，以达到让新增页面直接绑定到html中已有dom元素的能力。
+3.范例增加了另一种初始loading的创建方法，直接写在html页面中，这样可以保证这个loading在页面读到的第一时间即可现实，等待其他主要框架js文件加载完成后再自动把loading相关控制类绑定到此loading视图。  
+4.适当简化了整个框架的文件结构。  
+5.优化ant命令集，增加了build/site.properties中的一些新参数。
+
 *version:1.1.1*  
 *date:2014.08.27*  
 添加assets加载机制，让每个页面的预载更灵活。
@@ -68,23 +77,25 @@ Athena所有命令都置于Athena.api下，
 **flow("normal"|"preload"|"reverse"|"cross");**  
 设置页面切换流程,具体含义请参考下方常量说明
 
-**pageTo(data);**  
+**pageOn(data);**  
 *data*为节点对象 pagedata,一般情况下节点数据在sitemap.js中设置,一般转场都用这条命令即可  
 *data*也可以为节点信息的数组 [pagedata,pagedata,pagedata]，会统一加载后一起执行进场程序  
+--**pagedata**:{title:"home",routing:"首页",view:"app/view/HomePage",tpl:"app/tpl/home.html",css:"app/tpl/home",depth:"top",flow:"normal",fast:"false",assets:[]}  
+--*title*:用于识别区分，暂时无用  
+--*routing*:用于设置页面标头文本  
+--*view*:每个页面的js文件地址，  
+--*tpl*:为页面模板html文件地址，  
+--*css*:为页面的css文件地址，  
+--*depth*:显示深度，可以使用关键词"preload","top","middle","bottom",也可以使用通配符"+","-"数字.例如"top-1",意为top层的下一层  
+--*flow*:当前页面进场时流程设置，无效则使用全局流程  
+--*assets*:当前页面需要额外加载的图片数组  
+--*fast*:是否快速加载（跳过所有图片加载）  
+新增参数类型：
+*data*也可以设置为{data:pagedata,el:dom}，同理也可以组成这样的数组 [{data:pagedata},{data:pagedata,el:dom},pagedata]  
 
-**pagedata**:{title:"home",routing:"首页",view:"app/view/HomePage",tpl:"app/tpl/home.html",css:"app/tpl/home",depth:"top",flow:"normal",fast:"false",assets:[]}  
-*title*:用于识别区分，暂时无用  
-*routing*:用于设置页面标头文本  
-*view*:每个页面的js文件地址，  
-*tpl*:为页面模板html文件地址，  
-*css*:为页面的css文件地址，  
-*depth*:显示深度，可以使用关键词"preload","top","middle","bottom",也可以使用通配符"+","-"数字.例如"top-1",意为top层的下一层  
-*flow*:当前页面进场时流程设置，无效则使用全局流程  
-*assets*:当前页面需要额外加载的图片数组  
-*fast*:是否快速加载（跳过所有图片加载）  
 
-**pageOn(data);**  
-*data*为SiteMap节点对象,效果同pageTo(data);
+**pageTo(data);**  
+*data*为SiteMap节点对象,效果同pageOn(data);
 
 **pageOff(data);**  
 *data*为SiteMap节点对象,此处也可以传string字符串，或者数字，用户指定页面中某层级的内容退场，也可以指定一个数组的页面一起退场

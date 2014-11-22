@@ -1,11 +1,25 @@
-/*
- * authur:shrek.wang
- * git:https://github.com/shrekshrek/athenaframework
- */
+/*!
+ * VERSION: 2.0.0
+ * DATE: 2014-11-20
+ * GIT:https://github.com/shrekshrek/athenaframework
+ * 
+ * @author: Shrek.wang, shrekshrek@gmail.com
+ **/
 
 (function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['underscore', 'jquery', 'backbone', 'exports'], function(_, $, Backbone, exports) {
+            root.Athena = factory(root, exports, _, Backbone, $);
+        });
 
-    root.Athena = factory(root, {}, root._, root.Backbone, (root.jQuery || root.Zepto || root.ender || root.$));
+    } else if (typeof exports !== 'undefined') {
+        var _ = require('underscore');
+        var Backbone = require('backbone');
+        factory(root, exports, _, Backbone);
+
+    } else {
+        root.Athena = factory(root, {}, root._, root.Backbone, (root.jQuery || root.Zepto || root.ender || root.$));
+    }
 
 }(this, function(root, Athena, _, Backbone, $) {
 
@@ -16,7 +30,7 @@
     var slice = array.slice;
     var splice = array.splice;
 
-    Athena.VERSION = '1.0.1';
+    Athena.VERSION = '2.0.0';
 
     Athena.noConflict = function() {
         root.Athena = previousAthena;
@@ -87,7 +101,7 @@
         },
         _curPages : null,
         _tempPages : null,
-        _pageQueue : null,
+        _actionQueue : null,
         _preloader : null,
         _tempData : null,
         _tempFlowIndex : null,
@@ -104,100 +118,123 @@
             this._flow = this.NORMAL;
             this._curPages = {};
             this._tempPages = {};
-            this._pageQueue = [];
+            this._actionQueue = [];
 
             this.$window.resize(function() {
                 _self.resize();
             });
             this.resize();
         },
-        pageTo : function(data) {
+        pageOn : function(obj) {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
-            data = this._checkData(data);
-            this._pageQueue.push(data);
+            obj = this._checkData(obj);
+            this._actionQueue.push({action:"on",data:obj});
 
             if (this._isFlowing)
                 return;
 
             this._playQueue();
         },
-        pageOn : function(data) {
-            this.pageTo(data);
+        pageTo : function(obj) {
+            this.pageOn(obj);
         },
-        pageOff : function(data) {
+        pageOff : function(obj) {
             if (!this.$stage)
                 throw "athena havn't stage!!!";
 
+            obj = this._checkData(obj);
+            this._actionQueue.push({action:"off",data:obj});
+            
             if (this._isFlowing)
                 return;
-
-            var _self = this;
-            this._isFlowing = true;
-            this._tempData = data;
-
-            var _page = null;
-            var _data = {};
-            if (_.isArray(data)) {
-                _.each(data, function(_obj, _index) {
-                    _obj.depth = _self._checkDepth(_obj.depth);
-                    _page = _self._curPages[_obj.depth];
-                    _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
-                        _self._flowOutComplete(_data);
-                    });
-                    _page.transitionOut();
-                });
-            } else {
-                if(_.isNumber(data)){
-                    _data.depth = data;
-                }else if (_.isString(data)) {
-                    _data.depth = _self._checkDepth(data);
-                } else if (data.depth) {
-                    _data.depth = _self._checkDepth(data.depth);
-                }
-                _page = _self._curPages[_data.depth];
-                _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
-                    _self._flowOutComplete(_data);
-                });
-                _page.transitionOut();
-            }
+                
+            this._playQueue();
         },
         _playQueue : function() {
             var _self = this;
-            if (this._pageQueue.length >= 1) {
-                this._tempData = this._pageQueue.shift();
+            if (this._actionQueue.length >= 1) {
+                var _data = this._actionQueue.shift();
+                this._tempData = _data.data;
                 this._isFlowing = true;
-                this._tempFlowIndex = 0;
-                this._tempPreloadIndex = 0;
-                if (_.isArray(this._tempData)) {
-                    this._tempLoadedProgress = {};
-                    _.each(this._tempData, function(_obj, _index) {
-                        _self._flowIn(_obj);
-                    });
-                } else {
-                    this._flowIn(this._tempData);
+                switch(_data.action){
+                    case "on":
+                        this._tempFlowIndex = 0;
+                        this._tempPreloadIndex = 0;
+                        if (_.isArray(this._tempData)) {
+                            this._tempLoadedProgress = {};
+                            _.each(this._tempData, function(_obj, _index) {
+                                _self._flowIn(_obj);
+                            });
+                        } else {
+                            this._flowIn(this._tempData);
+                        }
+                        _self.trigger(_self.FLOW_START, {
+                            data : this._tempData
+                        });
+                    break;
+                    case "off":
+                        var _data = {};
+                        if (_.isArray(this._tempData)) {
+                            _.each(this._tempData, function(_obj, _index) {
+                                if (_obj.data) {
+                                    _data = _obj.data;
+                                } else {
+                                    _data = _obj;
+                                }
+                                var _page = _self._curPages[_data.depth];
+                                _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
+                                    _self._flowOutComplete(_data);
+                                });
+                                _page.transitionOut();
+                            });
+                        } else {
+                            if (_.isNumber(this._tempData)) {
+                                _data.depth = this._tempData;
+                            } else if (_.isString(this._tempData)) {
+                                _data.depth = _self._checkDepth(this._tempData);
+                            } else if (this._tempData.data) {
+                                _data.depth = _self._checkDepth(this._tempData.data.depth);
+                            } else {
+                                _data.depth = _self._checkDepth(this._tempData.depth);
+                            }
+                            var _page = _self._curPages[_data.depth];
+                            _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
+                                _self._flowOutComplete(_data);
+                            });
+                            _page.transitionOut();
+                        }
+                    break;
                 }
-                _self.trigger(_self.FLOW_START, {
-                    data : this._tempData
-                });
             } else {
                 this._tempData = null;
                 this._isFlowing = false;
             }
         },
-        _checkData : function(data) {
+        _checkData : function(obj) {
+            if (!obj)
+                throw "page data is undefined!";
+
             var _self = this;
-            if (_.isArray(data)) {
+            if (_.isArray(obj)) {
                 var _a = [];
-                _.each(data, function(_obj, _index) {
-                    if (!(_obj.view && _obj.tpl))
-                        throw "each page data has wrong!!! must has 'data.view','data.tpl'";
-                    _obj.depth = _self._checkDepth(_obj.depth);
+                _.each(obj, function(_obj, _index) {
+                    if (!_obj)
+                        throw "page data is undefined!";
+
+                    if (_obj.data) {
+                        var _data = _obj.data;
+                    } else {
+                        var _data = _obj;
+                    }
+                    if (!(_data.view))
+                        throw "each page data has wrong!!! must has 'data.view'";
+                    _data.depth = _self._checkDepth(_data.depth);
 
                     var _isUnique = true;
                     _.each(_a, function(_obj2, _index2) {
-                        if (_obj.depth === _obj2.depth) {
+                        if (_data.depth === _obj2.depth) {
                             _isUnique = false;
                         }
                     });
@@ -208,10 +245,15 @@
                 });
                 return _a;
             } else {
-                if (!(data.view && data.tpl))
-                    throw "page data has wrong!!! must has 'data.view','data.tpl'";
-                data.depth = _self._checkDepth(data.depth);
-                return data;
+                if (obj.data) {
+                    var _data = obj.data;
+                } else {
+                    var _data = obj;
+                }
+                if (!(_data.view))
+                    throw "each page data has wrong!!! must has 'data.view'";
+                _data.depth = _self._checkDepth(_data.depth);
+                return obj;
             }
         },
         calcDepth : function(depth) {
@@ -277,80 +319,89 @@
 
             return _depth;
         },
-        _flowIn : function(data) {
+        _flowIn : function(obj) {
             var _self = this;
-            var _curPage = this._curPages[data.depth];
-            var _tempPage = this._tempPages[data.depth];
-            var _flow = data.flow ? data.flow : this._flow;
+            var _data = obj.data?obj.data:obj;
+            var _curPage = this._curPages[_data.depth];
+            var _tempPage = this._tempPages[_data.depth];
+            var _flow = _data.flow ? _data.flow : this._flow;
             switch (_flow) {
                 case this.NORMAL :
                     if (_curPage) {
                         this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function() {
-                            _self._flowInComplete(data);
+                            _self._flowInComplete(obj);
                         });
                         _curPage.transitionOut();
                     } else {
-                        this._flowInComplete(data);
+                        this._flowInComplete(obj);
                     }
                     break;
                 case this.PRELOAD :
                 case this.REVERSE :
                 case this.CROSS :
                     this._preloaderOn();
-
-                    require([data.view, data.css ? "css!" + data.css : "", "text!" + data.tpl], function(view, css, tpl) {
-                        _self._tempPage = new view({
-                            template : _.template(tpl.html ? tpl.html : tpl, {}),
-                            data : data
-                        });
-                        _self._tempPages[data.depth] = _self._tempPage;
-                        _self.$stage.append(_self._tempPage.el);
+                    require([_data.view], function(view) {
+                        if (obj.data) {
+                            _self._tempPage = new view(obj);
+                        } else {
+                            _self._tempPage = new view({
+                                data : obj
+                            });
+                        }
+                        _self._tempPages[_data.depth] = _self._tempPage;
+                        if (!obj.el)
+                            _self.$stage.append(_self._tempPage.el);
                         _self._tempPage.init();
-                        _self._initPreloader(data);
+                        _self._initPreloader(obj);
                         _self.listenToOnce(_self._tempPage, _self.PRELOAD_COMPLETE, function() {
-                            _self._preloadComplete(data);
+                            _self._pageLoadComplete(obj);
                         });
-                        _self._tempPage.preload(_self._preloadFast || data.fast === "true");
+                        _self._tempPage.preload(_self._preloadFast || _data.fast === "true");
                     });
                     break;
             }
         },
-        _flowInComplete : function(data) {
+        _flowInComplete : function(obj) {
             var _self = this;
-            var _curPage = this._curPages[data.depth];
-            var _tempPage = this._tempPages[data.depth];
-            var _flow = data.flow ? data.flow : this._flow;
+            var _data = obj.data?obj.data:obj;
+            var _curPage = this._curPages[_data.depth];
+            var _tempPage = this._tempPages[_data.depth];
+            var _flow = _data.flow ? _data.flow : this._flow;
             switch (_flow) {
                 case this.NORMAL :
                     this._preloaderOn();
-                    require([data.view, data.css ? "css!" + data.css : "", "text!" + data.tpl], function(view, css, tpl) {
-                        _self._tempPage = new view({
-                            template : _.template(tpl.html ? tpl.html : tpl, {}),
-                            data : data
-                        });
-                        _self._tempPages[data.depth] = _self._tempPage;
-                        _self.$stage.append(_self._tempPage.el);
+                    require([_data.view], function(view) {
+                        if (obj.data) {
+                            _self._tempPage = new view(obj);
+                        } else {
+                            _self._tempPage = new view({
+                                data : obj
+                            });
+                        }
+                        _self._tempPages[_data.depth] = _self._tempPage;
+                        if (!obj.el)
+                            _self.$stage.append(_self._tempPage.el);
                         _self._tempPage.init();
-                        _self._initPreloader(data);
+                        _self._initPreloader(obj);
                         _self.listenToOnce(_self._tempPage, _self.PRELOAD_COMPLETE, function() {
-                            _self._preloadComplete(data);
+                            _self._pageLoadComplete(obj);
                         });
-                        _self._tempPage.preload(_self._preloadFast || data.fast === "true");
+                        _self._tempPage.preload(_self._preloadFast || _data.fast === "true");
                     });
                     break;
                 case this.PRELOAD :
                     if (_curPage) {
                         this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function() {
-                            _self._flowOut(data);
+                            _self._flowOut(obj);
                         });
                         _curPage.transitionOut();
                     } else {
-                        this._flowOut(data);
+                        this._flowOut(obj);
                     }
                     break;
                 case this.REVERSE :
                     this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function() {
-                        _self._flowOut(data);
+                        _self._flowOut(obj);
                     });
                     _tempPage.transitionIn();
                     break;
@@ -358,62 +409,64 @@
                     if (_curPage) {
                         _curPage.transitionOut();
                     }
-                    this._flowOut(data);
+                    this._flowOut(obj);
                     break;
             }
         },
-        _flowOut : function(data) {
+        _flowOut : function(obj) {
             var _self = this;
-            var _curPage = this._curPages[data.depth];
-            var _tempPage = this._tempPages[data.depth];
-            var _flow = data.flow ? data.flow : this._flow;
+            var _data = obj.data?obj.data:obj;
+            var _curPage = this._curPages[_data.depth];
+            var _tempPage = this._tempPages[_data.depth];
+            var _flow = _data.flow ? _data.flow : this._flow;
             switch (_flow) {
                 case this.NORMAL :
                     this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function() {
-                        _self._flowOutComplete(data);
+                        _self._flowOutComplete(obj);
                     });
                     _tempPage.transitionIn();
                     break;
                 case this.PRELOAD :
                     this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function() {
-                        _self._flowOutComplete(data);
+                        _self._flowOutComplete(obj);
                     });
                     _tempPage.transitionIn();
                     break;
                 case this.REVERSE :
                     if (_curPage) {
                         this.listenToOnce(_curPage, this.TRANSITION_OUT_COMPLETE, function() {
-                            _self._flowOutComplete(data);
+                            _self._flowOutComplete(obj);
                         });
                         _curPage.transitionOut();
                     } else {
-                        this._flowOutComplete(data);
+                        this._flowOutComplete(obj);
                     }
                     break;
                 case this.CROSS :
                     this.listenToOnce(_tempPage, this.TRANSITION_IN_COMPLETE, function() {
-                        _self._flowOutComplete(data);
+                        _self._flowOutComplete(obj);
                     });
                     _tempPage.transitionIn();
                     break;
             }
         },
-        _flowOutComplete : function(data) {
+        _flowOutComplete : function(obj) {
             var _self = this;
-            var _curPage = this._curPages[data.depth];
-            var _tempPage = this._tempPages[data.depth];
-            var _flow = data.flow ? data.flow : this._flow;
+            var _data = obj.data?obj.data:obj;
+            var _curPage = this._curPages[_data.depth];
+            var _tempPage = this._tempPages[_data.depth];
+            var _flow = _data.flow ? _data.flow : this._flow;
 
             if (_curPage)
-                delete this._curPages[data.depth];
+                delete this._curPages[_data.depth];
 
             if (_tempPage) {
-                this._curPages[data.depth] = _tempPage;
-                delete this._tempPages[data.depth];
+                this._curPages[_data.depth] = _tempPage;
+                delete this._tempPages[_data.depth];
             }
 
-            if (data.routing) {
-                document.title = data.routing;
+            if (_data.routing) {
+                document.title = _data.routing;
             }
 
             if (_.isArray(this._tempData)) {
@@ -431,9 +484,10 @@
                 this._playQueue();
             }
         },
-        _preloadComplete : function(data) {
+        _pageLoadComplete : function(obj) {
             var _self = this;
-            var _flow = data.flow ? data.flow : this._flow;
+            var _data = obj.data?obj.data:obj;
+            var _flow = _data.flow ? _data.flow : this._flow;
             if (_.isArray(this._tempData)) {
                 this._tempFlowIndex++;
                 if (this._tempFlowIndex >= this._tempData.length) {
@@ -454,61 +508,65 @@
             } else {
                 switch (_flow) {
                     case _self.NORMAL :
-                        _self._flowOut(data);
+                        _self._flowOut(obj);
                         break;
                     case _self.PRELOAD :
                     case _self.REVERSE :
                     case _self.CROSS :
-                        _self._flowInComplete(data);
+                        _self._flowInComplete(obj);
                         break;
                 }
             }
         },
-        preloader : function(data) {
-            if(data){
+        preloader : function(obj) {
+            var _self = this;
+            if (obj) {
                 if (!this.$stage)
                     throw "athena havn't stage!!!";
 
-                var _self = this;
                 if (this._preloader !== null) {
                     this._preloader.destroy();
                     this._preloader = null;
                 }
 
-                if (!data) {
-                    return;
-                }
-
-                data.depth = this._checkDepth(this.PRELOAD);
-                if (data.view && data.tpl && data.tpl !== "") {
-                    require([data.view, data.css ? "css!" + data.css : "", "text!" + data.tpl], function(view, css, tpl) {
-                        _self._preloader = new view({
-                            template : _.template(tpl.html ? tpl.html : tpl, {}),
-                            data : data
-                        });
+                var _data = obj.data?obj.data:obj;
+                _data.depth = this._checkDepth(this.PRELOAD);
+                if (_data.view !== "") {
+                    require([_data.view], function(view) {
+                        if (obj.data) {
+                            _self._preloader = new view(obj);
+                        } else {
+                            _self._preloader = new view({
+                                data : obj
+                            });
+                        }
                         _self.$stage.append(_self._preloader.el);
                         _self._preloader.init();
                         _self.trigger(_self.PRELOAD_PREPARE);
                     });
                 } else {
-                    throw "preloader must have data.tpl!!!";
+                    throw "preloader must have data.view!!!";
                 }
                 return this._preloader;
-            }else{
+            } else {
                 return this._preloader;
             }
         },
-        _initPreloader : function(data) {
+        _initPreloader : function(obj) {
             if (this._preloader === null)
                 return;
-            var _tempPage = this._tempPages[data.depth];
+
+            var _data = obj.data?obj.data:obj;
+            var _tempPage = this._tempPages[_data.depth];
             this.listenTo(_tempPage, this.PRELOAD_PROGRESS, this._preloaderProgress);
             this.listenTo(_tempPage, this.PRELOAD_COMPLETE, this._preloaderOff);
         },
-        _clearPreloader : function(data) {
+        _clearPreloader : function(obj) {
             if (this._preloader === null)
                 return;
-            var _tempPage = this._tempPages[data.depth];
+
+            var _data = obj.data?obj.data:obj;
+            var _tempPage = this._tempPages[_data.depth];
             this.stopListening(_tempPage, this.PRELOAD_PROGRESS, this._preloaderProgress);
             this.stopListening(_tempPage, this.PRELOAD_COMPLETE, this._preloaderOff);
         },
@@ -519,10 +577,10 @@
                 this._tempPreloadIndex++;
                 if (this._tempPreloadIndex >= this._tempData.length) {
                     this._tempPreloadIndex = 0;
-                    this._preloader.transitionIn(obj);
+                    this._preloader.transitionIn();
                 }
             } else {
-                this._preloader.transitionIn(obj);
+                this._preloader.transitionIn();
             }
         },
         _preloaderProgress : function(obj) {
@@ -551,10 +609,10 @@
                 this._tempPreloadIndex++;
                 if (this._tempPreloadIndex >= this._tempData.length) {
                     this._tempPreloadIndex = 0;
-                    this._preloader.transitionOut(obj);
+                    this._preloader.transitionOut();
                 }
             } else {
-                this._preloader.transitionOut(obj);
+                this._preloader.transitionOut();
             }
         },
         getPage : function(data) {
@@ -719,7 +777,7 @@
         parent : null,
         children : null,
         args : null,
-        _inited : null,
+        _isInited : null,
         events : {},
         initialize : function(args) {
             this.children = [];
@@ -731,10 +789,10 @@
                 this.render();
             }
         },
-        init : function() {
-            if (this._inited)
+        init : function(args) {
+            if (this._isInited)
                 return;
-            this._inited = true;
+            this._isInited = true;
         },
         destroy : function() {
             this.parent = null;
@@ -862,8 +920,8 @@
             });
             this.data.assets = _assets;
         },
-        init : function() {
-            Athena.view.BaseView.prototype.init.apply(this);
+        init : function(args) {
+            Athena.view.BaseView.prototype.init.apply(this, [args]);
 
             this.listenTo(Athena, Athena.WINDOW_RESIZE, function() {
                 this.resize();
@@ -887,6 +945,7 @@
             this._loadMax = _imgs.length;
             this._loaded = 0;
             if (this._loadMax === 0) {
+                this.progressHandle(1);
                 this.completeHandle();
             } else {
                 _.each(_imgs, function(url) {

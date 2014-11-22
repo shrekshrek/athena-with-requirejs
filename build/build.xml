@@ -2,257 +2,229 @@
 <!-- Set Ant Project Name -->
 <project name="athena" default="$main" basedir=".">
 
-    <property name="version" value="1.1.1" />
+	<property name="version" value="2.0.0" />
 
-    <property name="build" value="." />
-    <property file="${build}/site.properties" />
+	<property name="build" value="./" />
+	<property file="${build}/site.properties" />
 
-    <property name="template" value="${build}/template" />
-    <property name="require-optimize" value="${build}/libs/require-optimize" />
-    <property name="grunt" value="${build}/libs/grunt" />
-    <property name="css" value="${siteroot}/css" />
-    <property name="js" value="${siteroot}/js" />
-    <property name="images" value="${siteroot}/images" />
-    <property name="css-built" value="${siteroot}/css-built" />
-    <property name="js-built" value="${siteroot}/js-built" />
-    <property name="images-built" value="${siteroot}/images-built" />
-    <property name="grunt-images" value="../../${images}" />
-    <property name="grunt-images-built" value="../../${images-built}" />
-    <property name="temp" value="${siteroot}/temp" />
-    <property name="env-mac" value="/usr/local/bin" />
-    <!--<property name="newline" value="&#92;&#110;" />-->
+	<property name="template" value="${build}template/" />
+	<property name="require-optimize" value="${build}libs/require-optimize/" />
+	<property name="grunt" value="${build}libs/grunt/" />
+	<property name="css" value="${siteroot}css/" />
+	<property name="js" value="${siteroot}js/" />
+	<property name="images" value="${siteroot}images/" />
+	<property name="css-built" value="${siteroot}css-built/" />
+	<property name="js-built" value="${siteroot}js-built/" />
+	<property name="images-built" value="${siteroot}images-built/" />
+	<property name="grunt-images" value="../../${images}" />
+	<property name="grunt-images-built" value="../../${images-built}" />
+	<property name="temp" value="${siteroot}/temp/" />
+	<property name="env-mac" value="/usr/local/bin" />
+	<property name="newline" value="&#10;" />
 
-    <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${build}/libs/ant-contrib-1.0b3.jar" />
+	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${build}/libs/ant-contrib-1.0b3.jar" />
 
-    <target name="$main" depends="$create">
-        <echo message="main" />
-    </target>
+	<target name="$main">
+		<echo message="main" />
+		<antcall target="$create" />
+	</target>
 
-    <target name="_!_clean" depends="_!_clean-built">
-        <echo message="clean" />
-        <delete dir="${siteroot}/css" />
-        <delete dir="${siteroot}/js" />
-        <delete dir="${siteroot}/images" />
-        <delete file="${siteroot}/favicon.ico" />
-        <delete file="${siteroot}/index.html" />
-    </target>
+	<target name="_!_clean">
+		<echo message="clean" />
+		<antcall target="_!_clean-built" />
+		<delete dir="${siteroot}css" />
+		<delete dir="${siteroot}js" />
+		<delete dir="${siteroot}images" />
+		<delete file="${siteroot}favicon.ico" />
+		<delete file="${siteroot}index.html" />
+	</target>
 
-    <target name="_!_clean-built">
-        <echo message="clean-built" />
-        <delete dir="${css-built}" />
-        <delete dir="${js-built}" />
-        <delete dir="${images-built}" />
-    </target>
+	<target name="_!_clean-built">
+		<echo message="clean-built" />
+		<delete dir="${css-built}" />
+		<delete dir="${js-built}" />
+		<delete dir="${images-built}" />
+	</target>
 
-    <target name="$create">
-        <echo message="create" />
-        <copy toDir="${siteroot}" overwrite="false" encoding="UTF-8">
-            <fileset dir="${template}" />
-            <filterchain>
-                <replacetokens>
-                    <token key="sitename" value="${sitename}" />
-                </replacetokens>
-            </filterchain>
-        </copy>
-    </target>
+	<target name="$create">
+		<echo message="create" />
+		<copy toDir="${siteroot}" overwrite="false" encoding="UTF-8">
+			<fileset dir="${template}" />
+			<filterchain>
+				<replacetokens>
+					<token key="sitename" value="${sitename}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+	</target>
 
-    <target name="_echo">
-        <echo message="${basedir}" />
-        <echo message="${os.name}" />
-        <echo message="${newline}" />
-        <echo message="${grunt}" />
-    </target>
+	<target name="_echo">
+		<echo message="${basedir}" />
+		<echo message="${os.name}" />
+		<echo message="${newline}" />
+		<echo message="${grunt}" />
+	</target>
 
-    <target name="$compile" depends="__optimize,__images-to-built,__html2js,__cdn-format,__mainjs-to-built,$link-to-built">
-        <echo message="compile" />
-    </target>
+	<target name="$compile">
+		<echo message="compile" />
+		<antcall target="__optimize" />
+		<antcall target="__images-to-built" />
+		<antcall target="__cdn-format" />
+		<antcall target="__mainjs-to-built" />
+		<antcall target="$link-to-built" />
+		<antcall target="__image-min" />
+	</target>
 
-    <target name="__html2js" depends="">
-        <copy toDir="${temp}">
-            <fileset dir="${js-built}" includes="**/*.html"/>
-        </copy>
-        
-        <replaceregexp  match="&#32;&#32;&#32;&#32;" replace="" flags="g" byline="false">
-            <fileset dir="${temp}" />
-        </replaceregexp>
-        
-        <replaceregexp  match="&#13;" replace="" flags="g" byline="false">
-            <fileset dir="${temp}" />
-        </replaceregexp>
-        
-        <replaceregexp  match="&#10;" replace="" flags="g" byline="false">
-            <fileset dir="${temp}" />
-        </replaceregexp>
-        
-        <replaceregexp  match="&#9;" replace="" flags="g" byline="false">
-            <fileset dir="${temp}" />
-        </replaceregexp>
-        
-        <replaceregexp  match="&#39;" replace="&#92;&#92;&#92;&#92;&#39;" flags="g" byline="false">
-            <fileset dir="${temp}" includes="**/*.html"/>
-        </replaceregexp>
-        
-        <foreach list="" target="__header-footer" param="file">
-            <fileset dir="${temp}" includes="**/*.html"/>
-        </foreach>
-        
-        <replaceregexp  match="&#92;&#92;&#39;" replace="&#39;" flags="g" byline="false">
-            <fileset dir="${temp}" includes="**/*.html"/>
-        </replaceregexp>
-        
-        <copy toDir="${js-built}">
-            <fileset dir="${temp}" />
-        </copy>
-        
-        <delete dir="${temp}" />
-    </target>
+	<target name="__cdn-format">
+		<foreach list="" target="__cdn-footer" param="file">
+			<fileset dir="${css-built}" includes="**/*.js,**/*.html,**/*.css" />
+		</foreach>
+		<foreach list="" target="__cdn-footer" param="file">
+			<fileset dir="${js-built}" includes="**/*.js,**/*.html,**/*.css" />
+		</foreach>
+	</target>
 
-    <target name="__header-footer" >
-        <concat destfile="${file}.js">
-            <header filtering="no" trimleading="yes">define({html:'</header>
-            <fileset file="${file}" />
-            <footer filtering="no" trimleading="yes">'});</footer>
-        </concat>
-    </target>
+	<target name="__cdn-footer">
+		<concat append="yes" destfile="${file}">${newline}</concat>
+	</target>
 
-    <target name="__cdn-format" >
-        <foreach list="" target="__cdn-footer" param="file">
-            <fileset dir="${css-built}"  includes="**/*.js,**/*.html,**/*.css" />
-        </foreach>
-        <foreach list="" target="__cdn-footer" param="file">
-            <fileset dir="${js-built}"  includes="**/*.js,**/*.html,**/*.css" />
-        </foreach>
-    </target>
+	<target name="__images-to-built">
+		<replaceregexp match="${match}" replace="${replace}" flags="g" byline="false">
+			<fileset dir="${css-built}" includes="**/*.css" />
+		</replaceregexp>
+		<replaceregexp match="${match}" replace="${replace}" flags="g" byline="false">
+			<fileset dir="${js-built}" includes="**/*.html,**/*.js" />
+		</replaceregexp>
+	</target>
 
-    <target name="__cdn-footer" >
-        <concat append="yes" destfile="${file}">${newline}</concat>
-    </target>
+	<target name="__mainjs-to-built">
+		<replaceregexp match="js&#34;," replace="js-built&#34;," flags="g" byline="false">
+			<fileset dir="${js-built}" includes="main.js" />
+		</replaceregexp>
+	</target>
 
-    <target name="__images-to-built" >
-        <replaceregexp  match="images/" replace="images-built/" flags="g" byline="false">
-            <fileset dir="${css-built}" includes="**/*.css" />
-        </replaceregexp>
-        <replaceregexp  match="images/" replace="images-built/" flags="g" byline="false">
-            <fileset dir="${js-built}" includes="**/*.html,**/*.js" />
-        </replaceregexp>
-    </target>
+	<target name="$link-to-built">
+		<echo message="link-to-built" />
+		<replaceregexp match="js/" replace="js-built/" flags="g" byline="false">
+			<fileset dir="${siteroot}" includes="index.html" />
+		</replaceregexp>
+		<replaceregexp match="css/" replace="css-built/" flags="g" byline="false">
+			<fileset dir="${siteroot}" includes="index.html" />
+		</replaceregexp>
+		<replaceregexp match="images/" replace="images-built/" flags="g" byline="false">
+			<fileset dir="${siteroot}" includes="index.html" />
+		</replaceregexp>
+	</target>
 
-    <target name="__mainjs-to-built" >
-        <replaceregexp  match="js&#34;," replace="js-built&#34;," flags="g" byline="false">
-            <fileset dir="${js-built}" includes="main.js" />
-        </replaceregexp>
-    </target>
+	<target name="$link-to-origin">
+		<echo message="link-to-origin" />
+		<replaceregexp match="js-built/" replace="js/" flags="g" byline="false">
+			<fileset dir="${siteroot}" includes="index.html" />
+		</replaceregexp>
+		<replaceregexp match="css-built/" replace="css/" flags="g" byline="false">
+			<fileset dir="${siteroot}" includes="index.html" />
+		</replaceregexp>
+		<replaceregexp match="images-built/" replace="images-built/" flags="g" byline="false">
+			<fileset dir="${siteroot}" includes="index.html" />
+		</replaceregexp>
+	</target>
 
-    <target name="$link-to-built" >
-        <echo message="link-to-built" />
-        <replaceregexp  match="js/" replace="js-built/" flags="g" byline="false">
-            <fileset dir="${siteroot}" includes="index.html" />
-        </replaceregexp>
-        <replaceregexp  match="css/" replace="css-built/" flags="g" byline="false">
-            <fileset dir="${siteroot}" includes="index.html" />
-        </replaceregexp>
-        <replaceregexp  match="images/" replace="images-built/" flags="g" byline="false">
-            <fileset dir="${siteroot}" includes="index.html" />
-        </replaceregexp>
-    </target>
+	<!-- set the operating system test properties -->
+	<condition property="__isMac">
+		<os family="mac" />
+	</condition>
 
-    <target name="$link-to-origin" >
-        <echo message="link-to-origin" />
-        <replaceregexp  match="js-built/" replace="js/" flags="g" byline="false">
-            <fileset dir="${siteroot}" includes="index.html" />
-        </replaceregexp>
-        <replaceregexp  match="css-built/" replace="css/" flags="g" byline="false">
-            <fileset dir="${siteroot}" includes="index.html" />
-        </replaceregexp>
-        <replaceregexp  match="images-built/" replace="images-built/" flags="g" byline="false">
-            <fileset dir="${siteroot}" includes="index.html" />
-        </replaceregexp>
-    </target>
+	<condition property="__isWindows">
+		<os family="windows" />
+	</condition>
 
-    <!-- set the operating system test properties -->  
-    <condition property="__isMac">
-        <os family="mac" />
-    </condition>
+	<condition property="__isUnix">
+		<os family="unix" />
+	</condition>
 
-    <condition property="__isWindows">
-        <os family="windows" />
-    </condition>
+	<target name="__optimize">
+		<echo message="optimize" />
+		<antcall target="__optimize-unix" />
+		<antcall target="__optimize-windows" />
+	</target>
 
-    <condition property="__isUnix">
-        <os family="unix" />
-    </condition>
+	<target name="__optimize-unix" if="__isUnix">
+		<echo message="optimize-unix" />
+		<exec executable="/bin/sh" failonerror="true">
+			<env key="PATH" path="${env-mac}" />
+			<arg line="-c 'node ${require-optimize}/r.js -o ${build}/css-build.js appDir=${css} baseUrl='./' dir=${css-built}'" />
+		</exec>
+		<exec executable="/bin/sh" failonerror="true">
+			<env key="PATH" path="${env-mac}" />
+			<arg line="-c 'node ${require-optimize}/r.js -o ${build}/js-build.js appDir=${js} baseUrl='./' dir=${js-built}'" />
+		</exec>
+	</target>
 
-    <target name="__optimize" depends="__optimize-unix,__optimize-windows,__image-min-unix,__image-min-windows">
-        <echo message="optimize" />
-    </target>
+	<target name="__optimize-windows" if="__isWindows">
+		<echo message="optimize-windows" />
+		<exec executable="cmd" failonerror="true">
+			<arg line="/c node ${require-optimize}/r.js -o ${build}/css-build.js appDir=${css} baseUrl='./' dir=${css-built}" />
+		</exec>
+		<exec executable="cmd" failonerror="true">
+			<arg line="/c node ${require-optimize}/r.js -o ${build}/js-build.js appDir=${js} baseUrl='./' dir=${js-built}" />
+		</exec>
+	</target>
 
-    <target name="__optimize-unix" if="__isUnix">
-        <echo message="optimize-unix" />
-        <exec executable="/bin/sh" failonerror="true">
-            <env key="PATH" path="${env-mac}"/>
-            <arg line="-c 'node ${require-optimize}/r.js -o ${require-optimize}/build.js appDir=${css} baseUrl=${siteroot} dir=${css-built}'" />
-        </exec>
-        <exec executable="/bin/sh" failonerror="true">
-            <env key="PATH" path="${env-mac}"/>
-            <arg line="-c 'node ${require-optimize}/r.js -o ${require-optimize}/build.js appDir=${js} baseUrl=${siteroot} dir=${js-built}'" />
-        </exec>
-    </target>
+	<target name="__image-min" if="${needimagemin}">
+		<echo message="image-min" />
+		<antcall target="__image-min-unix" />
+		<antcall target="__image-min-windows" />
+	</target>
 
-    <target name="__optimize-windows" if="__isWindows">
-        <echo message="optimize-windows" />
-        <exec executable="cmd" failonerror="true">
-            <arg line="/c node ${require-optimize}/r.js -o ${require-optimize}/build.js appDir=${css} baseUrl=${siteroot} dir=${css-built} " />
-        </exec>
-        <exec executable="cmd" failonerror="true">
-            <arg line="/c node ${require-optimize}/r.js -o ${require-optimize}/build.js appDir=${js} baseUrl=${siteroot} dir=${js-built} " />
-        </exec>
-    </target>
+	<target name="__image-min-unix" if="__isUnix">
+		<echo message="image-min-unix" />
+		<antcall target="__gruntfile-update" />
+		<exec executable="/bin/sh" failonerror="true">
+			<env key="PATH" path="${env-mac}" />
+			<arg line="-c &quot;cd ${grunt} &amp;&amp; grunt imagemin&quot;" />
+		</exec>
+	</target>
 
-    <target name="__image-min-unix" if="__isUnix" depends="__gruntfile-update">
-        <echo message="image-min-unix" />
-        <exec executable="/bin/sh" failonerror="true">
-            <env key="PATH" path="${env-mac}"/>
-            <arg line="-c &quot;cd ${grunt} &amp;&amp; grunt imagemin&quot;" />
-        </exec>
-    </target>
+	<target name="__image-min-windows" if="__isWindows">
+		<echo message="image-min-windows" />
+		<antcall target="__gruntfile-update" />
+		<exec executable="cmd" failonerror="true">
+			<arg line="/c &quot;cd ${grunt} &amp;&amp; grunt imagemin&quot; " />
+		</exec>
+	</target>
 
-    <target name="__image-min-windows" if="__isWindows" depends="__gruntfile-update">
-        <echo message="image-min-windows" />
-        <exec executable="cmd" failonerror="true">
-            <arg line="/c &quot;cd ${grunt} &amp;&amp; grunt imagemin&quot; " />
-        </exec>
-    </target>
+	<target name="__gruntfile-update">
+		<echo message="gruntfile-update" />
+		<copy tofile="${grunt}/Gruntfile.js" overwrite="true" encoding="UTF-8">
+			<fileset dir="${grunt}" includes="Gruntfile-template.js" />
+			<filterchain>
+				<replacetokens>
+					<token key="images" value="${grunt-images}" />
+					<token key="images-built" value="${grunt-images-built}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+	</target>
 
-    <target name="__gruntfile-update">
-        <echo message="gruntfile-update" />
-        <copy tofile="${grunt}/Gruntfile.js" overwrite="true" encoding="UTF-8">
-            <fileset dir="${grunt}" includes="Gruntfile-template.js" />
-            <filterchain>
-                <replacetokens>
-                    <token key="images" value="${grunt-images}" />
-                    <token key="images-built" value="${grunt-images-built}" />
-                </replacetokens>
-            </filterchain>
-        </copy>
-    </target>
+	<target name="$grunt-install">
+		<echo message="grunt install" />
+		<antcall target="__grunt-unix" />
+		<antcall target="__grunt-windows" />
+	</target>
 
-    <target name="$grunt-install" depends="__grunt-unix,__grunt-windows">
-        <echo message="grunt install" />
-    </target>
+	<target name="__grunt-unix" if="__isUnix">
+		<echo message="grunt-unix" />
+		<exec executable="/bin/sh" failonerror="true">
+			<env key="PATH" path="${env-mac}" />
+			<arg line="-c &quot;cd ${grunt} &amp;&amp; npm install&quot;" />
+		</exec>
+	</target>
 
-    <target name="__grunt-unix" if="__isUnix">
-        <echo message="grunt-unix" />
-        <exec executable="/bin/sh" failonerror="true" >
-            <env key="PATH" path="${env-mac}"/>
-            <arg line="-c &quot;cd ${grunt} &amp;&amp; npm install&quot;" />
-        </exec>
-    </target>
-
-    <target name="__grunt-windows" if="__isWindows">
-        <echo message="grunt-windows" />
-        <exec executable="cmd" failonerror="true">
-            <arg line="/c &quot;cd ${grunt} &amp;&amp; npm install&quot; " />
-        </exec>
-    </target>
+	<target name="__grunt-windows" if="__isWindows">
+		<echo message="grunt-windows" />
+		<exec executable="cmd" failonerror="true">
+			<arg line="/c &quot;cd ${grunt} &amp;&amp; npm install&quot; " />
+		</exec>
+	</target>
 
 </project>

@@ -1,4 +1,4 @@
-define(["athena", "tweenmax"], function(Athena, TweenMax) {
+define(["athena", "tweenmax"], function() {
     var view = Athena.view.BaseBtn.extend({
         $obj1: null,
         $obj2: null,
