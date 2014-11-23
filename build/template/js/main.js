@@ -87,11 +87,12 @@ require(['backbone', 'athena', 'map', 'router', 'model'], function(Backbone, Ath
 //         } else {
 //         init();
 //         }
+
+        Athena.api.once(Athena.PRELOAD_PREPARE, init);
         Athena.api.preloader({
             data : SiteMap.preloader0,
             el : $("#preloader0")
         });
-        init();
     });
 
     function init() {
