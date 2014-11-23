@@ -178,11 +178,7 @@
                         var _data = {};
                         if (_.isArray(this._tempData)) {
                             _.each(this._tempData, function(_obj, _index) {
-                                if (_obj.data) {
-                                    _data = _obj.data;
-                                } else {
-                                    _data = _obj;
-                                }
+                                _data = _obj.data?_obj.data:_obj;
                                 var _page = _self._curPages[_data.depth];
                                 _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
                                     _self._flowOutComplete(_data);
@@ -222,14 +218,12 @@
                 _.each(obj, function(_obj, _index) {
                     if (!_obj)
                         throw "page data is undefined!";
-
-                    if (_obj.data) {
-                        var _data = _obj.data;
-                    } else {
-                        var _data = _obj;
-                    }
+                        
+                    var _data = _obj.data?_obj.data:_obj;
+                    
                     if (!(_data.view))
                         throw "each page data has wrong!!! must has 'data.view'";
+                        
                     _data.depth = _self._checkDepth(_data.depth);
 
                     var _isUnique = true;
@@ -245,11 +239,7 @@
                 });
                 return _a;
             } else {
-                if (obj.data) {
-                    var _data = obj.data;
-                } else {
-                    var _data = obj;
-                }
+                var _data = obj.data?obj.data:obj;
                 if (!(_data.view))
                     throw "each page data has wrong!!! must has 'data.view'";
                 _data.depth = _self._checkDepth(_data.depth);
@@ -341,13 +331,7 @@
                 case this.CROSS :
                     this._preloaderOn();
                     require([_data.view], function(view) {
-                        if (obj.data) {
-                            _self._tempPage = new view(obj);
-                        } else {
-                            _self._tempPage = new view({
-                                data : obj
-                            });
-                        }
+                        _self._tempPage = new view(obj.data?obj:{data:obj});
                         _self._tempPages[_data.depth] = _self._tempPage;
                         if (!obj.el)
                             _self.$stage.append(_self._tempPage.el);
@@ -371,13 +355,7 @@
                 case this.NORMAL :
                     this._preloaderOn();
                     require([_data.view], function(view) {
-                        if (obj.data) {
-                            _self._tempPage = new view(obj);
-                        } else {
-                            _self._tempPage = new view({
-                                data : obj
-                            });
-                        }
+                        _self._tempPage = new view(obj.data?obj:{data:obj});
                         _self._tempPages[_data.depth] = _self._tempPage;
                         if (!obj.el)
                             _self.$stage.append(_self._tempPage.el);
@@ -533,13 +511,7 @@
                 _data.depth = this._checkDepth(this.PRELOAD);
                 if (_data.view !== "") {
                     require([_data.view], function(view) {
-                        if (obj.data) {
-                            _self._preloader = new view(obj);
-                        } else {
-                            _self._preloader = new view({
-                                data : obj
-                            });
-                        }
+                        _self._preloader = new view(obj.data?obj:{data:obj});
                         _self.$stage.append(_self._preloader.el);
                         _self._preloader.init();
                         _self.trigger(_self.PRELOAD_PREPARE);
@@ -573,6 +545,7 @@
         _preloaderOn : function(obj) {
             if (this._preloader === null)
                 return;
+                
             if (_.isArray(this._tempData)) {
                 this._tempPreloadIndex++;
                 if (this._tempPreloadIndex >= this._tempData.length) {
@@ -587,6 +560,7 @@
             var _self = this;
             if (this._preloader === null)
                 return;
+                
             if (_.isArray(this._tempData)) {
                 var _n = 0;
                 this._tempLoadedProgress[obj.data.depth] = obj.progress;
@@ -604,6 +578,7 @@
         _preloaderOff : function(obj) {
             if (this._preloader === null)
                 return;
+                
             this._clearPreloader(obj.data);
             if (_.isArray(this._tempData)) {
                 this._tempPreloadIndex++;
@@ -622,8 +597,10 @@
                     _page = _obj;
                 }
             });
+            
             if (_page)
                 return _page;
+                
             _.each(this._curPages, function(_obj, _index) {
                 if (_obj.data === data) {
                     _page = _obj;
@@ -635,9 +612,11 @@
             var _depth = 0;
             if (depth)
                 _depth = this._checkDepth(depth);
+                
             var _page = this._tempPages[_depth];
             if (_page)
                 return _page;
+                
             var _page = this._curPages[_depth];
             return _page;
         },

@@ -12,6 +12,7 @@ require.config({
         'jquery' : 'libs/jquery/jquery-1.11.1.min',
         'tweenmax' : 'libs/greensock/TweenMax.min',
         'athena' : 'libs/athena/Athena',
+        'zepto' : 'libs/zepto/zepto.min',
         // app基本类地址
         'map' : 'app/map',
         'model' : 'app/model',
