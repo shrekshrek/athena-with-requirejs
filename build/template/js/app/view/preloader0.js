@@ -1,6 +1,6 @@
 define(['map', 'model', 'router'], function(SiteMap, SiteModel, SiteRouter) {
     var view = Athena.view.BasePage.extend({
-        id : 'preloader2',
+        id : 'preloader0',
         className : 'pop',
         $bar : null,
         init : function() {
