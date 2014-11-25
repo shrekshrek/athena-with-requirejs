@@ -53,13 +53,19 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 ##Athena如何使用？  
 在使用athena框架之前需要先安装nodejs客户端：http://nodejs.org/  
 在你的开发环境中需要安装ant插件，eclipse或者aptana的ant插件安装可以参考链接：http://www.netvisions.eu/component/k2/item/33-ant/33-ant.html  
-装好ant后，就可以使用build/build.xml进行网站部署和开发，具体部署命令详见下方built命令介绍  
+
+将build包下载放到网站目录下，  
+build/site.properties 为配置参数文件  
+**sitename** 指定网站名称，会替换到index.html中的title  
+**siteroot** 指定网站根目录  
+**image_match** 查找所有js，html，css文件中的此字段  
+**image_replace** 替换image_match查找到的值  
+**needimagemin** 是否需要压缩图片，这里如果选择true，在ant打包命令中就会进行图片压缩步骤，但是前提是需要先手动执行$grunt-install命令。  
+
+build/build.xml为ant命令集，具体部署命令详见下方built命令介绍  
 ![命令行列表](img3.gif)  
 
 ##ant命令介绍：  
-将build包下载放到网站目录下，  
-修改site.properties文件中的siteroot值，设置为网站相对当前build目录的相对路径(一般无需修改，直接把build放在网站根目录即可)。  
-修改site.properties文件中的sitename值，设置网站title(也可以在网站部署好后直接修改index.html的title)。  
 将build.xml装载进ant，使用相关命令  
 **$create**   将网站创建到之前site地址指定的位置  
 **$clean**    清除site下相关网站文件及目录（慎用！！！）  

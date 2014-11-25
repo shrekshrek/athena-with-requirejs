@@ -89,7 +89,7 @@
 	</target>
 
 	<target name="__images-to-built">
-		<replaceregexp match="${match}" replace="${replace}" flags="g" byline="false">
+		<replaceregexp match="${image_match}" replace="${image_replace}" flags="g" byline="false">
 			<fileset dir="${css-built}" includes="**/*.css" />
 		</replaceregexp>
 		<replaceregexp match="${match}" replace="${replace}" flags="g" byline="false">
