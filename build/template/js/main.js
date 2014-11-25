@@ -14,10 +14,10 @@ require.config({
         'athena' : 'libs/athena/Athena',
         'zepto' : 'libs/zepto/zepto.min',
         // app基本类地址
-        'map' : 'app/map',
-        'model' : 'app/model',
-        'router' : 'app/router',
-        'tracker' : 'app/tracker',
+        'map' : 'app/base/map',
+        'model' : 'app/base/model',
+        'router' : 'app/base/router',
+        'tracker' : 'app/base/tracker',
         // lib辅助类
         "easyBtn" : "libs/athena/ui/EasyBtn",
         "scroller" : "libs/athena/ui/Scroller",
@@ -31,7 +31,7 @@ require.config({
         'jquery.zclip' : 'libs/jquery/jquery.zclip.min',
         'json2' : 'libs/json2.min',
         'css3d' : 'libs/css3d/css3d'
-    // app其他辅助类
+        // app其他辅助类
     },
     shim : {
         'jquery' : {
@@ -68,7 +68,7 @@ require.config({
             deps : ['underscore'],
             exports : 'Css3D'
         }
-        
+
     }
 });
 
@@ -81,13 +81,13 @@ require(['backbone', 'athena', 'map', 'router', 'model'], function(Backbone, Ath
             height : 600
         });
         Athena.api.flow(Athena.NORMAL);
-//         Athena.api.preloadFast(true);
-//         if (SiteMap.preloader) {
-//         Athena.api.once(Athena.PRELOAD_PREPARE, init);
-//         Athena.api.preloader(SiteMap.preloader);
-//         } else {
-//         init();
-//         }
+        //         Athena.api.preloadFast(true);
+        //         if (SiteMap.preloader) {
+        //         Athena.api.once(Athena.PRELOAD_PREPARE, init);
+        //         Athena.api.preloader(SiteMap.preloader);
+        //         } else {
+        //         init();
+        //         }
 
         Athena.api.once(Athena.PRELOAD_PREPARE, init);
         Athena.api.preloader({
@@ -109,11 +109,12 @@ require(['backbone', 'athena', 'map', 'router', 'model'], function(Backbone, Ath
         $('body').on('mousedown', function(event) {
             var _tag = ['TEXTAREA', 'INPUT', 'P', 'SPAN', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'A', 'SELECT'];
             var _len = _tag.length;
-            for ( var i = 0; i < _len; i++) {
+            for (var i = 0; i < _len; i++) {
                 if (event.target.tagName == _tag[i])
                     return true;
             }
             return false;
         });
     }
+
 });

@@ -15,7 +15,7 @@ define(['athena', 'tweenmax', 'jquery.mousewheel'], function() {
         init : function() {
             Athena.view.BaseView.prototype.init.apply(this);
 
-            if (document.hasOwnProperty("ontouchstart"))
+            if (document.hasOwnProperty && document.hasOwnProperty("ontouchstart"))
                 this.hasTouch = true;
             else
                 this.hasTouch = false;
