@@ -47,15 +47,16 @@ Athena，整合以上各种强大通用的第三方库，使html网站开发变�
 如果开发者有使用过as3下的开发框架gaia framework的经验就可以更快更好的理解这一点  
 支持ie7+，firefox，chrome等所有主流浏览器
 
-##Athena适合做什么？
+##Athena适合做什么？  
 athena适合开发跨平台的单页应用网站，如活动的minisite，产品演示网站等等
 
-##Athena如何使用？
+##Athena如何使用？  
 在使用athena框架之前需要先安装nodejs客户端：http://nodejs.org/  
 在你的开发环境中需要安装ant插件，eclipse或者aptana的ant插件安装可以参考链接：http://www.netvisions.eu/component/k2/item/33-ant/33-ant.html  
-装好ant后，就可以使用build/build.xml进行网站部署和开发，具体部署命令详见下方built命令介绍
+装好ant后，就可以使用build/build.xml进行网站部署和开发，具体部署命令详见下方built命令介绍  
+![命令行列表](img3.gif)  
 
-##ant命令介绍：
+##ant命令介绍：  
 将build包下载放到网站目录下，  
 修改site.properties文件中的siteroot值，设置为网站相对当前build目录的相对路径(一般无需修改，直接把build放在网站根目录即可)。  
 修改site.properties文件中的sitename值，设置网站title(也可以在网站部署好后直接修改index.html的title)。  
@@ -68,7 +69,7 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 **$link-to-origin** 将index.html中的css和js指向原始文件夹  
 **$grunt-install** 在使用$compile命令前请先使用此命令安装grunt相关组件，以便使用grunt-imagemin功能  
 
-##Athena API:
+##Athena API:  
 Athena所有命令都置于Athena.api下，
 
 **init(stage);**  
@@ -93,43 +94,42 @@ Athena所有命令都置于Athena.api下，
 新增参数类型：
 *data*也可以设置为{data:pagedata,el:dom}，同理也可以组成这样的数组 [{data:pagedata},{data:pagedata,el:dom},pagedata]  
 
-
 **pageTo(data);**  
-*data*为SiteMap节点对象,效果同pageOn(data);
+*data*为SiteMap节点对象,效果同pageOn(data);  
 
 **pageOff(data);**  
-*data*为SiteMap节点对象,此处也可以传string字符串，或者数字，用户指定页面中某层级的内容退场，也可以指定一个数组的页面一起退场
+*data*为SiteMap节点对象,此处也可以传string字符串，或者数字，用户指定页面中某层级的内容退场，也可以指定一个数组的页面一起退场  
 
-**preloader(data,{complete:function});**  
-*data*为节点对象，function为加载设置完成的回调函数，data为空则取消preload显示组件  
-如果参数为空则获取当前preloader对象  
+**preloader(data);**  
+*data*为节点对象，参数类型请参考pageOn()，data相关文件加载准备完成后会发出事件:Athena.PRELOAD_PREPARE  
+返回当前preloader对象，不传参则获取当前preloader对象  
 
 **preloadFast(bool);**  
 *bool*为布尔值，是否跳过预载。true时在加载完html和css文件后立即置入场景触发进场。false时会在html页面中所有img标签的图片全部加载完成后置入场景触发进场动画。  
 **preloadFast();**  
-返回bool布尔值
+返回bool布尔值  
 
 **fullScreen(bool);**  
 *bool*为布尔值，是否设置全屏，true为全屏显示无滚动条，false为普通显示，滚动条显示状态为auto。rect设置全屏状态下的最小分辨率，低于此分辨率强制出现滚动条(默认值为1x1)。  
 **fullScreen();**  
-返回bool布尔值
+返回bool布尔值  
 
 **windowRect();**  
-获取当前窗口分辨率
+获取当前窗口分辨率  
 
 **windowRectMin(rect);**  
 *rect*设置窗口最小分辨率  
 **windowRectMin();**  
-获取窗口最小分辨率
+获取窗口最小分辨率  
 
 **stageRect();**  
-获取当前场景分辨率
+获取当前场景分辨率  
 
 **getPage(data);**  
-获取指定data的页面实例
+获取指定data的页面实例  
 
 **getPageAt(depth);**  
-获取指定depth层级的页面实例,默认depth为0，即"middle"层。
+获取指定depth层级的页面实例,默认depth为0，即"middle"层。  
 
 **resize();**  
 当页面尺寸变化时自动调用，发布resize事件。需要时也可以主动调用，所有page扩展页会响应全局resize事件一起刷新。
@@ -139,7 +139,7 @@ Athena所有命令都置于Athena.api下，
 **Athena.trigger(Athena.PRELOAD_PREPARE);**  
 **Athena.trigger(Athena.FLOW_COMPLETE, {data:当前流程的页面信息});**  
 **Athena.trigger(Athena.FLOW_START, {data:当前流程的页面信息});**  
-使用Backbone的on或listenTo就可以监听这些全局事件。
+使用Backbone的on或listenTo就可以监听这些全局事件。  
 
 ##Athena CONST:
 页面深度常量  
@@ -147,23 +147,23 @@ Athena所有命令都置于Athena.api下，
 **TOP:"top"**          等价于z-index = 500  
 **MIDDLE:"middle"**    等价于z-index = 0  
 **BOTTOM:"bottom"**    等价于z-index = -500  
-Athena.api.getPageAt(depth);此命令有时会需要用到这些变量以获取相应层级的页面。
+Athena.api.getPageAt(depth);此命令有时会需要用到这些变量以获取相应层级的页面。  
 
 页面切换方式常量  
 **NORMAL:"normal"**    普通切换方式：1。当前页面退场。2。加载新页面。3。新页面进场。  
 **PRELOAD:"preload"**  预载切换方式：1。加载新页面。2。当前页面退场。3。新页面进场。  
 **REVERSE:"reverse"**  反转切换方式：1。加载新页面。2。新页面进场。3。当前页面退场。  
 **CROSS:"cross"**      交叉切换方式：1。加载新页面。2。新页面进场。当前页面退场。同时进行。  
-Athena.api.flow(flow);此命令会用到这些变量以用来设置页面切换方式。
+Athena.api.flow(flow);此命令会用到这些变量以用来设置页面切换方式。  
 
 页面间切换状态常量  
 **FLOW_START:"flowStart"**           页面切换流程开始时发布此事件  
 **FLOW_COMPLETE:"flowComplete"**     页面切换流程结束时发布此事件  
 **WINDOW_RESIZE:"windowResize"**     窗体尺寸变化时发布此事件  
 **PRELOAD_PREPARE:"preloadPrepare"** 预载页准备完成时发布此事件（常用于网站开始前侦听此事件）  
-这些是全局事件变量，任何地方有需要都可以通过使用Backbone的on或listenTo就可以监听这些全局事件。
+这些是全局事件变量，任何地方有需要都可以通过使用Backbone的on或listenTo就可以监听这些全局事件。  
 
-##Athena 相关基类:
+##Athena 相关基类:  
 Athena所有基类都置于Athena.view下  
 **BaseView**   为视图类基类，当页面中有需要添加新元素是可以直接继承此类做各种扩展  
     init:function(){  
@@ -204,29 +204,34 @@ removeChild(view);   将视图类移出view视图类。移出后自动执行dest
         Athena.view.BasePage.prototype.transitionOutComplete.apply(this);  
     }  
 
-##Athena 扩展组件:
+##Athena 扩展组件:  
 组件在app/js/libs/athena/ui/下，目前可以使用的组件只有两个，  
 scroller 范例参考workspage  
-easybtn  目前没在范例中使用，一般情况下的按钮交互效果建议尽量使用css实现  
+easybtn  目前没在范例中使用，一般情况下的按钮交互效果建议使用css实现  
 
 ##网站文件结构：
 Athena.js 为框架主文件，组织图解如下：  
-![组织图解](readme_img1.gif)  
-
+![组织图解](img1.gif)  
 如上图，  
 athena框架核心文件位于*libs/athena/*文件夹中  
-app/ 为网站文件所在，SiteMap.js记录网站所有的页面节点，
-main.js 里需要为所有使用的js文件注册一个对应的变量名，以方便以后的js文件来书写依赖关系。(开发中别忘记每个新建的模块js需要在main中注册一个变量，使用起来才更方便，这里需要熟悉requirejs的使用方法)
+app/ 为网站文件所在，map.js记录网站所有的页面节点，
+main.js 里需要为所有使用的js文件注册一个对应的变量名，以方便以后的js文件来书写依赖关系。(开发中别忘记每个新建的模块js需要在main中注册一个变量，使用起来才更方便，这里需要熟悉requirejs的使用方法)  
+build/js-built.js 是requirejs打包配置文件，里面的文件对应关系需要与main.js文件相同，modules内设置需要合并的主文件，打包完成后如下图显示，会自动生成几个 *-built 文件夹  
+![组织图解](img2.gif)  
+发布打包的优点是将每个分页所需的html，css，js文件全部打包成一个js文件，这样大幅减少了http请求数量，也小幅减少了整体大小，并增强了加密性。  
 
-在首页html中只需加入一行  
-![首页代码](readme_img2.gif)
-即可载入并启动整站  
+
+范例中还显示了一种比较常用的特殊做法，将第一个loading页面直接做在html页面中，这样页面载入后就直接显示loading页面，等require将后面需要的主体框架文件载入后再将页面的loading视图绑定相应的loading控制类js，继续加载后续页面内容  
+另一种常规做法就是主框架js文件加载完成后再加载并显示loading页面。相对来说，前种做法更好。  
+![预设加载](img4.gif)  
+
 
 ##应用案例：
 http://kyrios.hvsop.cn/  
 http://pc4.hvsop.cn/  
 http://outdoor.adidasevent.com/  
 http://minutemaid.qq.com/  
+http://msg.crayola.cn/  
 
 ##其他：
 本框架仅为本人开发方便之用，如有问题，不吝赐教。QQ:274924021  
