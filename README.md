@@ -60,7 +60,7 @@ build/site.properties 为配置参数文件
 **siteroot** 指定网站根目录  
 **image_match** 查找所有js，html，css文件中的此字段  
 **image_replace** 替换image_match查找到的值  
-**needimagemin** 是否需要压缩图片，这里如果选择true，在ant打包命令中就会进行图片压缩步骤，但是前提是需要先手动执行$grunt-install命令。  
+**needimagemin** 是否需要压缩图片，这里如果选择true，在ant打包命令中就会进行图片压缩步骤，但是前提是需要先手动执行$grunt-install命令。（mac下请手动在grunt目录下运行命令行 npm install，暂时没有解决$grunt-install在mac下运行失败的问题，有明白的请不吝赐教）  
 
 build/build.xml为ant命令集，具体部署命令详见下方built命令介绍  
 ![命令行列表](img3.gif)  
