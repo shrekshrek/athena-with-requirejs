@@ -5,7 +5,7 @@
 	<property name="version" value="2.0.0" />
 
 	<property name="build" value="./" />
-	<property file="${build}/site.properties" />
+	<property file="${build}site.properties" />
 
 	<property name="template" value="${build}template/" />
 	<property name="require-optimize" value="${build}libs/require-optimize/" />
@@ -18,7 +18,7 @@
 	<property name="images-built" value="${siteroot}images-built/" />
 	<property name="grunt-images" value="../../${images}" />
 	<property name="grunt-images-built" value="../../${images-built}" />
-	<property name="temp" value="${siteroot}/temp/" />
+	<property name="temp" value="${siteroot}temp/" />
 	<property name="env-mac" value="/usr/local/bin" />
 	<property name="newline" value="&#10;" />
 
@@ -68,7 +68,6 @@
 	<target name="$compile">
 		<echo message="compile" />
 		<antcall target="__optimize" />
-		<antcall target="__images-to-built" />
 		<antcall target="__cdn-format" />
 		<antcall target="__mainjs-to-built" />
 		<antcall target="$link-to-built" />
@@ -92,7 +91,7 @@
 		<replaceregexp match="${image_match}" replace="${image_replace}" flags="g" byline="false">
 			<fileset dir="${css-built}" includes="**/*.css" />
 		</replaceregexp>
-		<replaceregexp match="${match}" replace="${replace}" flags="g" byline="false">
+		<replaceregexp match="${image_match}" replace="${image_replace}" flags="g" byline="false">
 			<fileset dir="${js-built}" includes="**/*.html,**/*.js" />
 		</replaceregexp>
 	</target>
@@ -174,6 +173,7 @@
 		<echo message="image-min" />
 		<antcall target="__image-min-unix" />
 		<antcall target="__image-min-windows" />
+        <antcall target="__images-to-built" />
 	</target>
 
 	<target name="__image-min-unix" if="__isUnix">
