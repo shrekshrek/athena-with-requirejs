@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Set Ant Project Name -->
-<project name="athena" default="$main" basedir=".">
+<project name="athena" default="main" basedir=".">
 
 	<property name="version" value="2.0.0" />
 
@@ -24,9 +24,9 @@
 
 	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${build}/libs/ant-contrib-1.0b3.jar" />
 
-	<target name="$main">
+	<target name="main">
 		<echo message="main" />
-		<antcall target="$create" />
+		<antcall target="create" />
 	</target>
 
 	<target name="!clean">
@@ -46,7 +46,7 @@
 		<delete dir="${images-built}" />
 	</target>
 
-	<target name="$create">
+	<target name="create">
 		<echo message="create" />
 		<copy toDir="${siteroot}" overwrite="false" encoding="UTF-8">
 			<fileset dir="${template}" />
@@ -65,7 +65,7 @@
 		<echo message="${grunt}" />
 	</target>
 
-	<target name="$compile">
+	<target name="compile">
 		<echo message="compile" />
 		<antcall target="__optimize" />
 		<antcall target="__cdn-format" />
@@ -87,7 +87,7 @@
 		<concat append="yes" destfile="${file}">${newline}</concat>
 	</target>
 
-	<target name="$images-to-built">
+	<target name="images-to-built">
 		<replaceregexp match="${image_match}" replace="${image_replace}" flags="g" byline="false">
 			<fileset dir="${css-built}" includes="**/*.css" />
 		</replaceregexp>
@@ -96,7 +96,7 @@
 		</replaceregexp>
 	</target>
 
-    <target name="$images-to-origin">
+    <target name="images-to-origin">
         <replaceregexp match="${image_replace}" replace="${image_match}" flags="g" byline="false">
             <fileset dir="${css-built}" includes="**/*.css" />
         </replaceregexp>
@@ -111,7 +111,7 @@
 		</replaceregexp>
 	</target>
 
-	<target name="$index-to-built">
+	<target name="index-to-built">
 		<echo message="link-to-built" />
 		<replaceregexp match="js/" replace="js-built/" flags="g" byline="false">
 			<fileset dir="${siteroot}" includes="index.html" />
@@ -124,7 +124,7 @@
 		</replaceregexp>
 	</target>
 
-	<target name="$index-to-origin">
+	<target name="index-to-origin">
 		<echo message="link-to-origin" />
 		<replaceregexp match="js-built/" replace="js/" flags="g" byline="false">
 			<fileset dir="${siteroot}" includes="index.html" />
@@ -182,7 +182,7 @@
 		<echo message="image-min" />
 		<antcall target="__image-min-unix" />
 		<antcall target="__image-min-windows" />
-        <antcall target="$images-to-built" />
+        <antcall target="images-to-built" />
 	</target>
 
 	<target name="__image-min-unix" if="__isUnix">
@@ -215,7 +215,7 @@
 		</copy>
 	</target>
 
-	<target name="$grunt-install">
+	<target name="grunt-install">
 		<echo message="grunt install" />
 		<antcall target="__grunt-unix" />
 		<antcall target="__grunt-windows" />
