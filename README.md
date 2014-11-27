@@ -77,18 +77,18 @@ build/build.xml为ant命令集，具体部署命令详见下方built命令介绍
 **!clean-built**    清除site下所有压缩过的built文件夹  
 **grunt-install** 在使用compile命令前请先使用此命令安装grunt相关组件，以便使用grunt-imagemin功能  
 
-其他：ant命令在webstorm中的使用，需要在External Tools中把以上所有命令逐条添加其中，图示如下：
+其他：ant命令在webstorm中的使用，步骤图示如下：
+mac下选择WebStorm > Preferences，windows下选择File > Settings  
 ![webstorm preferences](assets/img5.gif)  
-mac下选择WebStorm > Preferences，windows下选择File > Settings
 
-![edit tool](assets/img6.gif)  
 选择Tools > External Tools，添加相关命令  
+![edit tool](assets/img6.gif)  
 
-![diffrent in windows](assets/img7.gif)  
 在windows系统中的不同处，ant存在的地址不同  
+![diffrent in windows](assets/img7.gif)  
 
-![右键点击项目build文件夹，选择相关命令](assets/img8.gif)  
 右键点击项目build文件夹，选择相关命令  
+![右键点击项目build文件夹，选择相关命令](assets/img8.gif)  
 **注：mac版的ant安装比windows麻烦些，可以搜索查阅一下相关资料。这里提供一篇参考：http://blog.csdn.net/crazybigfish/article/details/18215439**  
 
 ##Athena API:  
