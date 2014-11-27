@@ -81,6 +81,7 @@ build/build.xml为ant命令集，具体部署命令详见下方built命令介绍
 ![webstorm preferences](img5.gif)  
 ![edit tool](img6.gif)  
 ![diffrent in windows](img7.gif)  
+![右键点击项目build文件夹，选择相关命令](img8.gif)  
 **注：mac版的ant安装比windows麻烦些，可以搜索查阅一下相关资料。这里提供一篇参考：http://blog.csdn.net/crazybigfish/article/details/18215439**  
 
 ##Athena API:  
