@@ -68,11 +68,13 @@ build/build.xml为ant命令集，具体部署命令详见下方built命令介绍
 ##ant命令介绍：  
 将build.xml装载进ant，使用相关命令  
 **$create**   将网站创建到之前site地址指定的位置  
-**$clean**    清除site下相关网站文件及目录（慎用！！！）  
-**$clean-built**    清除site下所有压缩过的built文件夹  
 **$compile**  发布并优化css文件夹和js文件夹下文件，tpl中的html文件会自动打包成js文件以方便cdn跨域调用。生成新的优化文件包，以-build结尾。最后会将index.html中相关地址指向新的优化文件包  
-**$link-to-built** 将index.html中的css和js指向压缩过的built文件夹  
-**$link-to-origin** 将index.html中的css和js指向原始文件夹  
+**$index-to-built** 将index.html中的css和js指向压缩过的built文件夹  
+**$index-to-origin** 将index.html中的css和js指向原始文件夹  
+**$image-to-built** 将built文件夹中的css和js文件内所有image_match字段替换成image_replace  
+**$image-to-origin** $image-to-built命令的反效果  
+**!clean**    清除site下相关网站文件及目录（慎用！！！）  
+**!clean-built**    清除site下所有压缩过的built文件夹  
 **$grunt-install** 在使用$compile命令前请先使用此命令安装grunt相关组件，以便使用grunt-imagemin功能  
 
 ##Athena API:  

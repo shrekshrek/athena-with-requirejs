@@ -29,9 +29,9 @@
 		<antcall target="$create" />
 	</target>
 
-	<target name="_!_clean">
+	<target name="!clean">
 		<echo message="clean" />
-		<antcall target="_!_clean-built" />
+		<antcall target="!clean-built" />
 		<delete dir="${siteroot}css" />
 		<delete dir="${siteroot}js" />
 		<delete dir="${siteroot}images" />
@@ -39,7 +39,7 @@
 		<delete file="${siteroot}index.html" />
 	</target>
 
-	<target name="_!_clean-built">
+	<target name="!clean-built">
 		<echo message="clean-built" />
 		<delete dir="${css-built}" />
 		<delete dir="${js-built}" />
@@ -87,7 +87,7 @@
 		<concat append="yes" destfile="${file}">${newline}</concat>
 	</target>
 
-	<target name="__images-to-built">
+	<target name="$images-to-built">
 		<replaceregexp match="${image_match}" replace="${image_replace}" flags="g" byline="false">
 			<fileset dir="${css-built}" includes="**/*.css" />
 		</replaceregexp>
@@ -96,13 +96,22 @@
 		</replaceregexp>
 	</target>
 
+    <target name="$images-to-origin">
+        <replaceregexp match="${image_replace}" replace="${image_match}" flags="g" byline="false">
+            <fileset dir="${css-built}" includes="**/*.css" />
+        </replaceregexp>
+        <replaceregexp match="${image_replace}" replace="${image_match}" flags="g" byline="false">
+            <fileset dir="${js-built}" includes="**/*.html,**/*.js" />
+        </replaceregexp>
+    </target>
+
 	<target name="__mainjs-to-built">
 		<replaceregexp match="js&#34;," replace="js-built&#34;," flags="g" byline="false">
 			<fileset dir="${js-built}" includes="main.js" />
 		</replaceregexp>
 	</target>
 
-	<target name="$link-to-built">
+	<target name="$index-to-built">
 		<echo message="link-to-built" />
 		<replaceregexp match="js/" replace="js-built/" flags="g" byline="false">
 			<fileset dir="${siteroot}" includes="index.html" />
@@ -115,7 +124,7 @@
 		</replaceregexp>
 	</target>
 
-	<target name="$link-to-origin">
+	<target name="$index-to-origin">
 		<echo message="link-to-origin" />
 		<replaceregexp match="js-built/" replace="js/" flags="g" byline="false">
 			<fileset dir="${siteroot}" includes="index.html" />
@@ -173,7 +182,7 @@
 		<echo message="image-min" />
 		<antcall target="__image-min-unix" />
 		<antcall target="__image-min-windows" />
-        <antcall target="__images-to-built" />
+        <antcall target="$images-to-built" />
 	</target>
 
 	<target name="__image-min-unix" if="__isUnix">
