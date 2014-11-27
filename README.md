@@ -63,7 +63,7 @@ build/site.properties 为配置参数文件
 **needimagemin** 是否需要压缩图片，这里如果选择true，在ant打包命令中就会进行图片压缩步骤，但是前提是需要先手动执行$grunt-install命令。（mac下请手动在grunt目录下运行命令行 npm install，暂时没有解决$grunt-install在mac下运行失败的问题，有明白的请不吝赐教）  
 
 build/build.xml为ant命令集，具体部署命令详见下方built命令介绍  
-![命令行列表](img3.gif)  
+![命令行列表](assets/img3.gif)  
 
 ##ant命令介绍：  
 将build.xml装载进ant，使用相关命令  
@@ -78,10 +78,10 @@ build/build.xml为ant命令集，具体部署命令详见下方built命令介绍
 **grunt-install** 在使用compile命令前请先使用此命令安装grunt相关组件，以便使用grunt-imagemin功能  
 
 其他：ant命令在webstorm中的使用，需要在External Tools中把以上所有命令逐条添加其中，图示如下：
-![webstorm preferences](img5.gif)  
-![edit tool](img6.gif)  
-![diffrent in windows](img7.gif)  
-![右键点击项目build文件夹，选择相关命令](img8.gif)  
+![webstorm preferences](assets/img5.gif)  
+![edit tool](assets/img6.gif)  
+![diffrent in windows](assets/img7.gif)  
+![右键点击项目build文件夹，选择相关命令](assets/img8.gif)  
 **注：mac版的ant安装比windows麻烦些，可以搜索查阅一下相关资料。这里提供一篇参考：http://blog.csdn.net/crazybigfish/article/details/18215439**  
 
 ##Athena API:  
@@ -120,7 +120,7 @@ Athena所有命令都置于Athena.api下，
 返回当前preloader对象，不传参则获取当前preloader对象  
 
 **preloadFast(bool);**  
-*bool*为布尔值，是否跳过预载。true时在加载完html和css文件后立即置入场景触发进场。false时会在html页面中所有img标签的图片全部加载完成后置入场景触发进场动画。  
+*bool*为布尔值，是否跳过预载。true时在加载完html和css文件后立即置入场景触发进场。false时会在html页面中所有assets/img标签的图片全部加载完成后置入场景触发进场动画。  
 **preloadFast();**  
 返回bool布尔值  
 
@@ -226,19 +226,19 @@ easybtn  目前没在范例中使用，一般情况下的按钮交互效果建�
 
 ##网站文件结构：
 Athena.js 为框架主文件，组织图解如下：  
-![组织图解](img1.gif)  
+![组织图解](assets/img1.gif)  
 如上图，  
 athena框架核心文件位于*libs/athena/*文件夹中  
 app/ 为网站文件所在，map.js记录网站所有的页面节点，
 main.js 里需要为所有使用的js文件注册一个对应的变量名，以方便以后的js文件来书写依赖关系。(开发中别忘记每个新建的模块js需要在main中注册一个变量，使用起来才更方便，这里需要熟悉requirejs的使用方法)  
 build/js-built.js 是requirejs打包配置文件，里面的文件对应关系需要与main.js文件相同，modules内设置需要合并的主文件，打包完成后如下图显示，会自动生成几个 *-built 文件夹  
-![组织图解](img2.gif)  
+![组织图解](assets/img2.gif)  
 发布打包的优点是将每个分页所需的html，css，js文件全部打包成一个js文件，这样大幅减少了http请求数量，也小幅减少了整体大小，并增强了加密性。  
 
 
 范例中还显示了一种比较常用的特殊做法，将第一个loading页面直接做在html页面中，这样页面载入后就直接显示loading页面，等require将后面需要的主体框架文件载入后再将页面的loading视图绑定相应的loading控制类js，继续加载后续页面内容  
 另一种常规做法就是主框架js文件加载完成后再加载并显示loading页面。相对来说，前种做法更好。  
-![预设加载](img4.gif)  
+![预设加载](assets/img4.gif)  
 
 
 ##应用案例：
