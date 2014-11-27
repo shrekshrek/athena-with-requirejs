@@ -70,7 +70,7 @@
 		<antcall target="__optimize" />
 		<antcall target="__cdn-format" />
 		<antcall target="__mainjs-to-built" />
-		<antcall target="$link-to-built" />
+		<antcall target="index-to-built" />
 		<antcall target="__image-min" />
 	</target>
 
@@ -96,14 +96,14 @@
 		</replaceregexp>
 	</target>
 
-    <target name="images-to-origin">
-        <replaceregexp match="${image_replace}" replace="${image_match}" flags="g" byline="false">
-            <fileset dir="${css-built}" includes="**/*.css" />
-        </replaceregexp>
-        <replaceregexp match="${image_replace}" replace="${image_match}" flags="g" byline="false">
-            <fileset dir="${js-built}" includes="**/*.html,**/*.js" />
-        </replaceregexp>
-    </target>
+	<target name="images-to-origin">
+		<replaceregexp match="${image_replace}" replace="${image_match}" flags="g" byline="false">
+			<fileset dir="${css-built}" includes="**/*.css" />
+		</replaceregexp>
+		<replaceregexp match="${image_replace}" replace="${image_match}" flags="g" byline="false">
+			<fileset dir="${js-built}" includes="**/*.html,**/*.js" />
+		</replaceregexp>
+	</target>
 
 	<target name="__mainjs-to-built">
 		<replaceregexp match="js&#34;," replace="js-built&#34;," flags="g" byline="false">
@@ -182,7 +182,7 @@
 		<echo message="image-min" />
 		<antcall target="__image-min-unix" />
 		<antcall target="__image-min-windows" />
-        <antcall target="images-to-built" />
+		<antcall target="images-to-built" />
 	</target>
 
 	<target name="__image-min-unix" if="__isUnix">
