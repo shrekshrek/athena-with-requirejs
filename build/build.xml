@@ -106,7 +106,7 @@
 	</target>
 
 	<target name="__mainjs-to-built">
-		<replaceregexp match="js&#34;," replace="js-built&#34;," flags="g" byline="false">
+		<replaceregexp match="js‘," replace="js-built’," flags="g" byline="false">
 			<fileset dir="${js-built}" includes="main.js" />
 		</replaceregexp>
 	</target>
