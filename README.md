@@ -6,7 +6,7 @@ Athena是一个基于Backbone和requirejs的前端框架。结构清晰，管理
 *date:2014.11.20*  
 版本更新到2.0，主要更新：  
 1.增加了require的文件合并功能，让整个框架的http请求数量显著降低，文件大小也有小幅缩减。增加build/js-built.js，用于进行require优化的配置。  
-2.增强了pageOn()的功能，可以在参数中增加el等backbone.view的初始参数，以达到让新增页面直接绑定到html中已有dom元素的能力。
+2.增强了pageOn()的功能，可以在参数中增加el等backbone.view的初始参数，以达到让新增页面直接绑定到html中已有dom元素的能力。  
 3.范例增加了另一种初始loading的创建方法，直接写在html页面中，这样可以保证这个loading在页面读到的第一时间即可现实，等待其他主要框架js文件加载完成后再自动把loading相关控制类绑定到此loading视图。  
 4.适当简化了整个框架的文件结构。  
 5.优化ant命令集，增加了build/site.properties中的一些新参数。
