@@ -821,12 +821,12 @@
         _isSelected : null,
         _isEnable : null,
         init : function() {
-            Athena.view.BaseView.prototype.init.apply(this);
+            Athena.view.BaseBtn.__super__.init.apply(this);
             this._isMouseOver = false, this._isSelected = false, this._isEnable = false, this.enable(true);
         },
         destroy : function() {
             this.enable(false);
-            Athena.view.BaseView.prototype.destroy.apply(this);
+            Athena.view.BaseBtn.__super__.destroy.apply(this);
         },
         mouseOverHandler : function() {
         },
@@ -883,7 +883,7 @@
         _loaded : null,
         data : null,
         initialize : function(args) {
-            Athena.view.BaseView.prototype.initialize.apply(this, [args]);
+            Athena.view.BasePage.__super__.initialize.apply(this, [args]);
             var _self = this;
             this.data = args.data;
             this.$el.css({
@@ -900,14 +900,14 @@
             this.data.assets = _assets;
         },
         init : function(args) {
-            Athena.view.BaseView.prototype.init.apply(this, [args]);
+            Athena.view.BasePage.__super__.init.apply(this, [args]);
 
             this.listenTo(Athena, Athena.WINDOW_RESIZE, function() {
                 this.resize();
             });
         },
         destroy : function() {
-            Athena.view.BaseView.prototype.destroy.apply(this);
+            Athena.view.BasePage.__super__.destroy.apply(this);
         },
         preload : function(skip) {
             this.trigger(Athena.PRELOAD_START, {

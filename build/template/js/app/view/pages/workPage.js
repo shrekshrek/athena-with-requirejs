@@ -5,7 +5,7 @@ define(['text!./work.html', 'css!./work.css', 'map', 'model', 'router', 'scrolle
         init : function() {
             this.template = html;
             this.render();
-            Athena.view.BasePage.prototype.init.apply(this);
+            view.__super__.init.apply(this);
             var _self = this;
 
             this.scroller = new Scroller({
@@ -21,14 +21,14 @@ define(['text!./work.html', 'css!./work.css', 'map', 'model', 'router', 'scrolle
             });
         },
         destroy : function() {
-            Athena.view.BasePage.prototype.destroy.apply(this);
+            view.__super__.destroy.apply(this);
         },
         resize : function() {
-            Athena.view.BasePage.prototype.resize.apply(this);
+            view.__super__.resize.apply(this);
         },
         transitionIn : function() {
             var _self = this;
-            Athena.view.BasePage.prototype.transitionIn.apply(this);
+            view.__super__.transitionIn.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.5, {
@@ -44,7 +44,7 @@ define(['text!./work.html', 'css!./work.css', 'map', 'model', 'router', 'scrolle
         },
         transitionOut : function() {
             var _self = this;
-            Athena.view.BasePage.prototype.transitionOut.apply(this);
+            view.__super__.transitionOut.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.5, {

@@ -6,7 +6,7 @@ define(['text!./preloader.html', 'css!./preloader.css', 'map', 'model', 'router'
         init : function() {
             this.template = html;
             this.render();
-            Athena.view.BasePage.prototype.init.apply(this);
+            view.__super__.init.apply(this);
             var _self = this;
 
             this.$bar = $(this.el).find('#loading-bar');
@@ -17,11 +17,11 @@ define(['text!./preloader.html', 'css!./preloader.css', 'map', 'model', 'router'
             });
         },
         resize : function() {
-            Athena.view.BasePage.prototype.resize.apply(this);
+            view.__super__.resize.apply(this);
         },
         transitionIn : function() {
             var _self = this;
-            Athena.view.BasePage.prototype.transitionIn.apply(this);
+            view.__super__.transitionIn.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.5, {
@@ -40,7 +40,7 @@ define(['text!./preloader.html', 'css!./preloader.css', 'map', 'model', 'router'
         },
         transitionOut : function() {
             var _self = this;
-            Athena.view.BasePage.prototype.transitionOut.apply(this);
+            view.__super__.transitionOut.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.5, {

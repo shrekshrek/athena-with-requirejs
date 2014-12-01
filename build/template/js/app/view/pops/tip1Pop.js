@@ -4,7 +4,7 @@ define(['text!./tip1.html', 'css!./tip1.css', 'map', 'model', 'router', './baseP
         init : function() {
             this.template = html;
             this.render();
-            Athena.view.BasePage.prototype.init.apply(this);
+            view.__super__.init.apply(this);
             var _self = this;
 
             TweenMax.set(this.$el, {

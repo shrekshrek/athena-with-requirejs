@@ -5,7 +5,7 @@ define(['text!./three.html', 'css!./three.css', 'map', 'model', 'router', 'css3d
         init : function() {
             this.template = html;
             this.render();
-            Athena.view.BasePage.prototype.init.apply(this);
+            view.__super__.init.apply(this);
             var _self = this;
 
             TweenMax.set(this.$el, {
@@ -14,10 +14,10 @@ define(['text!./three.html', 'css!./three.css', 'map', 'model', 'router', 'css3d
             });
         },
         destroy : function() {
-            Athena.view.BasePage.prototype.destroy.apply(this);
+            view.__super__.destroy.apply(this);
         },
         resize : function() {
-            Athena.view.BasePage.prototype.resize.apply(this);
+            view.__super__.resize.apply(this);
 
             this.$el.width(Athena.stageRect().width);
             this.$el.height(Athena.stageRect().height);
@@ -28,7 +28,7 @@ define(['text!./three.html', 'css!./three.css', 'map', 'model', 'router', 'css3d
 
             this.init3D();
 
-            Athena.view.BasePage.prototype.transitionIn.apply(this);
+            view.__super__.transitionIn.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.5, {
@@ -42,7 +42,7 @@ define(['text!./three.html', 'css!./three.css', 'map', 'model', 'router', 'css3d
         },
         transitionOut : function() {
             var _self = this;
-            Athena.view.BasePage.prototype.transitionOut.apply(this);
+            view.__super__.transitionOut.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.5, {

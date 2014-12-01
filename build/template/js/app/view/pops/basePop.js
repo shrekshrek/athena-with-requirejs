@@ -8,7 +8,7 @@ define([], function() {
             "click .close" : "closeHandler"
         },
         init : function() {
-            Athena.view.BasePage.prototype.init.apply(this);
+            view.__super__.init.apply(this);
 
             this.$main = this.$el.find(".pop-main");
             this.$bg = this.$el.find(".pop-bg");
@@ -17,7 +17,7 @@ define([], function() {
             this.$el.width(Athena.api.stageRect().width);
             this.$el.height(Athena.api.stageRect().height);
 
-            Athena.view.BasePage.prototype.resize.apply(this);
+            view.__super__.resize.apply(this);
         },
         closeHandler : function() {
             Athena.api.pageOff(this.data);

@@ -4,7 +4,7 @@ define(['map', 'model', 'router'], function(SiteMap, SiteModel, SiteRouter) {
         className : 'pop',
         $bar : null,
         init : function() {
-            Athena.view.BasePage.prototype.init.apply(this);
+            view.__super__.init.apply(this);
             var _self = this;
 
             this.$bar = $(this.el).find('#loading-bar');
@@ -15,11 +15,11 @@ define(['map', 'model', 'router'], function(SiteMap, SiteModel, SiteRouter) {
 //            });
         },
         resize : function() {
-            Athena.view.BasePage.prototype.resize.apply(this);
+            view.__super__.resize.apply(this);
         },
         transitionIn : function() {
             var _self = this;
-            Athena.view.BasePage.prototype.transitionIn.apply(this);
+            view.__super__.transitionIn.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.5, {
@@ -38,7 +38,7 @@ define(['map', 'model', 'router'], function(SiteMap, SiteModel, SiteRouter) {
         },
         transitionOut : function() {
             var _self = this;
-            Athena.view.BasePage.prototype.transitionOut.apply(this);
+            view.__super__.transitionOut.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.5, {
