@@ -19,8 +19,8 @@ require.config({
         'router' : 'app/base/router',
         'tracker' : 'app/base/tracker',
         // lib辅助类
-        "easyBtn" : "libs/athena/ui/EasyBtn",
-        "scroller" : "libs/athena/ui/Scroller",
+        'easyBtn' : 'libs/athena/ui/EasyBtn',
+        'scroller' : 'libs/athena/ui/Scroller',
         'timelinemax' : 'libs/greensock/TimelineMax.min',
         'jquery.cookie' : 'libs/jquery/jquery.cookie-min',
         'jquery.md5' : 'libs/jquery/jquery.md5-min',
