@@ -165,10 +165,10 @@ Athena所有命令都置于Athena.api下，
 
 ##Athena CONST:
 页面深度常量  
-**PRELOAD:"preload"**  等价于z-index = 1000  
-**TOP:"top"**          等价于z-index = 500  
-**MIDDLE:"middle"**    等价于z-index = 0  
-**BOTTOM:"bottom"**    等价于z-index = -500  
+**PRELOAD:"preload"**  等价于z-index = 1500  
+**TOP:"top"**          等价于z-index = 1000  
+**MIDDLE:"middle"**    等价于z-index = 500  
+**BOTTOM:"bottom"**    等价于z-index = 0  
 Athena.api.getPageAt(depth);此命令有时会需要用到这些变量以获取相应层级的页面。  
 
 页面切换方式常量  
