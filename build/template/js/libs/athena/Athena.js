@@ -49,8 +49,11 @@
         TRANSITION_OUT : "transitionOut",
         TRANSITION_OUT_COMPLETE : "transitionOutComplete",
         /*
-         * 页面深度常量 preload 相当于 z-index = 1000 top 相当于 z-index = 500 middle 相当于
-         * z-index = 0 bottom 相当于 z-index = -500
+         * 页面深度常量
+         * preload 相当于 z-index = 1500
+         * top 相当于 z-index = 1000
+         * middle 相当于z-index = 500
+         * bottom 相当于 z-index = 0
          */
         PRELOAD : "preload",
         TOP : "top",
@@ -250,7 +253,7 @@
             return this._checkDepth(depth);
         },
         _checkDepth : function(depth) {
-            var _depth = 0;
+            var _depth = 500;
 
             if (_.isString(depth)) {
                 depth = depth.toLowerCase();
@@ -278,19 +281,17 @@
 
                 switch (_depth) {
                     case this.PRELOAD :
-                        _depth = 1000;
+                        _depth = 1500;
                         break;
                     case this.TOP :
-                        _depth = 500;
+                        _depth = 1000;
                         break;
                     case this.MIDDLE :
-                        _depth = 0;
+                        _depth = 500;
                         break;
                     case this.BOTTOM :
-                        _depth = -500;
-                        break;
-                    default :
                         _depth = 0;
+                        break;
                 }
 
                 switch (_plus) {
