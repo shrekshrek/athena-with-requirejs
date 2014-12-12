@@ -13,11 +13,11 @@ define(['text!./tip1.html', 'css!./tip1.css', 'map', 'model', 'router', './baseP
             });
         },
         resize : function() {
-            BasePop.prototype.resize.apply(this);
+            view.__super__.resize.apply(this);
         },
         transitionIn : function() {
             var _self = this;
-            BasePop.prototype.transitionIn.apply(this);
+            view.__super__.transitionIn.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.3, {
@@ -31,7 +31,7 @@ define(['text!./tip1.html', 'css!./tip1.css', 'map', 'model', 'router', './baseP
         },
         transitionOut : function() {
             var _self = this;
-            BasePop.prototype.transitionOut.apply(this);
+            view.__super__.transitionOut.apply(this);
             if (TweenMax.isTweening(this.$el))
                 TweenMax.killTweensOf(this.$el);
             TweenMax.to(this.$el, 0.3, {
@@ -44,7 +44,7 @@ define(['text!./tip1.html', 'css!./tip1.css', 'map', 'model', 'router', './baseP
             });
         },
         closeHandler : function() {
-            BasePop.prototype.closeHandler.apply(this);
+            view.__super__.closeHandler.apply(this);
         }
     });
     return view;
