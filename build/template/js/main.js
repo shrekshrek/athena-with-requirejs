@@ -99,6 +99,8 @@ require(['backbone', 'athena', 'map', 'router', 'model'], function(Backbone, Ath
     function init() {
         mouseEventOff();
 
+        SiteModel.init();
+
         Backbone.history.start({
             pushState : false
         });
