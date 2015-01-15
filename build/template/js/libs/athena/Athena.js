@@ -102,6 +102,7 @@
             width : 0,
             height : 0
         },
+        _depths:[1500,1000,500,0],
         _curPages : null,
         _tempPages : null,
         _actionQueue : null,
@@ -253,7 +254,7 @@
             return this._checkDepth(depth);
         },
         _checkDepth : function(depth) {
-            var _depth = 500;
+            var _depth = this._depths[2];
 
             if (_.isString(depth)) {
                 depth = depth.toLowerCase();
@@ -281,16 +282,16 @@
 
                 switch (_depth) {
                     case this.PRELOAD :
-                        _depth = 1500;
+                        _depth = this._depths[0];
                         break;
                     case this.TOP :
-                        _depth = 1000;
+                        _depth = this._depths[1];
                         break;
                     case this.MIDDLE :
-                        _depth = 500;
+                        _depth = this._depths[2];
                         break;
                     case this.BOTTOM :
-                        _depth = 0;
+                        _depth = this._depths[3];
                         break;
                 }
 
@@ -610,7 +611,7 @@
             return _page;
         },
         getPageAt : function(depth) {
-            var _depth = 0;
+            var _depth = this._depths[2];
             if (depth)
                 _depth = this._checkDepth(depth);
                 

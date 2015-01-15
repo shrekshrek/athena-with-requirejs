@@ -2,6 +2,8 @@
     optimize:'uglify2',
     optimizeCss:'standard',
     fileExclusionRegExp:/^((r|build)\.js)|(\.svn)$/,
+
+    siteRoot: './',
     paths: {
     // athena框架配置地址
     'text': 'libs/require/requirePlugin/text',
