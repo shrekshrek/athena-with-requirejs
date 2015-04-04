@@ -89,7 +89,9 @@ mac下选择WebStorm > Preferences，windows下选择File > Settings
 
 右键点击项目build文件夹，选择相关命令  
 ![右键点击项目build文件夹，选择相关命令](assets/img8.gif)  
-**注：mac版的ant安装比windows麻烦些，可以搜索查阅一下相关资料。这里提供一篇参考：http://blog.csdn.net/crazybigfish/article/details/18215439**  
+**注：mac版的ant安装比windows麻烦些，可以搜索查阅一下相关资料。  
+这里提供一篇参考：http://blog.csdn.net/crazybigfish/article/details/18215439  
+这里的命令已经更新，设置时命令中的$已经去掉**  
 
 ##Athena API:  
 Athena所有命令都置于Athena.api下，
