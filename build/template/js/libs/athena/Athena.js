@@ -2,7 +2,7 @@
  * VERSION: 2.0.0
  * DATE: 2014-11-20
  * GIT:https://github.com/shrekshrek/athenaframework
- * 
+ *
  * @author: Shrek.wang, shrekshrek@gmail.com
  **/
 
@@ -150,10 +150,10 @@
 
             obj = this._checkData(obj);
             this._actionQueue.push({action:"off",data:obj});
-            
+
             if (this._isFlowing)
                 return;
-                
+
             this._playQueue();
         },
         _playQueue : function() {
@@ -181,14 +181,30 @@
                     case "off":
                         var _data = {};
                         if (_.isArray(this._tempData)) {
-                            _.each(this._tempData, function(_obj, _index) {
+                            var _fine = true;
+                            for(var i in this._tempData){
+                                var _obj = this._tempData[i];
                                 _data = _obj.data?_obj.data:_obj;
                                 var _page = _self._curPages[_data.depth];
-                                _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
-                                    _self._flowOutComplete(_data);
-                                });
-                                _page.transitionOut();
-                            });
+                                if(!_page){
+                                    _fine = false;
+                                    break;
+                                }
+                            }
+
+                            if(_fine){
+                                for(var j in this._tempData){
+                                    var _obj = this._tempData[j];
+                                    _data = _obj.data?_obj.data:_obj;
+                                    var _page = _self._curPages[_data.depth];
+                                    _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
+                                        _self._flowOutComplete(_data);
+                                    });
+                                    _page.transitionOut();
+                                }
+                            }else{
+                                _self._isFlowing = false;
+                            }
                         } else {
                             if (_.isNumber(this._tempData)) {
                                 _data.depth = this._tempData;
@@ -200,10 +216,14 @@
                                 _data.depth = _self._checkDepth(this._tempData.depth);
                             }
                             var _page = _self._curPages[_data.depth];
-                            _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
-                                _self._flowOutComplete(_data);
-                            });
-                            _page.transitionOut();
+                            if(_page){
+                                _self.listenToOnce(_page, _self.TRANSITION_OUT_COMPLETE, function() {
+                                    _self._flowOutComplete(_data);
+                                });
+                                _page.transitionOut();
+                            }else{
+                                _self._isFlowing = false;
+                            }
                         }
                     break;
                 }
@@ -222,12 +242,12 @@
                 _.each(obj, function(_obj, _index) {
                     if (!_obj)
                         throw "page data is undefined!";
-                        
+
                     var _data = _obj.data?_obj.data:_obj;
-                    
+
                     if (!(_data.view))
                         throw "each page data has wrong!!! must has 'data.view'";
-                        
+
                     _data.depth = _self._checkDepth(_data.depth);
 
                     var _isUnique = true;
@@ -547,7 +567,7 @@
         _preloaderOn : function(obj) {
             if (this._preloader === null)
                 return;
-                
+
             if (_.isArray(this._tempData)) {
                 this._tempPreloadIndex++;
                 if (this._tempPreloadIndex >= this._tempData.length) {
@@ -562,7 +582,7 @@
             var _self = this;
             if (this._preloader === null)
                 return;
-                
+
             if (_.isArray(this._tempData)) {
                 var _n = 0;
                 this._tempLoadedProgress[obj.data.depth] = obj.progress;
@@ -580,7 +600,7 @@
         _preloaderOff : function(obj) {
             if (this._preloader === null)
                 return;
-                
+
             this._clearPreloader(obj.data);
             if (_.isArray(this._tempData)) {
                 this._tempPreloadIndex++;
@@ -599,10 +619,10 @@
                     _page = _obj;
                 }
             });
-            
+
             if (_page)
                 return _page;
-                
+
             _.each(this._curPages, function(_obj, _index) {
                 if (_obj.data === data) {
                     _page = _obj;
@@ -614,11 +634,11 @@
             var _depth = this._depths[2];
             if (depth)
                 _depth = this._checkDepth(depth);
-                
+
             var _page = this._tempPages[_depth];
             if (_page)
                 return _page;
-                
+
             var _page = this._curPages[_depth];
             return _page;
         },
