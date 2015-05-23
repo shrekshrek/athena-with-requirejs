@@ -1,59 +1,64 @@
 /*!
- * VERSION: 0.1.0
- * DATE: 2014-11-20
+ * VERSION: 0.3.0
+ * DATE: 2015-04-22
  * GIT:https://github.com/shrekshrek/css3d-engine
- * 
+ *
  * @author: Shrek.wang, shrekshrek@gmail.com
  **/
 
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['underscore', 'exports'], function(_, exports) {
-            root.Css3D = factory(root, exports, _);
+        define(['exports'], function(exports) {
+            root.Css3D = factory(root, exports);
         });
-
-    } else if (typeof exports !== 'undefined') {
-        var _ = require('underscore');
-        factory(root, exports, _);
-
     } else {
-        root.Css3D = factory(root, {}, root._);
+        root.Css3D = factory(root, {});
     }
 
-}(this, function(root, Css3D, _) {
+}(this, function(root, Css3D) {
 
     var previousCss3D = root.Css3D;
 
-    Css3D.VERSION = '0.1.0';
+    Css3D.VERSION = '0.2.0';
 
     Css3D.noConflict = function() {
         root.Css3D = previousCss3D;
         return this;
     };
 
-    // --------------------------------------------------------------------extend.from.backbone
+    // --------------------------------------------------------------------extend
+
+    var ext = function(obj){
+        var len = arguments.length;
+        if (len < 2 || obj == null) return obj;
+        for (var i = 1; i < len; i++) {
+            var source = arguments[i];
+            for (var j in source) {
+                obj[j] = source[j];
+            }
+        }
+        return obj;
+    };
+
     var extend = function(protoProps, staticProps) {
         var parent = this;
         var child;
 
-        if (protoProps && _.has(protoProps, 'constructor')) {
+        if (protoProps && Object.prototype.hasOwnProperty.call(protoProps, 'constructor')) {
             child = protoProps.constructor;
         } else {
-            child = function() {
-                return parent.apply(this, arguments);
-            };
+            child = function(){ return parent.apply(this, arguments); };
         }
 
-        _.extend(child, parent, staticProps);
+        ext(child, parent, staticProps);
 
-        var Surrogate = function() {
+        var Surrogate = function(){
             this.constructor = child;
         };
         Surrogate.prototype = parent.prototype;
         child.prototype = new Surrogate;
 
-        if (protoProps)
-            _.extend(child.prototype, protoProps);
+        if (protoProps) ext(child.prototype, protoProps);
 
         child.__super__ = parent.prototype;
 
@@ -145,7 +150,7 @@
         this.initialize.apply(this, arguments);
     };
 
-    _.extend(Css3D.Object3D.prototype, {
+    ext(Css3D.Object3D.prototype, {
         __position : {
             x : 0,
             y : 0,
@@ -222,63 +227,6 @@
                 this.__position.y += y;
                 this.__position.z += z;
                 this.__isPositionUpdate = true;
-                return this;
-            }
-        },
-
-        __origin : {
-            x : 0,
-            y : 0,
-            z : 0
-        },
-        __isOriginUpdate : false,
-        originX : function(n) {
-            if (arguments.length) {
-                this.__origin.x = n;
-                this.__isOriginUpdate = true;
-                return this;
-            } else {
-                return this.__origin.x;
-            }
-        },
-        originY : function(n) {
-            if (arguments.length) {
-                this.__origin.y = n;
-                this.__isOriginUpdate = true;
-                return this;
-            } else {
-                return this.__origin.y;
-            }
-        },
-        originZ : function(n) {
-            if (arguments.length) {
-                this.__origin.z = n;
-                this.__isOriginUpdate = true;
-                return this;
-            } else {
-                return this.__origin.z;
-            }
-        },
-        origin : function(x, y, z) {
-            switch (arguments.length) {
-            case 0 :
-                return this.__origin;
-            case 1 :
-                this.__origin.x = x;
-                this.__origin.y = x;
-                this.__origin.z = x;
-                this.__isOriginUpdate = true;
-                return this;
-            case 2 :
-                this.__origin.x = x;
-                this.__origin.y = y;
-                this.__isOriginUpdate = true;
-                return this;
-            case 3 :
-                this.__origin.x = x;
-                this.__origin.y = y;
-                this.__origin.z = z;
-                this.__isOriginUpdate = true;
                 return this;
             }
         },
@@ -485,13 +433,6 @@
             };
             this.__isPositionUpdate = true;
 
-            this.__origin = {
-                x : 0,
-                y : 0,
-                z : 0
-            };
-            this.__isOriginUpdate = true;
-
             this.__rotation = {
                 x : 0,
                 y : 0,
@@ -516,9 +457,9 @@
             this.children = [];
         },
         destroy : function() {
-            _.each(this.children, function(obj) {
-                obj.destroy();
-            });
+            for(var i in this.children){
+                this.children[i].destroy();
+            }
             this.children = [];
         },
 
@@ -528,23 +469,23 @@
             if (view.parent)
                 view.parent.removeChild(view);
 
-            _.each(this.children, function(obj) {
-                if (obj === view)
+            for(var i in this.children){
+                if (this.children[i] === view)
                     return this;
-            });
+            }
             view.parent = this;
             this.children.push(view);
             return this;
         },
         removeChild : function(view) {
             var _self = this;
-            _.each(this.children, function(index, obj) {
-                if (obj === view) {
-                    _self.children.splice(index, 1);
+            for(var i = this.children.length-1; i>=0; i--){
+                if (this.children[i] === view) {
+                    _self.children.splice(i, 1);
                     view.parent = null;
                     return this;
                 }
-            });
+            }
             return this;
         },
         update : function() {
@@ -558,7 +499,7 @@
         initialize : function(params) {
             Css3D.Sprite3D.__super__.initialize.apply(this, [params]);
 
-            this.__isMaterialUpdate = true;
+            //this.__isMaterialUpdate = true;
 
             if (!(Css3D._isSupported || Css3D.checkSupport())) {
                 throw "this browser does not support css3d!!!";
@@ -581,7 +522,6 @@
             }
             _dom.style[Css3D._browserPrefix + "Transform"] = "translateZ(0px)";
             _dom.style[Css3D._browserPrefix + "TransformStyle"] = "preserve-3d";
-            _dom.style[Css3D._browserPrefix + "TransformOrigin"] = "0px 0px 0px";
             this.el = _dom;
             _dom.le = this;
         },
@@ -594,11 +534,16 @@
         update : function() {
             Css3D.Sprite3D.__super__.update.apply(this);
 
-            if (this.__isPositionUpdate || this.__isRotationUpdate || this.__isScaleUpdate) {
+            if (this.__isPositionUpdate || this.__isRotationUpdate || this.__isScaleUpdate || this.__isSizeUpdate) {
                 this.__isPositionUpdate = false;
                 this.__isRotationUpdate = false;
                 this.__isScaleUpdate = false;
-                this.el.style[Css3D._browserPrefix + "Transform"] = "translate3d(" + this.__position.x + "px," + this.__position.y + "px," + this.__position.z + "px) " + "rotateX(" + this.__rotation.x + "deg) " + "rotateY(" + this.__rotation.y + "deg) " + "rotateZ(" + this.__rotation.z + "deg) " + "scale3d(" + this.__scale.x + ", " + this.__scale.y + ", " + this.__scale.z + ") ";
+                this.__isSizeUpdate = false;
+                var _w = Number(this.__size.x) ? this.__size.x : 0;
+                var _h = Number(this.__size.y) ? this.__size.y : 0;
+                var _d = Number(this.__size.z) ? this.__size.z : 0;
+                //this.el.style.margin = '-50% 0 0 -50%';
+                this.el.style[Css3D._browserPrefix + "Transform"] = "translate3d(" + (this.__position.x - _w/2) + "px," + (this.__position.y - _h/2) + "px," + (this.__position.z - _d/2) + "px) " + "rotateX(" + this.__rotation.x + "deg) " + "rotateY(" + this.__rotation.y + "deg) " + "rotateZ(" + this.__rotation.z + "deg) " + "scale3d(" + this.__scale.x + ", " + this.__scale.y + ", " + this.__scale.z + ") ";
             }
 
             return this;
@@ -669,11 +614,12 @@
             if (!(params && params.el)) {
                 this.el.style.top = "0px";
                 this.el.style.left = "0px";
-                this.el.style.width = "100%";
-                this.el.style.height = "100%";
+                this.el.style.width = "0px";
+                this.el.style.height = "0px";
             }
             this.el.style[Css3D._browserPrefix + "Perspective"] = "800px";
             this.el.style[Css3D._browserPrefix + "TransformStyle"] = "flat";
+            this.el.style[Css3D._browserPrefix + "Transform"] = "";
             this.el.style.overflow = "hidden";
 
             this.__fix1 = new Css3D.Sprite3D();
@@ -687,14 +633,12 @@
             this.camera = new Css3D.Camera();
         },
         update : function() {
-            Css3D.Stage.__super__.update.apply(this);
-
             if (this.__isSizeUpdate || this.camera.__isFovUpdate) {
                 this.__isSizeUpdate = false;
                 var _w = this.__size.x;
                 var _h = this.__size.y;
-                this.el.style.width = Number(_w) ? _w + "px" : _w;
-                this.el.style.height = Number(_h) ? _h + "px" : _h;
+                this.el.style.width = parseInt(_w) + "px";
+                this.el.style.height = parseInt(_h) + "px";
 
                 this.camera.__isFovUpdate = false;
                 var _fov = 0.5 / Math.tan((this.camera.fov() * 0.5) / 180 * Math.PI) * this.height();
@@ -754,15 +698,6 @@
             } else {
                 return this.__fov;
             }
-        },
-        target : function(obj) {
-            if (arguments.length) {
-                this.__target = obj;
-                this.__isFovUpdate = true;
-                return this;
-            } else {
-                return this.__target;
-            }
         }
     });
 
@@ -772,24 +707,15 @@
             Css3D.Plane.__super__.initialize.apply(this);
         },
         update : function() {
-            Css3D.Plane.__super__.update.apply(this);
-
-            if (this.__isSizeUpdate || this.__isOriginUpdate) {
-                this.__isSizeUpdate = false;
-                this.__isOriginUpdate = false;
+            if (this.__isSizeUpdate) {
                 var _w = Number(this.__size.x) ? this.__size.x : 0;
                 var _h = Number(this.__size.y) ? this.__size.y : 0;
-                var _d = 0;
                 this.el.style.width = _w + "px";
                 this.el.style.height = _h + "px";
-                this.el.style.marginLeft = -_w / 2 + "px";
-                this.el.style.marginTop = -_h / 2 + "px";
-
-                var _ox = (Number(this.__origin.x) ? this.__origin.x : 0) + _w / 2 + "px";
-                var _oy = (Number(this.__origin.y) ? this.__origin.y : 0) + _h / 2 + "px";
-                var _oz = (Number(this.__origin.z) ? this.__origin.z : 0) + _d / 2 + "px";
-                this.el.style[Css3D._browserPrefix + "TransformOrigin"] = _ox + " " + _oy + " " + _oz;
+                this.__size.z = 0;
             }
+
+            Css3D.Plane.__super__.update.apply(this);
 
             if (this.__isMaterialUpdate) {
                 this.__isMaterialUpdate = false;
@@ -838,21 +764,24 @@
 
         },
         update : function() {
-            Css3D.Cube.__super__.update.apply(this);
-
             if (this.__isSizeUpdate) {
-                this.__isSizeUpdate = false;
                 var _w = this.__size.x;
                 var _h = this.__size.y;
                 var _d = this.__size.z;
 
-                this.front.size(_w, _h, 0).position(0, 0, -_d / 2).rotation(0, 180, 0).update();
-                this.back.size(_w, _h, 0).position(0, 0, _d / 2).rotation(0, 0, 0).update();
-                this.left.size(_d, _h, 0).position(-_w / 2, 0, 0).rotation(0, -90, 0).update();
-                this.right.size(_d, _h, 0).position(_w / 2, 0, 0).rotation(0, 90, 0).update();
-                this.up.size(_w, _d, 0).position(0, -_h / 2, 0).rotation(90, 0, 0).update();
-                this.down.size(_w, _d, 0).position(0, _h / 2, 0).rotation(-90, 0, 0).update();
+                this.front.size(_w, _h, 0).position(0, 0, -_d/2).rotation(0, 0, 0).update();
+                this.back.size(_w, _h, 0).position(0, 0, _d/2).rotation(0, 180, 0).update();
+                this.left.size(_d, _h, 0).position(-_w/2, 0, 0).rotation(0, 90, 0).update();
+                this.right.size(_d, _h, 0).position(_w/2, 0, 0).rotation(0, -90, 0).update();
+                this.up.size(_w, _d, 0).position(0, -_h/2, 0).rotation(-90, 0, 0).update();
+                this.down.size(_w, _d, 0).position(0, _h/2, 0).rotation(90, 0, 0).update();
             }
+
+            this.__size.x = 0;
+            this.__size.y = 0;
+            this.__size.z = 0;
+            this.__isSizeUpdate = false;
+            Css3D.Cube.__super__.update.apply(this);
 
             if (this.__isMaterialUpdate) {
                 this.__isMaterialUpdate = false;
@@ -897,6 +826,6 @@
             }
         }
     });
-    
+
     return Css3D;
 }));
