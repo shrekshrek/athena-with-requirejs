@@ -2,6 +2,13 @@
 a js web framework base on backbone.js & require.js  
 Athena是一个基于Backbone和requirejs的前端框架。结构清晰，管理方便。
 
+*version:2.1.0*  
+*date:2015.5.29*  
+版本更新到2.1.0，主要更新：  
+1.build文件夹下增加了site.xml，可以通过该文件直接配置网站结构，create命令会自动生成所有页面，方便大网站开发时增加新页面。  
+2.对整站结构略做调整，文件结构更简洁直观。  
+3.site.properties里增加了indexPath用来布置index页面位置，因为有些时候index.html和其他所有素材文件可能分别放在不同的文件夹下。
+
 *version:2.0.0*  
 *date:2014.11.20*  
 版本更新到2.0，主要更新：  
