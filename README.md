@@ -206,15 +206,9 @@ Athena.api.flow(flow);此命令会用到这些变量以用来设置页面切换�
 ##Athena 相关基类:  
 Athena所有基类都置于Athena.view下  
 **BaseView**   为视图类基类，当页面中有需要添加新元素是可以直接继承此类做各种扩展  
-    init:function(){  
-        Athena.view.BasePage.prototype.init.apply(this);  
-    },  
-    destroy:function(){  
-        Athena.view.BasePage.prototype.destroy.apply(this);  
-    },  
-    resize:function(){  
-        Athena.view.BasePage.prototype.resize.apply(this);  
-    }  
+    init:function(){ },  
+    destroy:function(){ },  
+    resize:function(){ }  
 另：本基类含有两个方法：  
 addChild(view,$dom); 将视图类加入view视图类中，添加入page页面类的view视图会跟随page类执行resize()和destroy().  
 removeChild(view);   将视图类移出view视图类。移出后自动执行destroy();  
@@ -222,20 +216,13 @@ removeChild(view);   将视图类移出view视图类。移出后自动执行dest
 **BaseBtn**    为按钮类基类，继承自BaseView，有css搞不定的特殊需求按钮时可以使用此类扩展自己所需按钮类（当然如果能使用css做按钮会方便很多，省得创建很多js来管理按钮了）  
 
 **BasePage**   为页面类的基类，所有page和pop都继承自此类，继承并可以覆写的方法如下（可参考js/app/view/下页面和弹窗文件）：  
-    init:function(){      
-    },  
-    destroy:function(){  
-    },  
-    resize:function(){  
-    },  
-    transitionIn:function(){  
-    },  
-    transitionInComplete:function(){  
-    },  
-    transitionOut:function(){   
-    },  
-    transitionOutComplete:function(){  
-    }  
+    init:function(){ },  
+    destroy:function(){ },  
+    resize:function(){ },  
+    transitionIn:function(){ },  
+    transitionInComplete:function(){ },  
+    transitionOut:function(){ },  
+    transitionOutComplete:function(){ }  
 
 ##Athena 扩展组件:  
 组件在app/js/libs/athena/ui/下，目前可以使用的组件只有两个，  
