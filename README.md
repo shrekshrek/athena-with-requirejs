@@ -62,27 +62,36 @@ athena适合开发跨平台的单页应用网站，如活动的minisite，产品
 在你的开发环境中需要安装ant插件，eclipse或者aptana的ant插件安装可以参考链接：http://www.netvisions.eu/component/k2/item/33-ant/33-ant.html  
 
 将build包下载放到网站目录下，  
+![命令行列表](assets/img9.gif)  
+
 build/site.properties 为配置参数文件  
-**sitename** 指定网站名称，会替换到index.html中的title  
-**siteroot** 指定网站根目录  
-**image_match** 查找所有js，html，css文件中的此字段  
-**image_replace** 替换image_match查找到的值  
-**needimagemin** 是否需要压缩图片，这里如果选择true，在ant打包命令中就会进行图片压缩步骤，但是前提是需要先手动执行$grunt-install命令。（mac下请手动在grunt目录下运行命令行 npm install，暂时没有解决$grunt-install在mac下运行失败的问题，有明白的请不吝赐教）  
+**siteName** 指定网站名称，会替换到index.html中的title  
+**sitePath** 指定网站素材所在目录（包括css,js,images等等），默认是相对当前build工具包的父级目录，如需修改请保持${build}开头不变。  
+**indexPath** 指定网站首页index.html所在目录，很多时候index可能会放在与其他素材不在同一目录。  
+**indexFixPath** 补偿路径，指定sitePath相对于indexPath的相对路径，这里需要开发者设置正确，这里请务必保证正确的相对地址。  
+**imageMatch** 查找所有js，html，css文件中的此字段  
+**imageReplace** 替换image_match查找到的值  
+
+build/site.xml 为网站结构配置文件  
+这里的结构很简单，总共五种标签，preloader，header，footer，page，pop，语意明确，这里不多赘述，一般情况下只要增加page和pop的节点就可以。  
+节点参数有depth, fast ready  
+**depth** 是指定层级，每种节点都有默认值，preloader默认depth是preload，header一般需要指定到'top-1'，footer指定到'top-2'，具体含义可以参看查看后面api中的pagedata部分。  
+**fast** 参看查看后面api中的pagedata部分。  
+**ready** 是特殊参数，只对preloader节点有用，需要前置loading时会就指定为true，一个网站只会有一个前置loading。    
 
 build/build.xml为ant命令集，具体部署命令详见下方built命令介绍  
 ![命令行列表](assets/img3.gif)  
 
 ##ant命令介绍：  
 将build.xml装载进ant，使用相关命令  
-**create**   将网站创建到之前site地址指定的位置  
-**compile**  发布并优化css文件夹和js文件夹下文件，tpl中的html文件会自动打包成js文件以方便cdn跨域调用。生成新的优化文件包，以-build结尾。最后会将index.html中相关地址指向新的优化文件包  
+**create**   将根据site.xml的配置发布到sitePath指定的目录下，index.html也会发布到indexPath指定目录下  
+**compile**  发布并优化css文件夹和js文件夹下文件，生成新的优化文件包，以-build结尾。最后会将index.html中相关地址指向新的优化文件包，打包优化配置文件再build/optimize/下的js-build.js和css-build.js文件，相关打包的部分需要熟悉requirejs的打包规则，一般情况下，需要先把main.js下的paths部分拷贝过来替换js-build.js的paths，以保证两边内容相同，下方的modules也要根据site.xml的增减做相关调整，这部分没有自动代码帮助生成，需要手工调整。包括各个页面的依赖关系也要根据不同情况手工调整，这里是考验requirejs打包经验的地方。建议开发中多次调试打包测试，require打包还是经常有奇怪状况发生的。  
 **index-to-built** 将index.html中的css和js指向压缩过的built文件夹  
 **index-to-origin** 将index.html中的css和js指向原始文件夹  
 **image-to-built** 将built文件夹中的css和js文件内所有image_match字段替换成image_replace  
 **image-to-origin** 与image-to-built命令的反效果  
 **!clean**    清除site下相关网站文件及目录（慎用！！！）  
 **!clean-built**    清除site下所有压缩过的built文件夹  
-**grunt-install** 在使用compile命令前请先使用此命令安装grunt相关组件，以便使用grunt-imagemin功能  
 
 其他：ant命令在webstorm中的使用，步骤图示如下：
 mac下选择WebStorm > Preferences，windows下选择File > Settings  
@@ -213,26 +222,19 @@ removeChild(view);   将视图类移出view视图类。移出后自动执行dest
 **BaseBtn**    为按钮类基类，继承自BaseView，有css搞不定的特殊需求按钮时可以使用此类扩展自己所需按钮类（当然如果能使用css做按钮会方便很多，省得创建很多js来管理按钮了）  
 
 **BasePage**   为页面类的基类，所有page和pop都继承自此类，继承并可以覆写的方法如下（可参考js/app/view/下页面和弹窗文件）：  
-    init:function(){  
-        Athena.view.BasePage.prototype.init.apply(this);  
+    init:function(){      
     },  
     destroy:function(){  
-        Athena.view.BasePage.prototype.destroy.apply(this);  
     },  
     resize:function(){  
-        Athena.view.BasePage.prototype.resize.apply(this);  
     },  
     transitionIn:function(){  
-        Athena.view.BasePage.prototype.transitionIn.apply(this);  
     },  
     transitionInComplete:function(){  
-        Athena.view.BasePage.prototype.transitionInComplete.apply(this);  
     },  
-    transitionOut:function(){  
-        Athena.view.BasePage.prototype.transitionOut.apply(this);  
+    transitionOut:function(){   
     },  
     transitionOutComplete:function(){  
-        Athena.view.BasePage.prototype.transitionOutComplete.apply(this);  
     }  
 
 ##Athena 扩展组件:  
