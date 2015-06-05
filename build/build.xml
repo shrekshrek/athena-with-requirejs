@@ -55,6 +55,11 @@
 		<create-map/>
 	</target>
 
+	<target name="create-pages">
+		<create-pages/>
+		<create-map/>
+	</target>
+
 	<macrodef name="create-base">
 		<sequential>
 			<echo message="create-base" />
