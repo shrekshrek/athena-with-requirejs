@@ -78,7 +78,7 @@
 	<macrodef name="create-index">
 		<sequential>
 			<echo message="create-index" />
-			<copy file="${templates}/index.html" tofile="${indexPath}/index.html" overwrite="true" encoding="UTF-8">
+			<copy file="${templates}/index.html" tofile="${indexPath}/index.html" overwrite="false" encoding="UTF-8">
 				<filterchain>
 					<replacetokens>
 						<token key="name" value="${siteName}" />
@@ -92,7 +92,7 @@
 	<macrodef name="create-main">
 		<sequential>
 			<echo message="create-main" />
-			<copy file="${templates}/main.js" tofile="${sitePath}js/main.js" overwrite="true" encoding="UTF-8">
+			<copy file="${templates}/main.js" tofile="${sitePath}js/main.js" overwrite="false" encoding="UTF-8">
 				<filterchain>
 					<replacetokens>
 						<token key="path" value="${indexFixPath}" />
