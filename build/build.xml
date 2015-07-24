@@ -12,7 +12,7 @@
 	<property file="${build}site.properties" />
 
 	<property name="sitexml" value="${build}site.xml" />
-	<property name="optimize" value="${build}require-optimize/" />
+	<property name="optimize" value="${build}optimize/" />
 
 	<property name="www" value="${build}www/" />
 	<property name="templates" value="${build}www/templates/" />
@@ -482,21 +482,21 @@
 		<echo message="optimize-unix" />
 		<exec executable="/bin/sh" failonerror="true">
 			<env key="PATH" path="${env-mac}" />
-			<arg line="-c 'node ${require-optimize}/r.js -o ${build}optimize/css-build.js appDir=${css} baseUrl='./' dir=${cssBuilt}'" />
+			<arg line="-c 'node ${optimize}r.js -o ${optimize}css-build.js appDir=${css} baseUrl='./' dir=${cssBuilt}'" />
 		</exec>
 		<exec executable="/bin/sh" failonerror="true">
 			<env key="PATH" path="${env-mac}" />
-			<arg line="-c 'node ${require-optimize}/r.js -o ${build}optimize/js-build.js appDir=${js} baseUrl='./' dir=${jsBuilt}'" />
+			<arg line="-c 'node ${optimize}r.js -o ${optimize}js-build.js appDir=${js} baseUrl='./' dir=${jsBuilt}'" />
 		</exec>
 	</target>
 
 	<target name="__optimize-windows" if="__isWindows">
 		<echo message="optimize-windows" />
 		<exec executable="cmd" failonerror="true">
-			<arg line="/c node ${require-optimize}/r.js -o ${build}optimize/css-build.js appDir=${css} baseUrl='./' dir=${cssBuilt}" />
+			<arg line="/c node ${optimize}r.js -o ${optimize}css-build.js appDir=${css} baseUrl='./' dir=${cssBuilt}" />
 		</exec>
 		<exec executable="cmd" failonerror="true">
-			<arg line="/c node ${require-optimize}/r.js -o ${build}optimize/js-build.js appDir=${js} baseUrl='./' dir=${jsBuilt}" />
+			<arg line="/c node ${optimize}r.js -o ${optimize}js-build.js appDir=${js} baseUrl='./' dir=${jsBuilt}" />
 		</exec>
 	</target>
 
