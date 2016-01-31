@@ -9,7 +9,7 @@ require.config({
         'normalize' : 'libs/require/requirePlugin/normalize',
         'underscore' : 'libs/backbone/underscore-1.8.3.min',
         'backbone' : 'libs/backbone/backbone-1.2.1.min',
-        'jquery' : 'libs/jquery/jquery-1.20.0.min',
+        'jquery' : 'libs/jquery/jquery-1.12.0.min',
         'tweenmax' : 'libs/greensock/TweenMax.min',
         'athena' : 'libs/athena/Athena.min',
         // app基本类地址
