@@ -1,4 +1,4 @@
-define(['text!./@name@.html', 'css!./@name@.css', 'map', 'model', 'router'], function(html, css, SiteMap, SiteModel, SiteRouter) {
+define(['text!./@name@.html', 'css!./@name@.css', 'map', 'router', 'model'], function(html, css, Map, Router, Model) {
     var view = Athena.Page.extend({
         id : '@name@',
         className : 'page',
@@ -7,9 +7,10 @@ define(['text!./@name@.html', 'css!./@name@.css', 'map', 'model', 'router'], fun
             this.template = html.html || html;
             this.render();
             view.__super__.init.apply(this);
+
             var _self = this;
 
-            $.each(this.$el.find('li'), function(index, obj) {
+            $.each(this.$('li'), function(index, obj) {
                 $(obj).on('click', function() {
                     _self._navHandler(index);
                     return false;
@@ -34,36 +35,44 @@ define(['text!./@name@.html', 'css!./@name@.css', 'map', 'model', 'router'], fun
         resize : function() {
             view.__super__.resize.apply(this);
 
-            this.$el.width(Athena.stageRect().width);
+            //this.$el.width(Athena.stageRect().width);
 
         },
 
         transitionIn : function() {
-            var _self = this;
             view.__super__.transitionIn.apply(this);
-            this.$el.css({
-                visibility : 'visible'
-            });
+
+            var _self = this;
             JT.to(this.$el, 0.5, {
-                opacity : 1,
-                onEnd : function() {
+                opacity: 1,
+                onStart: function () {
+                    this.target.style.visibility = 'visible';
+                },
+                onEnd: function () {
                     _self.transitionInComplete();
                 }
             });
         },
 
+        transitionInComplete: function(){
+            view.__super__.transitionInComplete.apply(this);
+        },
+
         transitionOut : function() {
-            var _self = this;
             view.__super__.transitionOut.apply(this);
+
+            var _self = this;
             JT.to(this.$el, 0.5, {
-                opacity : 0,
-                onEnd : function() {
-                    _self.$el.css({
-                        visibility : 'hidden'
-                    });
+                opacity: 0,
+                onEnd: function () {
+                    this.target.style.visibility = 'hidden';
                     _self.transitionOutComplete();
                 }
             });
+        },
+
+        transitionOutComplete : function() {
+            view.__super__.transitionOutComplete.apply(this);
         },
 
         _checkNav : function() {
@@ -72,10 +81,10 @@ define(['text!./@name@.html', 'css!./@name@.css', 'map', 'model', 'router'], fun
 
             if (_page) {
                 switch (_page.data) {
-                case SiteMap.home :
+                case Map.home :
                     _id = 0;
                     break;
-                case SiteMap.work :
+                case Map.work :
                     _id = 1;
                     break;
                 }
@@ -93,17 +102,17 @@ define(['text!./@name@.html', 'css!./@name@.css', 'map', 'model', 'router'], fun
         _navHandler : function(id) {
             switch (id) {
             case 0 :
-                SiteRouter.navigate(SiteMap.home.id, {
+                Router.navigate(Map.home.id, {
                     trigger : true
                 });
                 break;
             case 1 :
-                SiteRouter.navigate(SiteMap.work.id, {
+                Router.navigate(Map.work.id, {
                     trigger : true
                 });
                 break;
             case 2 :
-                Athena.pageTo(SiteMap.tip1);
+                Athena.pageTo(Map.tip1);
                 break;
             }
         }

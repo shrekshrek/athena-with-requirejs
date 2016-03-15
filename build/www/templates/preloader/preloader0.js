@@ -1,4 +1,4 @@
-define(['map', 'model', 'router'], function(SiteMap, SiteModel, SiteRouter) {
+define(['map', 'router', 'model'], function(Map, Router, Model) {
     var view = Athena.Page.extend({
         id : '@name@',
         className : 'pop',
@@ -6,9 +6,8 @@ define(['map', 'model', 'router'], function(SiteMap, SiteModel, SiteRouter) {
 
         init : function() {
             view.__super__.init.apply(this);
-            var _self = this;
 
-            this.$bar = $(this.el).find('#loading-bar');
+            this.$bar = this.$('#loading-bar');
         },
 
         resize : function() {
@@ -16,13 +15,14 @@ define(['map', 'model', 'router'], function(SiteMap, SiteModel, SiteRouter) {
         },
 
         transitionIn : function() {
-            var _self = this;
             view.__super__.transitionIn.apply(this);
-            this.$el.css({
-                visibility : 'visible'
-            });
-            JT.to(this.$el, 0.5, {
+
+            var _self = this;
+            JT.to(this.$el, 0.3, {
                 opacity : 1,
+                onStart: function () {
+                    this.target.style.visibility = 'visible';
+                },
                 onEnd : function() {
                     _self.transitionInComplete();
                 }
@@ -35,14 +35,13 @@ define(['map', 'model', 'router'], function(SiteMap, SiteModel, SiteRouter) {
         },
 
         transitionOut : function() {
-            var _self = this;
             view.__super__.transitionOut.apply(this);
-            JT.to(this.$el, 0.5, {
+
+            var _self = this;
+            JT.to(this.$el, 0.3, {
                 opacity : 0,
                 onEnd : function() {
-                    _self.$el.css({
-                        visibility : 'hidden'
-                    });
+                    this.target.style.visibility = 'hidden';
                     _self.transitionOutComplete();
                 }
             });

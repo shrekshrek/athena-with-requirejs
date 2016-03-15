@@ -1,22 +1,13 @@
-define(['text!./@name@.html', 'css!./@name@.css', 'map', 'model', 'router'], function(html, css, SiteMap, SiteModel, SiteRouter) {
-    var view = Athena.Page.extend({
+define(['text!./@name@.html', 'css!./@name@.css', 'page', 'map', 'router', 'model'], function(html, css, BasePage, Map, Router, Model) {
+    var view = BasePage.extend({
         id : '@name@-page',
-        className : 'page',
 
         init : function() {
             this.template = html.html || html;
             this.render();
             view.__super__.init.apply(this);
-            var _self = this;
 
-            this.$el.css({
-                opacity : 0,
-                visibility : 'hidden'
-            });
-        },
-
-        events:{
-
+            //以上三行代码是将模板加入场景,一般需要保留不用删除
         },
 
         destroy : function() {
@@ -25,37 +16,30 @@ define(['text!./@name@.html', 'css!./@name@.css', 'map', 'model', 'router'], fun
 
         resize : function() {
             view.__super__.resize.apply(this);
-
-            this.$el.width(Athena.stageRect().width);
-            this.$el.height(Athena.stageRect().height);
         },
 
         transitionIn : function() {
-            var _self = this;
             view.__super__.transitionIn.apply(this);
-            this.$el.css({
-                visibility : 'visible'
-            });
-            JT.to(this.$el, 0.5, {
-                opacity : 1,
-                onEnd : function() {
-                    _self.transitionInComplete();
-                }
-            });
+
+            //进场方式沿用了basePage中定义的统一方式,如果需要修改可以修改继承自Athena.Page,具体实现可以参考basePage
+        },
+
+        transitionInComplete: function(){
+            view.__super__.transitionInComplete.apply(this);
+
+            //coding here
         },
 
         transitionOut : function() {
-            var _self = this;
             view.__super__.transitionOut.apply(this);
-            JT.to(this.$el, 0.5, {
-                opacity : 0,
-                onEnd : function() {
-                    _self.$el.css({
-                        visibility : 'hidden'
-                    });
-                    _self.transitionOutComplete();
-                }
-            });
+
+            //coding here
+        },
+
+        transitionOutComplete : function() {
+            view.__super__.transitionOutComplete.apply(this);
+
+            //coding here
         }
 
     });

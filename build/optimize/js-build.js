@@ -21,6 +21,7 @@
         'model' : 'app/base/model',
         'router' : 'app/base/router',
         'tracker' : 'app/base/tracker',
+        'page' : 'app/pages/basePage',
         'pop' : 'app/pops/basePop',
         // lib辅助类
         'scroller' : 'libs/athena/ui/scroller',
@@ -32,7 +33,7 @@
     },
     modules:[{
         name : 'main',
-        include : ['text', 'css', 'jquery', 'bone', 'jstween', 'athena', 'map', 'model', 'router', 'pop', 'tracker'],
+        include : ['text', 'css', 'jquery', 'bone', 'jstween', 'athena', 'map', 'model', 'router', 'page', 'pop', 'tracker'],
         exclude : ['normalize']
     }, {
         name : 'app/preloader/preloader0',

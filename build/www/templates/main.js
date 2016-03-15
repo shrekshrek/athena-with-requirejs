@@ -19,6 +19,7 @@ require.config({
         'model' : 'app/base/model',
         'router' : 'app/base/router',
         'tracker' : 'app/base/tracker',
+        'page' : 'app/pages/basePage',
         'pop' : 'app/pops/basePop',
         // lib辅助类
         'scroller' : 'libs/athena/ui/Scroller',
@@ -75,7 +76,7 @@ require.config({
     }
 });
 
-require(['bone', 'athena', 'map', 'router', 'model', 'jstween'], function(Bone, Athena, SiteMap, SiteRouter, SiteModel) {
+require(['bone', 'athena', 'map', 'router', 'model', 'jstween'], function(Bone, Athena, Map, Router, Model) {
     $(function() {
         Athena.init();
         Athena.fullScreen(true);
@@ -87,9 +88,9 @@ require(['bone', 'athena', 'map', 'router', 'model', 'jstween'], function(Bone, 
         Athena.preloadFast(false);
 
         //没有默认loading时使用以下代码
-        //if (SiteMap.preloader) {
+        //if (Map.preloader) {
         //    Athena.once(Athena.PRELOAD_PREPARE, init);
-        //    Athena.preloader(SiteMap.preloader);
+        //    Athena.preloader(Map.preloader);
         //} else {
         //    init();
         //}
@@ -97,14 +98,14 @@ require(['bone', 'athena', 'map', 'router', 'model', 'jstween'], function(Bone, 
         //有默认loading时使用一下代码
         Athena.once(Athena.PRELOAD_PREPARE, init);
         Athena.preloader({
-            data : SiteMap.preloader0,
+            data : Map.preloader0,
             el : $("#preloader0")
         });
     });
 
     function init() {
 
-        SiteModel.init();
+        Model.init();
 
         Bone.history.start({});
     }
