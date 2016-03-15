@@ -22,7 +22,7 @@ define(['text!./@name@.html', 'css!./@name@.css', 'map', 'router', 'model'], fun
             view.__super__.resize.apply(this);
 
             this.$el.css({
-                //width : Athena.stageRect().width,
+                width : Athena.stageRect().width,
                 top : Athena.stageRect().height
             });
         },

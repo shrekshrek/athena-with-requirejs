@@ -35,7 +35,7 @@ define(['text!./@name@.html', 'css!./@name@.css', 'map', 'router', 'model'], fun
         resize : function() {
             view.__super__.resize.apply(this);
 
-            //this.$el.width(Athena.stageRect().width);
+            this.$el.width(Athena.stageRect().width);
 
         },
 

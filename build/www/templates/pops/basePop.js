@@ -19,8 +19,8 @@ define(['athena'], function(Athena) {
         resize : function() {
             view.__super__.resize.apply(this);
 
-            //this.$el.width(Athena.stageRect().width);
-            //this.$el.height(Athena.stageRect().height);
+            this.$el.width(Athena.stageRect().width);
+            this.$el.height(Athena.stageRect().height);
         },
 
         transitionIn : function() {
