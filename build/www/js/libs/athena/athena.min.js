@@ -1,7 +1,7 @@
 /*!
  * VERSION: 2.0.0
  * DATE: 2016-03-15
- * GIT:https://github.com/shrekshrek/athenaframework
+ * GIT:https://github.com/shrekshrek/athena-with-requirejs
  *
  * @author: Shrek.wang, shrekshrek@gmail.com
  **/
