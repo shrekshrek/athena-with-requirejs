@@ -1,5 +1,5 @@
 /*!
- * VERSION: 1.6.0
+ * VERSION: 2.0.0
  * DATE: 2016-03-15
  * GIT:https://github.com/shrekshrek/athenaframework
  *

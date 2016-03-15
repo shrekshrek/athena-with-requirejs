@@ -2,52 +2,15 @@
 a js web framework base on backbone.js & require.js  
 Athena是一个基于Backbone和requirejs的前端框架。结构清晰，管理方便。
 
-*version:2.1.0*  
-*date:2015.5.29*  
-版本更新到2.1.0，主要更新：  
-1.build文件夹下增加了site.xml，可以通过该文件直接配置网站结构，create命令会自动生成所有页面，方便大网站开发时增加新页面。  
-2.对整站结构略做调整，文件结构更简洁直观。  
-3.site.properties里增加了indexPath用来布置index页面位置，因为有些时候index.html和其他所有素材文件可能分别放在不同的文件夹下。
-
-*version:2.0.0*  
-*date:2014.11.20*  
-版本更新到2.0，主要更新：  
-1.增加了require的文件合并功能，让整个框架的http请求数量显著降低，文件大小也有小幅缩减。增加build/js-built.js，用于进行require优化的配置。  
-2.增强了pageOn()的功能，可以在参数中增加el等backbone.view的初始参数，以达到让新增页面直接绑定到html中已有dom元素的能力。  
-3.范例增加了另一种初始loading的创建方法，直接写在html页面中，这样可以保证这个loading在页面读到的第一时间即可现实，等待其他主要框架js文件加载完成后再自动把loading相关控制类绑定到此loading视图。  
-4.适当简化了整个框架的文件结构。  
-5.优化ant命令集，增加了build/site.properties中的一些新参数。
-
-*version:1.1.1*  
-*date:2014.08.27*  
-添加assets加载机制，让每个页面的预载更灵活。
-
-*version:1.1.0*  
-*date:2014.07.31*  
-添加grunt-imagemin图片压缩功能。
-
-*version:1.0.1*  
-*date:2014.03.17*
-
-*version:1.0.0*  
-*date:2014.01.23*
-
-*version:0.0.1*  
-*date:2013.06.13*
-
-authur:shrek.wang  
-http://shrekwang.duapp.com/
-
 ##Athena是什么？
 各位前端开发者都了解，js虽然强大，但是在网站开发过程中确实有很多地方用起来不是很爽。比如开发过程中单个js文件写的很大，不容易维护，oop开发方面也比较弱。。。。。。这里不一一累述。  
 特别是从其他领域（比如aser）转过来的jser们，这些问题更加明显，写起来更加不习惯。  
 当然js中也有很多优秀的框架和第三方库来解决这些问题，比如下面这些  
 
-backbone，优秀的mvc框架，方便oop开发，让大家继续使用熟悉的创建类，继承类，覆盖扩展方法等等，  
+backbone，优秀的mvc框架，方便oop开发，让大家继续使用熟悉的创建类，继承类，覆盖扩展方法等等，此处使用了简化版bone。  
 requirejs，让我们可以把臃肿复杂的js按照模块分拆，然后按需加载使用，结合backbone，可以让我们的开发习惯延续其他语言的习惯，工程文件结构清晰，代码结构也更加友善易懂，  
-jquery，功能大家都懂得，虽然稍显庞大  
-underscore，非常好用的方法集，也是backbone的强依赖库，其他项目中也推荐独立使用  
-TweenMax，功能强大的第三方类库，原as下就很好用，出了js版后延续了易用强大的特点，继续成为html网站开发不可或缺的运动控制类  
+jquery，功能大家都懂得，虽然稍显庞大，移动端可以替换成zepto。  
+TweenMax，功能强大的第三方类库，原as下就很好用，出了js版后延续了易用强大的特点，继续成为html网站开发不可或缺的运动控制类，移动端可以替换成小巧强大的jstween或者csstween。  
 
 Athena，整合以上各种强大通用的第三方库，使html网站开发变得更加美好。  
 让开发者可以快速搭建网站，更方便的调整加载流程，层级控制，以及页面管理。对表现层不做任何干预。  
@@ -140,6 +103,9 @@ Athena所有命令都置于Athena下，
 **pageOff(data);**  
 *data*为SiteMap节点对象,此处也可以传string字符串，或者数字，用户指定页面中某层级的内容退场，也可以指定一个数组的页面一起退场  
 
+**preload(data);**  
+*data*为SiteMap节点对象,直接开始后台预加载，完成后触发全局事件 Athena.BACKLOAD_COMPLETE;  
+
 **preloader(data);**  
 *data*为节点对象，参数类型请参考pageOn()，data相关文件加载准备完成后会发出事件:Athena.PRELOAD_PREPARE  
 返回当前preloader对象，不传参则获取当前preloader对象  
@@ -147,6 +113,11 @@ Athena所有命令都置于Athena下，
 **preloadFast(bool);**  
 *bool*为布尔值，是否跳过预载。true时在加载完html和css文件后立即置入场景触发进场。false时会在html页面中所有assets/img标签的图片全部加载完成后置入场景触发进场动画。  
 **preloadFast();**  
+返回bool布尔值  
+
+**preloadMustIn(bool);**  
+*bool*为布尔值，loading动画是否必须完成进场后。true时则在loading动画进场完成后开始正式加载。false时则会直接开始加载，有可能因为loading太快，直接触发loading出场而导致看不到loading界面的存在。  
+**preloadMustIn();**  
 返回bool布尔值  
 
 **fullScreen(bool);**  
@@ -202,6 +173,14 @@ Athena.api.flow(flow);此命令会用到这些变量以用来设置页面切换�
 **WINDOW_RESIZE:"windowResize"**     窗体尺寸变化时发布此事件  
 **PRELOAD_PREPARE:"preloadPrepare"** 预载页准备完成时发布此事件（常用于网站开始前侦听此事件）  
 这些是全局事件变量，任何地方有需要都可以通过使用Backbone的on或listenTo就可以监听这些全局事件。  
+
+主流程加载相关常量  
+**PRELOAD_START: "preloadStart"**       加载开始时发布此事件  
+**PRELOAD_PROGRESS: "preloadProgress"** 加载进行时发布此事件  
+**PRELOAD_COMPLETE: "preloadComplete"** 加载完成时发布此事件  
+
+后台加载相关常量  
+**BACKLOAD_COMPLETE: "backloadComplete"** 后台加载完成时发布此事件  
 
 ##Athena 相关基类:  
 Athena所有基类都置于Athena下  
