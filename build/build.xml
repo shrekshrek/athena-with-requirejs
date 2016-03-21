@@ -370,24 +370,19 @@
 	<target name="compile">
 		<echo message="compile" />
 		<antcall target="__optimize" />
+		<antcall target="__delete-css-html" />
 		<antcall target="__css-fix" />
 		<antcall target="__cdn-format" />
 		<antcall target="__mainjs-to-built" />
 		<antcall target="index-to-built" />
 	</target>
 
-	<macrodef name="cdn-format">
-		<attribute name="file" default="" />
-		<attribute name="document" default="" />
-		<sequential>
-			<foreach list="" target="__cdn-footer" param="file">
-				<fileset dir="${cssBuilt}" includes="**/*.js,**/*.html,**/*.css" />
-			</foreach>
-			<foreach list="" target="__cdn-footer" param="file">
-				<fileset dir="${jsBuilt}" includes="**/*.js,**/*.html,**/*.css" />
-			</foreach>
-		</sequential>
-	</macrodef>
+	<target name="__delete-css-html">
+		<delete>
+			<fileset dir="${jsBuilt}" includes="**/*.css"/>
+			<fileset dir="${jsBuilt}" includes="**/*.html"/>
+		</delete>
+	</target>
 
 	<target name="__cdn-format">
 		<foreach list="" target="__cdn-footer" param="file">
