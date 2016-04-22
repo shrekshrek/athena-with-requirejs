@@ -1,5 +1,6 @@
 require.config({
     waitSeconds : 0,
+    urlArgs : '',
     baseUrl : '@path@js/',
     paths : {
         // athena框架配置地址
