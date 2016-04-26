@@ -536,7 +536,7 @@
 
             var _imgs = [];
             for (var i = data.length - 1; i >= 0; i--) {
-                if (data[i].src && data[i].src !== '') _imgs.push(data[i].src);
+                if (data[i].src && data[i].src !== '' && data[i].src.substr(0,5) !== 'data:') _imgs.push(data[i].src);
             }
 
             var _loadMax = _imgs.length;
@@ -545,11 +545,11 @@
                 completeHandler();
             } else {
                 each(_imgs, function (index, obj) {
-                    $(new Image()).load(function () {
+                    var _image = new Image();
+                    _image.onload = _image.onerror = function () {
                         complete();
-                    }).error(function () {
-                        complete();
-                    }).attr("src", obj);
+                    };
+                    _image.src = obj;
                 });
             }
 
@@ -801,13 +801,13 @@
 
             AssetsPreloader.load({
                 data:this.$el.find("img"),
-                complete: function(){
-                    _self._progress = 1;
-                    _self.completeHandle();
-                },
                 progress: function(n){
                     _self._progress = n;
                     _self.progressHandle();
+                },
+                complete: function(){
+                    _self._progress = 1;
+                    _self.completeHandle();
                 }
             });
 
