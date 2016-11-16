@@ -1,6 +1,6 @@
 /*!
- * VERSION: 0.1.0
- * DATE: 2015-12-20
+ * VERSION: 0.2.0
+ * DATE: 2016-10-20
  * GIT:https://github.com/shrekshrek/orienter
  *
  * @author: Shrek.wang, shrekshrek@gmail.com
@@ -22,17 +22,12 @@
     }
 
 }(function (root, Orienter) {
-    function extend(obj, obj2) {
-        for (var prop in obj2) {
-            obj[prop] = obj2[prop];
-        }
-    }
 
     Orienter = function () {
         this.initialize.apply(this, arguments);
     };
 
-    extend(Orienter.prototype, {
+    Orienter.prototype = {
         lon: 0,
         lat: 0,
         direction: 0,
@@ -165,7 +160,7 @@
             }]);
         }
 
-    });
+    };
 
     return Orienter;
 }));
