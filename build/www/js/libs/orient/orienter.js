@@ -1,27 +1,23 @@
 /*!
  * VERSION: 0.2.0
  * DATE: 2016-10-20
- * GIT:https://github.com/shrekshrek/orienter
- *
- * @author: Shrek.wang, shrekshrek@gmail.com
+ * GIT: https://github.com/shrekshrek/orienter
+ * @author: Shrek.wang
  **/
 
 (function (factory) {
 
-    var root = (typeof self == 'object' && self.self == self && self) ||
-        (typeof global == 'object' && global.global == global && global);
-
     if (typeof define === 'function' && define.amd) {
-        define(['exports'], function (exports) {
-            root.Orienter = factory(root, exports);
+        define(['exports'], function(exports) {
+            window.Orienter = factory(exports);
         });
     } else if (typeof exports !== 'undefined') {
-        factory(root, exports);
+        factory(exports);
     } else {
-        root.Orienter = factory(root, {});
+        window.Orienter = factory({});
     }
 
-}(function (root, Orienter) {
+}(function (Orienter) {
 
     Orienter = function () {
         this.initialize.apply(this, arguments);
@@ -33,7 +29,15 @@
         direction: 0,
         fix: 0,
         os: '',
-        initialize: function () {
+        initialize: function (config) {
+            var _config = config || {};
+
+            this.orient = _config.orient || function(){};
+            this.change = _config.change || function(){};
+
+            this._orient = this.orientHandler.bind(this);
+            this._change = this.changeHandler.bind(this);
+
             this.lon = 0;
             this.lat = 0;
             this.direction = window.orientation || 0;
@@ -58,10 +62,7 @@
         },
 
         init: function () {
-            this._orient = this.orientHandler.bind(this);
             window.addEventListener('deviceorientation', this._orient, false);
-
-            this._change = this.changeHandler.bind(this);
             window.addEventListener('orientationchange', this._change, false);
         },
 
@@ -71,12 +72,9 @@
         },
 
         changeHandler: function (event) {
-            // if (this.direction == window.orientation) return;
-
             this.direction = window.orientation;
 
-            if (this.change) this.change(this.direction);
-            //alert(window.orientation);
+            this.change(this.direction);
         },
 
         changeDirectionTo: function (n) {
@@ -150,7 +148,7 @@
             this.lon = Math.round(this.lon);
             this.lat = Math.round(this.lat);
 
-            if (this.orient) this.orient.apply(this, [{
+            this.orient.apply(this, [{
                 a: Math.round(event.alpha),
                 b: Math.round(event.beta),
                 g: Math.round(event.gamma),
