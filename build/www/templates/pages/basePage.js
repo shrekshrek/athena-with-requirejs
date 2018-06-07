@@ -1,21 +1,20 @@
-define(['athena'], function (Athena) {
+define(['athena', 'jstween'], function (Athena, JT) {
     var view = Athena.Page.extend({
         className: "page",
 
         init: function () {
             view.__super__.init.apply(this);
 
-            this.$el.css({
-                opacity: 0,
-                visibility: 'hidden'
-            });
+            JT.set(this.$el, {autoAlpha: 0});
         },
 
         resize: function () {
             view.__super__.resize.apply(this);
 
-            this.$el.width(Athena.stageRect().width);
-            this.$el.height(Athena.stageRect().height);
+            this.$el.css({
+                width: Athena.stageRect().width,
+                height: Athena.stageRect().height
+            });
         },
 
         transitionIn: function () {
@@ -23,11 +22,7 @@ define(['athena'], function (Athena) {
 
             var _self = this;
             JT.to(this.$el, 0.5, {
-                opacity: 1,
-                onStart: function () {
-                    this.target.style.visibility = 'visible';
-                },
-                onEnd: function () {
+                autoAlpha: 1, onEnd: function () {
                     _self.transitionInComplete();
                 }
             });
@@ -38,9 +33,7 @@ define(['athena'], function (Athena) {
 
             var _self = this;
             JT.to(this.$el, 0.5, {
-                opacity: 0,
-                onEnd: function () {
-                    this.target.style.visibility = 'hidden';
+                autoAlpha: 0, onEnd: function () {
                     _self.transitionOutComplete();
                 }
             });

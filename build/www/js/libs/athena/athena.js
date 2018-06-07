@@ -1,28 +1,21 @@
 /*!
- * VERSION: 2.0.0
- * DATE: 2016-03-15
- * GIT:https://github.com/shrekshrek/athena-with-requirejs
- *
- * @author: Shrek.wang, shrekshrek@gmail.com
+ * GIT: https://github.com/shrekshrek/athena-with-requirejs
  **/
 
-(function (factory) {
-    var root = (typeof self == 'object' && self.self == self && self) ||
-        (typeof global == 'object' && global.global == global && global);
 
-    if (typeof define === 'function' && define.amd) {
-        define(['bone', 'jquery', 'exports'], function (Bone, $, exports) {
-            root.Athena = factory(root, exports, Bone, $);
-        });
-    } else if (typeof exports !== 'undefined') {
+(function (global, factory) {
+    if (typeof exports === 'object' && typeof module !== 'undefined') {
         var Bone = require('bone');
         var $ = require('jquery');
-        factory(root, exports, Bone, $);
+        module.exports = factory(Bone, $);
+    } else if (typeof define === 'function' && define.amd) {
+        define(['bone', 'jquery'], factory);
     } else {
-        root.Athena = factory(root, {}, root.Bone, (root.jQuery || root.Zepto || root.ender || root.$));
+        global.Athena = factory(global.Bone, global.$);
     }
+}(this, (function (Bone, $) {
+    'use strict';
 
-}(function (root, Athena, Bone, $) {
     // -------------------------------------------------------------------- 辅助方法
     function each(data, callback) {
         if (data.length === undefined) {
@@ -36,7 +29,7 @@
     }
 
     // -------------------------------------------------------------------- 框架事件名，事件功能
-    Bone.extend(Athena, Bone.Events, {
+    var Athena = Bone.extend({}, Bone.Events, {
         /*
          * 主流程加载相关常量
          */
@@ -425,7 +418,7 @@
                         _self.complete(obj);
                     }
                 } else {
-                    require([obj.view], function(view) {
+                    require([obj.view], function (view) {
                         var _page = new view({data: obj});
                         var _data = obj;
                         preloadPages[_data.depth] = _page;
@@ -457,7 +450,7 @@
                 var _page = preloadPages[obj.depth];
                 if (_page) _n += _page._progress / _self.curMax;
             });
-            if(preloader) preloader.progress({progress: _n});
+            if (preloader) preloader.progress({progress: _n});
         },
 
         complete: function (data) {
@@ -465,7 +458,7 @@
 
             this.curIndex++;
             if (this.curIndex >= this.curMax) {
-                if(preloader) preloader.transitionOut();
+                if (preloader) preloader.transitionOut();
 
                 each(this.curDatas, function (index, obj) {
                     nextPages[obj.depth] = preloadPages[obj.depth];
@@ -486,14 +479,14 @@
         curMax: 0,
 
         load: function (data) {
-            if(this.curDatas) throw 'backload is loading!!!';
+            if (this.curDatas) throw 'backload is loading!!!';
 
             this.curDatas = data;
             this.curIndex = 0;
             this.curMax = this.curDatas.length;
 
             each(data, function (index, obj) {
-                require([obj.view], function(view) {
+                require([obj.view], function (view) {
                     var _page = new view({data: obj});
                     var _data = obj;
                     backloadPages[_data.depth] = _page;
@@ -536,7 +529,7 @@
 
             var _imgs = [];
             for (var i = data.length - 1; i >= 0; i--) {
-                if (data[i].src && data[i].src !== '' && data[i].src.substr(0,5) !== 'data:') _imgs.push(data[i].src);
+                if (data[i].src && data[i].src !== '' && data[i].src.substr(0, 5) !== 'data:') _imgs.push(data[i].src);
             }
 
             var _loadMax = _imgs.length;
@@ -577,7 +570,7 @@
             nextPages = {};
             preloadPages = {};
 
-            $window.resize(function () {
+            $window.on('resize', function () {
                 Athena.resize();
             });
             this.resize();
@@ -628,7 +621,7 @@
                 var _data = data.data ? data : {data: data};
                 _data.data.depth = checkDepth(Athena.PRELOAD);
 
-                require([_data.data.view], function(view) {
+                require([_data.data.view], function (view) {
                     preloader = new view(_data);
                     $stage.append(preloader.el);
                     preloader.init();
@@ -741,7 +734,7 @@
                 stageRect.height = Math.max(windowRect.height, windowRectMin.height);
                 $stage.width(stageRect.width);
                 $stage.height(stageRect.height);
-            }else{
+            } else {
                 $stage.css("overflow", "auto");
                 windowRect.width = $window.width();
                 windowRect.height = $window.height();
@@ -800,12 +793,12 @@
             var _self = this;
 
             AssetsPreloader.load({
-                data:this.$el.find("img"),
-                progress: function(n){
+                data: this.$el.find("img"),
+                progress: function (n) {
                     _self._progress = n;
                     _self.progressHandle();
                 },
-                complete: function(){
+                complete: function () {
                     _self._progress = 1;
                     _self.completeHandle();
                 }
@@ -835,4 +828,5 @@
     });
 
     return Athena;
-}));
+
+})));
