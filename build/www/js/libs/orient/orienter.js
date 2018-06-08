@@ -1,25 +1,15 @@
 /*!
- * VERSION: 0.2.0
- * DATE: 2016-10-20
  * GIT: https://github.com/shrekshrek/orienter
- * @author: Shrek.wang
  **/
 
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+        typeof define === 'function' && define.amd ? define(factory) :
+            (global.Orienter = factory());
+}(this, (function () {
+    'use strict';
 
-    if (typeof define === 'function' && define.amd) {
-        define(['exports'], function(exports) {
-            window.Orienter = factory(exports);
-        });
-    } else if (typeof exports !== 'undefined') {
-        factory(exports);
-    } else {
-        window.Orienter = factory({});
-    }
-
-}(function (Orienter) {
-
-    Orienter = function () {
+    var Orienter = function () {
         this.initialize.apply(this, arguments);
     };
 
@@ -32,8 +22,8 @@
         initialize: function (config) {
             var _config = config || {};
 
-            this.onOrient = _config.onOrient || function(){};
-            this.onChange = _config.onChange || function(){};
+            this.onOrient = _config.onOrient || null;
+            this.onChange = _config.onChange || null;
 
             this._orient = this._orient.bind(this);
             this._change = this._change.bind(this);
@@ -74,7 +64,7 @@
         _change: function (event) {
             this.direction = window.orientation;
 
-            this.onChange(this.direction);
+            if (this.onChange) this.onChange(this.direction);
         },
 
         changeDirectionTo: function (n) {
@@ -148,7 +138,7 @@
             this.lon = Math.round(this.lon);
             this.lat = Math.round(this.lat);
 
-            this.onOrient({
+            if (this.onOrient) this.onOrient({
                 a: Math.round(event.alpha),
                 b: Math.round(event.beta),
                 g: Math.round(event.gamma),
@@ -161,4 +151,5 @@
     };
 
     return Orienter;
-}));
+
+})));
