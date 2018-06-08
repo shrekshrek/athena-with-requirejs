@@ -9,9 +9,7 @@ require.config({
         'css-builder': 'libs/require/requirePlugin/css-builder',
         'normalize': 'libs/require/requirePlugin/normalize',
         'jquery': 'libs/jquery/jqlite.min',
-        // 'jquery': 'libs/jquery/jquery-2.1.3.min',
-        //'jquery' : 'libs/jquery/jquery-1.11.2.min',
-        //'jquery' : 'libs/zepto/zepto.min',
+        // 'jquery': 'libs/jquery/jquery-3.3.1.min',
         'bone': 'libs/bone/bone.min',
         'jstween': 'libs/jstween/jstween.min',
         'athena': 'libs/athena/athena.min',
@@ -19,11 +17,9 @@ require.config({
         'map': 'app/base/map',
         'model': 'app/base/model',
         'router': 'app/base/router',
-        'tracker': 'app/base/tracker',
         'page': 'app/pages/basePage',
         'pop': 'app/pops/basePop',
         // lib辅助类
-        'scroller': 'libs/athena/ui/Scroller',
         'json': 'libs/json/json2.min',
         'css3d': 'libs/css3d/css3d.min',
         // app其他辅助类
@@ -72,7 +68,7 @@ require.config({
     }
 });
 
-require(['bone', 'athena', 'map', 'router', 'model', 'jstween'], function (Bone, Athena, Map, Router, Model) {
+require(['bone', 'athena', 'jquery', 'map', 'router', 'model', 'jstween'], function (Bone, Athena, $, Map, Router, Model) {
     $(function () {
         Athena.init();
         Athena.fullScreen(true);
@@ -92,15 +88,13 @@ require(['bone', 'athena', 'map', 'router', 'model', 'jstween'], function (Bone,
         //}
 
         //有默认loading时使用一下代码
-        Athena.once(Athena.PRELOAD_PREPARE, init);
+        Athena.once(Athena.PRELOAD_PREPARE, function () {
+            Bone.history.start({});
+        });
         Athena.preloader({
             data: Map.preloader0,
             el: $("#preloader0")
         });
     });
-
-    function init() {
-        Bone.history.start({});
-    }
 
 });

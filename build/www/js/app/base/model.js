@@ -1,4 +1,4 @@
-define(['bone'], function() {
+define(['bone'], function(Bone) {
     var model = Bone.extend({}, Bone.Events, {
         ua: function () {
             var u = navigator.userAgent;

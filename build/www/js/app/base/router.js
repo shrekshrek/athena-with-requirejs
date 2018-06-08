@@ -1,4 +1,4 @@
-define(['athena', 'jquery', 'map', 'bone'], function (Athena, $, SiteMap) {
+define(['bone', 'jquery', 'athena', 'map'], function (Bone, $, Athena, SiteMap) {
     var router = Bone.Router.extend({
         routes : {
             '*actions' : 'defaultRoute'

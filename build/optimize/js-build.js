@@ -10,21 +10,18 @@
         'css' : 'libs/require/requirePlugin/css.min',
         'css-builder' : 'libs/require/requirePlugin/css-builder',
         'normalize' : 'libs/require/requirePlugin/normalize',
-        'jquery' : 'libs/jquery/jquery-2.1.3.min',
+        'jquery': 'libs/jquery/jqlite.min',
         //'jquery' : 'libs/zepto/zepto.min',
         'bone' : 'libs/bone/bone.min',
         'jstween' : 'libs/jstween/jstween.min',
-        'csstween' : 'libs/csstween/csstween.min',
         'athena' : 'libs/athena/athena.min',
         // app基本类地址
         'map' : 'app/base/map',
         'model' : 'app/base/model',
         'router' : 'app/base/router',
-        'tracker' : 'app/base/tracker',
         'page' : 'app/pages/basePage',
         'pop' : 'app/pops/basePop',
         // lib辅助类
-        'scroller' : 'libs/athena/ui/scroller',
         'json2' : 'libs/json2.min',
         'css3d' : 'libs/css3d/css3d.min',
         // app其他辅助类
@@ -33,7 +30,7 @@
     },
     modules:[{
         name : 'main',
-        include : ['text', 'css', 'jquery', 'bone', 'jstween', 'athena', 'map', 'model', 'router', 'page', 'pop', 'tracker'],
+        include : ['text', 'css', 'jquery', 'bone', 'jstween', 'athena', 'map', 'model', 'router', 'page', 'pop'],
         exclude : ['normalize']
     }, {
         name : 'app/preloader/preloader0',
