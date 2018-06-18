@@ -393,23 +393,18 @@
     <target name="compile">
         <echo message="compile"/>
         <antcall target="__optimize"/>
-        <antcall target="__delete-css-html"/>
-        <antcall target="__delete-other-js"/>
+        <antcall target="__delete-css-html-js"/>
         <antcall target="__css-fix"/>
         <antcall target="__cdn-format"/>
         <antcall target="__mainjs-to-built"/>
         <antcall target="index-to-built"/>
     </target>
 
-    <target name="__delete-css-html">
-        <delete>
+    <target name="__delete-css-html-js">
+        <delete includeemptydirs="true">
             <fileset dir="${jsBuilt}" includes="**/*.css"/>
             <fileset dir="${jsBuilt}" includes="**/*.html"/>
-        </delete>
-    </target>
 
-    <target name="__delete-other-js">
-        <delete includeemptydirs="true">
             <fileset dir="${jsBuilt}app/base/" includes="**/*"/>
             <fileset dir="${jsBuilt}app/pages/" includes="basePage.js"/>
             <fileset dir="${jsBuilt}app/pops/" includes="basePop.js"/>
