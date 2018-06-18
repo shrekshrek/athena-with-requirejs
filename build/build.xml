@@ -401,7 +401,7 @@
     </target>
 
     <target name="__delete-css-html-js">
-        <delete includeemptydirs="true">
+        <delete verbose="true" includeemptydirs="true">
             <fileset dir="${jsBuilt}" includes="**/*.css"/>
             <fileset dir="${jsBuilt}" includes="**/*.html"/>
 
