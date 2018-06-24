@@ -317,7 +317,7 @@
             <xmltask source="${sitexml}">
                 <call path="//header">
                     <param name="id" path="@id"/>
-                    <param name="depth" path="@depth" default="normal"/>
+                    <param name="depth" path="@depth" default="top-1"/>
                     <param name="fast" path="@fast" default="false"/>
                     <actions>
                         <add-text file="${app}base/map.js"
@@ -329,7 +329,7 @@
             <xmltask source="${sitexml}">
                 <call path="//footer">
                     <param name="id" path="@id"/>
-                    <param name="depth" path="@depth" default="normal"/>
+                    <param name="depth" path="@depth" default="top-2"/>
                     <param name="fast" path="@fast" default="false"/>
                     <actions>
                         <add-text file="${app}base/map.js"
@@ -341,7 +341,7 @@
             <xmltask source="${sitexml}">
                 <call path="//page">
                     <param name="id" path="@id"/>
-                    <param name="depth" path="@depth" default="normal"/>
+                    <param name="depth" path="@depth" default="middle"/>
                     <param name="fast" path="@fast" default="false"/>
                     <actions>
                         <add-text file="${app}base/map.js"
@@ -353,7 +353,7 @@
             <xmltask source="${sitexml}">
                 <call path="//pop">
                     <param name="id" path="@id"/>
-                    <param name="depth" path="@depth" default="normal"/>
+                    <param name="depth" path="@depth" default="top"/>
                     <param name="fast" path="@fast" default="false"/>
                     <actions>
                         <add-text file="${app}base/map.js"
